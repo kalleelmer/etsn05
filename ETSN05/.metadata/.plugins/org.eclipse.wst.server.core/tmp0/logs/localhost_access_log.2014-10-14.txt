@@ -71,3 +71,11 @@
 127.0.0.1 - - [14/Oct/2014:19:45:44 +0200] "GET /BaseBlockSystem/Administration HTTP/1.1" 200 498
 127.0.0.1 - - [14/Oct/2014:19:45:48 +0200] "GET /BaseBlockSystem/Administration HTTP/1.1" 200 498
 127.0.0.1 - - [14/Oct/2014:19:45:50 +0200] "GET /BaseBlockSystem/LogIn HTTP/1.1" 200 341
+127.0.0.1 - - [14/Oct/2014:19:50:53 +0200] "GET / HTTP/1.1" 404 969
+127.0.0.1 - - [14/Oct/2014:19:50:55 +0200] "GET /favicon.ico HTTP/1.1" 404 991
+127.0.0.1 - - [14/Oct/2014:19:50:56 +0200] "GET /BaseBlockSystem/Administration HTTP/1.1" 302 -
+127.0.0.1 - - [14/Oct/2014:19:50:56 +0200] "GET /BaseBlockSystem/LogIn HTTP/1.1" 200 311
+127.0.0.1 - - [14/Oct/2014:19:51:01 +0200] "POST /BaseBlockSystem/LogIn HTTP/1.1" 302 -
+127.0.0.1 - - [14/Oct/2014:19:51:01 +0200] "GET /BaseBlockSystem/functionality.html HTTP/1.1" 200 415
+127.0.0.1 - - [14/Oct/2014:19:51:03 +0200] "GET /BaseBlockSystem/Administration HTTP/1.1" 200 498
+127.0.0.1 - - [14/Oct/2014:19:51:04 +0200] "GET /BaseBlockSystem/LogIn HTTP/1.1" 200 341
