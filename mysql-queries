@@ -1,0 +1,12 @@
+create database etsn05;
+
+use etsn05;
+
+CREATE TABLE `users` (`username` varchar(128), PRIMARY KEY(`username`), `password` varchar(128), `firstname` varchar(128), `lastname` varchar(128));
+
+CREATE TABLE `projects` (`id` int, PRIMARY KEY(`id`), `name` varchar(128), `closed` boolean);
+
+CREATE TABLE `members` (`username` varchar(128), `project` int, PRIMARY KEY(`username`, `project`), `role` ENUM('undefined', 'manager', 'architect', 'developer', 'tester'));
+
+CREATE TABLE `timeReports` (`id` int, PRIMARY KEY(`id`), `user` varchar(128), `project` int, `role` ENUM('undefined', 'manager', 'architect', 'developer', 'tester'), `activityType` int, `date` DATE, `duration` int, `signer` varchar(128));
+
