@@ -67,7 +67,7 @@
           <tags>persp.actionSet:org.eclipse.debug.ui.breakpointActionSet</tags>
           <tags>persp.newWizSC:org.eclipse.m2e.core.wizards.Maven2ProjectWizard</tags>
           <tags>persp.actionSet:org.eclipse.wst.ws.explorer.explorer</tags>
-          <children xsi:type="basic:PartSashContainer" xmi:id="_9s98oVOwEeSGgd3kLSDKVw" selectedElement="_9s98p1OwEeSGgd3kLSDKVw" horizontal="true">
+          <children xsi:type="basic:PartSashContainer" xmi:id="_9s98oVOwEeSGgd3kLSDKVw" selectedElement="_9s98olOwEeSGgd3kLSDKVw" horizontal="true">
             <children xsi:type="basic:PartStack" xmi:id="_9s98olOwEeSGgd3kLSDKVw" elementId="topLeft" containerData="1495" selectedElement="_9s98o1OwEeSGgd3kLSDKVw">
               <tags>newtablook</tags>
               <tags>active</tags>
@@ -133,7 +133,7 @@
         <tags>org.eclipse.e4.primaryDataStack</tags>
         <tags>EditorStack</tags>
         <children xsi:type="basic:Part" xmi:id="_yAgTgFPGEeSlpMk4hHBTNQ" elementId="org.eclipse.e4.ui.compatibility.editor" contributionURI="bundleclass://org.eclipse.ui.workbench/org.eclipse.ui.internal.e4.compatibility.CompatibilityEditor" label="servletBase.java" iconURI="platform:/plugin/org.eclipse.jdt.ui/icons/full/obj16/jcu_obj.gif" closeable="true">
-          <persistedState key="memento" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xA;&lt;editor id=&quot;org.eclipse.jdt.ui.CompilationUnitEditor&quot; name=&quot;servletBase.java&quot; partName=&quot;servletBase.java&quot; title=&quot;servletBase.java&quot; tooltip=&quot;BaseBlockSystem/src/servletBase.java&quot;>&#xA;&lt;input factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; path=&quot;/BaseBlockSystem/src/servletBase.java&quot;/>&#xA;&lt;editorState selectionHorizontalPixel=&quot;0&quot; selectionLength=&quot;0&quot; selectionOffset=&quot;1473&quot; selectionTopPixel=&quot;0&quot;/>&#xA;&lt;/editor>"/>
+          <persistedState key="memento" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xA;&lt;editor id=&quot;org.eclipse.jdt.ui.CompilationUnitEditor&quot; name=&quot;servletBase.java&quot; partName=&quot;servletBase.java&quot; title=&quot;servletBase.java&quot; tooltip=&quot;BaseBlockSystem/src/servletBase.java&quot;>&#xA;&lt;input factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; path=&quot;/BaseBlockSystem/src/servletBase.java&quot;/>&#xA;&lt;editorState selectionHorizontalPixel=&quot;0&quot; selectionLength=&quot;0&quot; selectionOffset=&quot;509&quot; selectionTopPixel=&quot;0&quot;/>&#xA;&lt;/editor>"/>
           <tags>Editor</tags>
           <tags>org.eclipse.jdt.ui.CompilationUnitEditor</tags>
           <tags>removeOnHide</tags>
@@ -271,7 +271,7 @@
       </children>
       <children xsi:type="menu:ToolBar" xmi:id="_9ZCUAFOwEeSGgd3kLSDKVw" elementId="org.eclipse.ui.workbench.file">
         <tags>Draggable</tags>
-        <children xsi:type="menu:HandledToolItem" xmi:id="_mRsmMFPKEeSXmN6bVtQn7g" elementId="print" iconURI="platform:/plugin/org.eclipse.ui/icons/full/etool16/print_edit.png" tooltip="Print" enabled="false" command="_8zk201OwEeSGgd3kLSDKVw"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_cEs74VV5EeSdeJy8HU4fQw" elementId="print" iconURI="platform:/plugin/org.eclipse.ui/icons/full/etool16/print_edit.png" tooltip="Print" enabled="false" command="_8zk201OwEeSGgd3kLSDKVw"/>
       </children>
       <children xsi:type="menu:ToolBar" xmi:id="_9ZCUAVOwEeSGgd3kLSDKVw" elementId="additions" toBeRendered="false">
         <tags>toolbarSeparator</tags>
@@ -301,7 +301,7 @@
       </children>
       <children xsi:type="menu:ToolBar" xmi:id="_9ZC7EFOwEeSGgd3kLSDKVw" elementId="org.eclipse.ui.workbench.navigate">
         <tags>Draggable</tags>
-        <children xsi:type="menu:HandledToolItem" xmi:id="_mRvphFPKEeSXmN6bVtQn7g" elementId="org.eclipse.ui.window.pinEditor" visible="false" iconURI="platform:/plugin/org.eclipse.ui/icons/full/etool16/pin_editor.png" tooltip="Pin Editor" type="Check" command="_8zjoblOwEeSGgd3kLSDKVw"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_cExNVFV5EeSdeJy8HU4fQw" elementId="org.eclipse.ui.window.pinEditor" visible="false" iconURI="platform:/plugin/org.eclipse.ui/icons/full/etool16/pin_editor.png" tooltip="Pin Editor" type="Check" command="_8zjoblOwEeSGgd3kLSDKVw"/>
       </children>
       <children xsi:type="menu:ToolBar" xmi:id="_9ZDiIFOwEeSGgd3kLSDKVw" elementId="group.editor" toBeRendered="false">
         <tags>toolbarSeparator</tags>
