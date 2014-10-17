@@ -1,0 +1,23 @@
+package database;
+
+public class Entity {
+	
+	Database db1 = Database.getInstance();
+	Database db2 = Database.getInstance();
+	
+	
+	private static class Database {
+		private static Database instance = null;
+		
+		private Database() {
+			System.out.print("Nu körs jag en gång");
+		}
+		public static synchronized Database getInstance() {
+			if (instance == null) {
+				instance = new Database();
+			}
+			return instance;
+		}
+		
+	}
+}

@@ -22,7 +22,6 @@ public class Entity {
 			Database.getInstance();
 			Statement stmt = Database.CONN.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
-			stmt.close();
 			return rs;
 		} catch (SQLException ex) {
 		} catch (Exception e) {
@@ -38,8 +37,7 @@ public class Entity {
 		try {
 			Database.getInstance();
 			Statement stmt = Database.CONN.createStatement();
-			stmt.executeUpdate(query);
-			stmt.close();
+			stmt.executeQuery(query);
 		} catch (SQLException ex) {
 		} catch (Exception e) {
 		}
@@ -62,10 +60,7 @@ public class Entity {
 			try{
 	    		DriverManager.registerDriver(new com.mysql.jdbc.Driver ());
 				CONN = DriverManager.getConnection("jdbc:mysql://localhost/base?" +
-	            "user=root&password=etsn05");
-				if (CONN == null) {
-					System.out.print("Skit också");
-				}
+	            "user=root&password=etsn05");			
 			} catch (SQLException ex) {
 			    System.out.println("SQLException: " + ex.getMessage());
 			    System.out.println("SQLState: " + ex.getSQLState());
@@ -81,6 +76,11 @@ public class Entity {
 			}
 			return INSTANCE;
 		}
+		
+	}
+	
+	public static void main(String[] args) {
+		Entity ent = new Entity();
 		
 	}
 }

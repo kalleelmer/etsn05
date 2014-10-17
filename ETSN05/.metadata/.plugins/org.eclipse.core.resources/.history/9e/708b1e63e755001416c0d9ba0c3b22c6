@@ -7,9 +7,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class Entity {
+	private Connection CONN = null;
 	
 	public Entity() {
-		Database.getInstance();
+		Database.getInstance(CONN);
 	}
 	
 	/**
@@ -19,10 +20,8 @@ public class Entity {
 	 */
 	protected ResultSet selectQuery(String query) {
 		try {
-			Database.getInstance();
-			Statement stmt = Database.CONN.createStatement();
+			Statement stmt = CONN.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
-			stmt.close();
 			return rs;
 		} catch (SQLException ex) {
 		} catch (Exception e) {
@@ -35,11 +34,13 @@ public class Entity {
 	 * @param query
 	 */
 	protected void query(String query) {
+		if (CONN == null) {
+			System.out.print("Skit också   ");
+		}
+		String test = "INSERT INTO users (username,password) VALUES(" + "Göran" + "," + "Haxx" + ")";
 		try {
-			Database.getInstance();
-			Statement stmt = Database.CONN.createStatement();
-			stmt.executeUpdate(query);
-			stmt.close();
+			Statement stmt = CONN.createStatement();
+			stmt.executeQuery(test);
 		} catch (SQLException ex) {
 		} catch (Exception e) {
 		}
@@ -56,28 +57,26 @@ public class Entity {
 	 */
 	private static class Database {
 		private static Database INSTANCE = null;
-		private static Connection CONN;
 		
-		private Database() {
-			try{
-	    		DriverManager.registerDriver(new com.mysql.jdbc.Driver ());
-				CONN = DriverManager.getConnection("jdbc:mysql://localhost/base?" +
-	            "user=root&password=etsn05");
-				if (CONN == null) {
-					System.out.print("Skit också");
-				}
+		private Database(Connection conn) {
+			try {
+				DriverManager.registerDriver(new com.mysql.jdbc.Driver());
+				conn = DriverManager
+						.getConnection("jdbc:mysql://localhost/base?"
+								+ "user=root&password=etsn05");
+
 			} catch (SQLException ex) {
-			    System.out.println("SQLException: " + ex.getMessage());
-			    System.out.println("SQLState: " + ex.getSQLState());
-			    System.out.println("VendorError: " + ex.getErrorCode());
+				System.out.println("SQLException: " + ex.getMessage());
+				System.out.println("SQLState: " + ex.getSQLState());
+				System.out.println("VendorError: " + ex.getErrorCode());
 			} catch (Exception e) {
 				System.out.println("SQL error: " + e.getMessage());
 			}
-	    }
+		}
 
-		public static synchronized Database getInstance() {
+		public static synchronized Database getInstance(Connection conn) {
 			if (INSTANCE == null) {
-				INSTANCE = new Database();
+				INSTANCE = new Database(conn);
 			}
 			return INSTANCE;
 		}

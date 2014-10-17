@@ -1,11 +1,9 @@
 package database;
 
-import java.sql.ResultSet;
-
 /**
  * User class...
  */
-public class User extends Entity {
+public class User {
 	String USERNAME;
 	String PASSWORD;
 	String FIRST_NAME;
@@ -31,8 +29,5 @@ public class User extends Entity {
 		return USERNAME == "admin";
 	}
 	
-	public void insert() {
-		String query = "INSERT INTO users (name,password) VALUES(" + USERNAME + "," + PASSWORD + ")";
-		query(query);
-	}
+	
 }

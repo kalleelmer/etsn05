@@ -22,7 +22,6 @@ public class Entity {
 			Database.getInstance();
 			Statement stmt = Database.CONN.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
-			stmt.close();
 			return rs;
 		} catch (SQLException ex) {
 		} catch (Exception e) {
@@ -81,6 +80,11 @@ public class Entity {
 			}
 			return INSTANCE;
 		}
+		
+	}
+	
+	public static void main(String[] args) {
+		Entity ent = new Entity();
 		
 	}
 }

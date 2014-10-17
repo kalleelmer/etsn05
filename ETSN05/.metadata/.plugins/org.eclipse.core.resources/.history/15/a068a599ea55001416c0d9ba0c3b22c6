@@ -32,7 +32,13 @@ public class User extends Entity {
 	}
 	
 	public void insert() {
-		String query = "INSERT INTO users (name,password) VALUES(" + USERNAME + "," + PASSWORD + ")";
+		String query = "INSERT INTO users (username,password) VALUES(" + USERNAME + "," + PASSWORD + ")";
 		query(query);
+	}
+	
+	public static void main(String[] args) {
+		User user = new User("Adamhaxx", "lolwut", "Adam", "Torstensson", true);
+		user.insert();
+		System.out.print("Lade till i databasen");
 	}
 }
