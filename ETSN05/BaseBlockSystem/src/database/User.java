@@ -1,6 +1,9 @@
 package database;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * User class...
@@ -32,11 +35,49 @@ public class User extends Entity {
 	}
 	
 	public void insert() {
-		String query = "INSERT INTO users (name,password) VALUES(" + USERNAME + "," + PASSWORD + ")";
+		String query = "INSERT INTO users (name, password) VALUES('" + USERNAME + "', '" + 
+                PASSWORD + "')";
 		query(query);
 	}
 	
 	public static User getByUsername(String username) {
-		return null;
+		String query = "SELECT * FROM users WHERE name='" + username + "'";
+		ResultSet rs = selectQuery(query);
+		if (rs == null)
+			return null;
+		User user = null;
+		try {
+			rs.next();
+			user = new User(rs.getString("name"), rs.getString("password"), "prel", "prel", true);
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+		return user;
+	}
+
+	public static List<User> getAllUsers() {
+		String query = "SELECT * FROM users";
+		ResultSet rs = selectQuery(query);
+		List<User> allUsers = null;
+		try {
+			allUsers = new ArrayList<User>();
+			while (rs.next()) {
+				User user = new User(rs.getString("name"), rs.getString("password"), "prel", "prel", true);
+				allUsers.add(user);
+			}
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+		return allUsers;
+	}
+	
+	public void update() {
+		String query = "UPDATE users SET name ='" + USERNAME + "', password='" + PASSWORD +"' WHERE name ='" + USERNAME + "'";
+		query(query);
+	}
+	
+	public void delete() {
+		String query = "DELETE FROM users WHERE name='" + USERNAME + "'";
+		query(query);
 	}
 }

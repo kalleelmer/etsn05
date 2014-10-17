@@ -17,12 +17,12 @@ public class Entity {
 	 * @param query The query to be executed
 	 * @return 
 	 */
-	protected ResultSet selectQuery(String query) {
+	protected static ResultSet selectQuery(String query) {
 		try {
 			Database.getInstance();
+			//Denna statement stängs aldrig, ny öppnas varje gång, se över detta?
 			Statement stmt = Database.CONN.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
-			stmt.close();
 			return rs;
 		} catch (SQLException ex) {
 		} catch (Exception e) {
@@ -34,12 +34,11 @@ public class Entity {
 	 * Executes SQL-queries
 	 * @param query
 	 */
-	protected void query(String query) {
+	protected static void query(String query) {
 		try {
 			Database.getInstance();
 			Statement stmt = Database.CONN.createStatement();
 			stmt.executeUpdate(query);
-			stmt.close();
 		} catch (SQLException ex) {
 		} catch (Exception e) {
 		}
@@ -82,6 +81,24 @@ public class Entity {
 			return INSTANCE;
 		}
 		
+	}
+	public static void main(String[] args) {
+		System.out.print("Hej");
+		try {
+			Database.getInstance();
+			Statement stmt = Database.CONN.createStatement();
+			//User user = new User("Hej","Hej","ej","Hej",true);
+			//stmt.executeUpdate("INSERT INTO users (name,password) VALUES('" + user.USERNAME + "','" + user.PASSWORD + "')");
+			ResultSet rs = stmt.executeQuery("SELECT * FROM users WHERE name='Hej'");
+			rs.next();
+			System.out.print(rs.getString("name"));
+			stmt.close();
+			
+		} catch (SQLException ex) {
+			System.out.print("ex");
+			ex.printStackTrace();
+		} catch (Exception e) {
+		}
 	}
 }
 
