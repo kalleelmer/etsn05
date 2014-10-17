@@ -64,7 +64,9 @@ public class LogIn extends servletBase {
 		boolean userChecked = false;
 		
 		try{
-			Statement stmt = conn.createStatement();		    
+			Statement stmt = conn.createStatement();
+			//if (User user = User.getByUsername("name") != null) {
+				//return false;
 		    ResultSet rs = stmt.executeQuery("select * from users"); 
 		    while (rs.next( ) && !userChecked) {
 		    	String nameSaved = rs.getString("name"); 
