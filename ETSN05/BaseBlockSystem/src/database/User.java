@@ -35,4 +35,8 @@ public class User extends Entity {
 		String query = "INSERT INTO users (name,password) VALUES(" + USERNAME + "," + PASSWORD + ")";
 		query(query);
 	}
+	
+	public static User getByUsername(String username) {
+		return null;
+	}
 }
