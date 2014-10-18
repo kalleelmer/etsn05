@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class Project extends Entity {
 	private final int ID;
-	private final String NAME;
+	public final String NAME;
 	private final boolean CLOSED;
 	
 	/**
@@ -38,7 +38,7 @@ public class Project extends Entity {
 		CLOSED = closed;
 	}
 	
-	public static List<Project> getByUser(User user) {
+	public static List<Project> getByUser(String user) {
 		return null;
 	}
 	

@@ -15,7 +15,7 @@ public class MemberList extends servletBase {
 protected String memberListRequestform() {
 	return "";
 }
-void goGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+protected void goGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 HttpSession session = request.getSession(true);
 PrintWriter out = response.getWriter();
 	if(!loggedIn(request)) {
