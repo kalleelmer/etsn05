@@ -11,9 +11,9 @@ import java.util.List;
  *
  */
 public class Project extends Entity {
-	int ID;
-	String NAME;
-	boolean CLOSED;
+	private final int ID;
+	private final String NAME;
+	private final boolean CLOSED;
 	
 	/**
 	 * Constructs a new project, and automatically marks it as an open project

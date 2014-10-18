@@ -42,7 +42,7 @@ public class Entity {
 			Statement stmt = Database.CONN.createStatement();
 			stmt.executeUpdate(query);
 		} catch (SQLException ex) {
-//			ex.printStackTrace();
+			ex.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

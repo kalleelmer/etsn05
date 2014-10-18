@@ -69,7 +69,7 @@ public class LogIn extends servletBase {
 				//return false;
 		    ResultSet rs = stmt.executeQuery("select * from users"); 
 		    while (rs.next( ) && !userChecked) {
-		    	String nameSaved = rs.getString("name"); 
+		    	String nameSaved = rs.getString("username"); 
 		    	String passwordSaved = rs.getString("password");
 		    	if (name.equals(nameSaved)) {
 		    		userChecked = true;
