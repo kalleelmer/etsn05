@@ -15,6 +15,11 @@ public class Member extends Entity {
 		ROLE = role;
 	}
 	
+	public enum Role {
+		MANAGER, ARCHITECT, DEVELOPER, TESTER
+	}
+
+	
 	public static List<Member> getMembers(User user, Project project) {
 		
 		return null;
@@ -43,14 +48,5 @@ public class Member extends Entity {
 	public void delete() {
 		String deleteQuery = "DELETE FROM members WHERE username='" + USERNAME + "' AND PROJECT='" + PROJECT + "'";
 		query(deleteQuery);
-	}
-	
-	public static void main(String[] args) {
-		Project project = new Project(2,"Test2");
-		project.insert();
-		Member m1 = new Member("Anna",1,Role.DEVELOPER);
-		m1.set();
-//		User user = new User("Anna","Password","Anna","Hej",true);
-//		user.insert();
 	}
 }
