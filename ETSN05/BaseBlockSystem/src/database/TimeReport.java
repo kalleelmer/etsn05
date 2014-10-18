@@ -8,15 +8,22 @@ import java.util.Date;
 
 import database.Member.Role;
 
+/**
+ * This is the time report class and has the amount of minutes on a specific activity.
+ * To create a full time report, sum all activities over a given time period.
+ * @author etsn05
+ *
+ */
 public class TimeReport extends Entity {
-	private final int ID;
-	private final String USERNAME;
-	private final int PROJECT_ID;
-	private final Member.Role ROLE;
-	private final int ACTIVITY_TYPE;
-	private final int DURATION;
-	private final String SIGNER;
+	public final int ID;
+	public final String USERNAME;
+	public final int PROJECT_ID;
+	public final Member.Role ROLE;
+	public final int ACTIVITY_TYPE;
+	public final int DURATION;
+	public final String SIGNER;
 	
+//	Här ska Date skickas med....
 	public TimeReport(int id, String userName, int projectID, Member.Role role,
 			int activityType, int duration, String signer) {
 		ID = id;
@@ -40,7 +47,10 @@ public class TimeReport extends Entity {
 //			e.printStackTrace();
 //		}
 //	}
-
+	
+	/**
+	 * Inserts a time report to the database
+	 */
 	public void insert() {
 		Calendar cal = Calendar.getInstance();
 		cal.getTime();
@@ -66,7 +76,12 @@ public class TimeReport extends Entity {
 		query(addQuery);
 	}
 	
+	/**
+	 * Updates an existing time report in the database
+	 */
 	public void update() {
+		// Denna ska kontrollera huruvida tidrapporten är signerad. Om den är
+		// signerad ska det inte gå att uppdatera den.
 		String selectQuery = "SELECT * FROM timeReports WHERE id=" + ID;
 		ResultSet rs = selectQuery(selectQuery);
 		try {
@@ -82,6 +97,11 @@ public class TimeReport extends Entity {
 		}
 	}
 	
+	/**
+	 * Deletes a time report from the database. 
+	 * This method may only be called by the user who created this time report
+	 * or the administrator of the system
+	 */
 	public void delete() {
 		String deleteQuery = "DELETE FROM timeReports WHERE id=" + ID;
 		query(deleteQuery);
