@@ -66,7 +66,7 @@ public class Project extends Entity {
 	 * Inserts the project to the database
 	 */
 	public void insert() {
-		String query = "INSERT INTO projects (id,name,closed) VALUES(" + ID + ",'" + NAME + "'," + CLOSED + ")";
+		String query = "INSERT INTO projects(id,name,closed) VALUES(" + ID + ",'" + NAME + "'," + CLOSED + ")";
 		query(query);
 	}
 	

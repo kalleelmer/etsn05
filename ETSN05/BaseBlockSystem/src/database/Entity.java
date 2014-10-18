@@ -25,7 +25,9 @@ public class Entity {
 			ResultSet rs = stmt.executeQuery(query);
 			return rs;
 		} catch (SQLException ex) {
+			ex.printStackTrace();
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return null;
 	}
@@ -40,7 +42,9 @@ public class Entity {
 			Statement stmt = Database.CONN.createStatement();
 			stmt.executeUpdate(query);
 		} catch (SQLException ex) {
+//			ex.printStackTrace();
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 	}
@@ -60,8 +64,8 @@ public class Entity {
 		private Database() {
 			try{
 	    		DriverManager.registerDriver(new com.mysql.jdbc.Driver ());
-				CONN = DriverManager.getConnection("jdbc:mysql://localhost/base?" +
-	            "user=root&password=etsn05");
+				CONN = DriverManager.getConnection("jdbc:mysql://vm26.cs.lth.se/puss1402?" +
+	            "user=puss1402&password=pwi8ww1k");
 				if (CONN == null) {
 					System.out.print("Skit också");
 				}
