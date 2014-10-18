@@ -11,11 +11,11 @@ import java.util.List;
  * not and can be updated with new information.
  */
 public class User extends Entity {
-	String USERNAME;
-	String PASSWORD;
-	String FIRST_NAME;
-	String LAST_NAME;
-	boolean ACTIVE;
+	private final String USERNAME;
+	private final String PASSWORD;
+	private final String FIRST_NAME;
+	private final String LAST_NAME;
+	private final boolean ACTIVE;
 
 	/**
 	 * Constructs a new user object without adding it to the database
@@ -119,5 +119,10 @@ public class User extends Entity {
 		// bli ett problem?
 		String query = "DELETE FROM users WHERE username='" + USERNAME + "'";
 		query(query);
+	}
+	
+	public static void main(String[] args) {
+		User user = new User("admin", "adminp", "admin","admin",true);
+		user.insert();
 	}
 }
