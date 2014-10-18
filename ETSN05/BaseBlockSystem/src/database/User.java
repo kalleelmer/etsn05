@@ -11,11 +11,11 @@ import java.util.List;
  * not and can be updated with new information.
  */
 public class User extends Entity {
-	String USERNAME;
-	String PASSWORD;
-	String FIRST_NAME;
-	String LAST_NAME;
-	boolean ACTIVE;
+	public String USERNAME;
+	public String PASSWORD;
+	public String FIRST_NAME;
+	public String LAST_NAME;
+	public boolean ACTIVE;
 
 	/**
 	 * Constructs a new user object without adding it to the database

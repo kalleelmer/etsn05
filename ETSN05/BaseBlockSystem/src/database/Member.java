@@ -5,9 +5,9 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class Member extends Entity {
-	private String USERNAME;
-	private int PROJECT;
-	private Role ROLE;
+	public String USERNAME;
+	public int PROJECT;
+	public Role ROLE;
 
 	public Member(String userName, int project, Role role) {
 		USERNAME = userName;
