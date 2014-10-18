@@ -6,8 +6,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+/**
+ * This class is the superclass for all other classes in the database package.
+ * It is the only class that communicates directly with the database.
+ * 
+ * @author etsn05
+ *
+ */
 public class Entity {
-	
+
 	public Entity() {
 		Database.getInstance();
 	}

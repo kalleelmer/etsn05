@@ -11,11 +11,12 @@ import java.util.List;
  * not and can be updated with new information.
  */
 public class User extends Entity {
-	private final String USERNAME;
+	public final String USERNAME;
 	private final String PASSWORD;
-	private final String FIRST_NAME;
-	private final String LAST_NAME;
+	public final String FIRST_NAME;
+	public final String LAST_NAME;
 	private final boolean ACTIVE;
+//	Active ska tas bort, change request på g
 
 	/**
 	 * Constructs a new user object without adding it to the database
@@ -106,7 +107,7 @@ public class User extends Entity {
 	 * Updates a user with new information to the database
 	 */
 	public void update() {
-		String query = "UPDATE users SET username ='" + USERNAME + "',password='"
+		String query = "UPDATE users SET password='"
 				+ PASSWORD + "' WHERE username ='" + USERNAME + "'";
 		query(query);
 	}
@@ -117,12 +118,9 @@ public class User extends Entity {
 	public void delete() {
 		// OBS!!!!! Var detta ett av ställena där Foreign_KEY skulle komma att
 		// bli ett problem?
+		//Ta bort även i members-tabellen
+//		Denna kommer ändras....
 		String query = "DELETE FROM users WHERE username='" + USERNAME + "'";
 		query(query);
-	}
-	
-	public static void main(String[] args) {
-		User user = new User("admin", "adminp", "admin","admin",true);
-		user.insert();
 	}
 }

@@ -38,7 +38,11 @@ public class Project extends Entity {
 		CLOSED = closed;
 	}
 	
-	public static List<Project> getByUser(String user) {
+
+//	Denna funktion är inte skriven ännu, skickar change request
+//	att ändra User user till String userName
+	public static List<Project> getByUser(User user) {
+
 		return null;
 	}
 	
@@ -80,3 +84,5 @@ public class Project extends Entity {
 		query(query);
 	}
 }
+
+
