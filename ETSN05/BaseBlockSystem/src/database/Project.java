@@ -2,6 +2,7 @@ package database;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,12 +38,37 @@ public class Project extends Entity {
 		NAME = name;
 		CLOSED = closed;
 	}
-	
 
-//	Denna funktion är inte skriven ännu, skickar change request
-//	att ändra User user till String userName
-	public static List<Project> getByUser(User user) {
-
+	/**
+	 * Given a specific username, this method returns a list of all the projects
+	 * the user with that username currently is enrolled in
+	 * @param username
+	 * @return
+	 */
+	public static List<Project> getByUser(String username) {
+		String selectQuery = "SELECT project FROM members WHERE username='"
+				+ username + "'";
+		ResultSet membersSet = selectQuery(selectQuery);
+		List<Project> foundList = new ArrayList<Project>();
+		try {
+			while (membersSet.next()) {
+				String projectQuery = "SELECT * FROM projects WHERE id="
+						+ membersSet.getInt("project");
+				ResultSet projectSet = selectQuery(projectQuery);
+				projectSet.next();
+				Project project = new Project(projectSet.getInt("id"),
+						projectSet.getString("name"),
+						projectSet.getBoolean("closed"));
+				foundList.add(project);
+			} 
+			if (foundList.size() == 0) {
+				return null;
+			} else {
+				return foundList;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 	

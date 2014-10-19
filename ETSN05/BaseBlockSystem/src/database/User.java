@@ -15,19 +15,16 @@ public class User extends Entity {
 	private final String PASSWORD;
 	public final String FIRST_NAME;
 	public final String LAST_NAME;
-	private final boolean ACTIVE;
-//	Active ska tas bort, change request på g
 
 	/**
 	 * Constructs a new user object without adding it to the database
 	 */
 	public User(String username, String password, String firstName,
-			String lastName, boolean active) {
+			String lastName) {
 		USERNAME = username;
 		PASSWORD = password;
 		FIRST_NAME = firstName;
 		LAST_NAME = lastName;
-		ACTIVE = active;
 	}
 
 	/**
@@ -52,8 +49,6 @@ public class User extends Entity {
 				+ "','"
 				+ LAST_NAME + "')";
 		query(query);
-		// Denna fungerar inte för tilfället eftersom tabellen users är
-		// felskriven i designen (saknas active)
 	}
 
 	/**
@@ -70,9 +65,8 @@ public class User extends Entity {
 		User user = null;
 		try {
 			rs.next();
-			// Denna fungerar inte heller, skickar enbart in true för tillfället
 			user = new User(rs.getString("username"), rs.getString("password"),
-					rs.getString("firstname"), "lastname", true);
+					rs.getString("firstname"), "lastname");
 		} catch (SQLException ex) {
 			ex.printStackTrace();
 		}
@@ -91,10 +85,9 @@ public class User extends Entity {
 		try {
 			allUsers = new ArrayList<User>();
 			while (rs.next()) {
-//				Samma fel här, skickas enbart in true
 				User user = new User(rs.getString("username"),
 						rs.getString("password"), rs.getString("firstname"),
-						rs.getString("lastname"), true);
+						rs.getString("lastname"));
 				allUsers.add(user);
 			}
 		} catch (SQLException ex) {

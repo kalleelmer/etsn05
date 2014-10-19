@@ -31,8 +31,8 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
 		response.sendRedirect("LogIn");
 	} else {
 		String username = (String) session.getAttribute("username");
-		List<Project> list = Project.getByUser(username);
-		out.print(projectListRequestForm(list));
+//		List<Project> list = Project.getByUser(username);
+//		out.print(projectListRequestForm(list));
 		out.println("<p><a href =" + formElement("LogIn") + "> Log out </p>");
 	}
 }
