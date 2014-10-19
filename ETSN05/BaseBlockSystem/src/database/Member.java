@@ -2,6 +2,7 @@ package database;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,57 +31,55 @@ public class Member extends Entity {
 	 *
 	 */
 	public enum Role {
-		MANAGER {
-			public String toString() {
-				return "Manager";
-			}
-		}, ARCHITECT {
-			public String toString() {
-				return "Architect";
-			}
-		}, DEVELOPER {
-			public String toString() {
-				return "Developer";
-			}
-		}, TESTER {
-			public String toString() {
-				return "Tester";
-			}
+		undefined, manager, architect, developer, tester
+	}
+
+	/**
+	 * Given a specific project id, this method returns a list of all members
+	 * currently enrolled in that project
+	 * @param id
+	 * @return
+	 */
+	public static List<Member> getMembers(int id) throws SQLException, Exception {
+		String selectQuery = "SELECT * FROM members WHERE project=" + id;
+		ResultSet memberSet = selectQuery(selectQuery);
+		List<Member> foundList = new ArrayList<Member>();
+		while (memberSet.next()) {
+			Member member = new Member(memberSet.getString("username"),
+					memberSet.getInt("project"), Role.valueOf(memberSet
+							.getString("role")));
+			foundList.add(member);
+		}
+		if (foundList.size() == 0) {
+			return null;
+		} else {
+			return foundList;
 		}
 	}
 
-//	Denna metod ska skickas change request på
-	public static List<Member> getMembers(User user, Project project) {
-		return null;
-	}
-	
 	/**
 	 * Inserts a member to the database. If the member already exists, it updates with new data
 	 */
-	public void set() {
+	public void set() throws SQLException, Exception {
 //		Finns redan member i databasen
 		String selectQuery = "SELECT * FROM members WHERE username='" + USERNAME + "' AND project='" + PROJECT +"'";
-		ResultSet rs = selectQuery(selectQuery);
-		try {
-			if (!rs.next()) {
-				String addQuery = "INSERT INTO members(username,project,role) VALUES('"
-						+ USERNAME + "'," + PROJECT + ",'" + ROLE + "')";
-				query(addQuery);
-			} else {
-				// Ska denna eventuellt berätta att rollen inte förändrats om
-				// man försöker byta till samma roll?
-				String updateQuery = "UPDATE members SET role='" + ROLE + "'";
-				query(updateQuery);
-			}
-		} catch (SQLException ex) {
-			ex.printStackTrace();
+		ResultSet memberSet = selectQuery(selectQuery);
+		if (!memberSet.next()) {
+			String addQuery = "INSERT INTO members(username,project,role) VALUES('"
+					+ USERNAME + "'," + PROJECT + ",'" + ROLE + "')";
+			query(addQuery);
+		} else {
+			// Ska denna eventuellt berätta att rollen inte förändrats om
+			// man försöker byta till samma roll?
+			String updateQuery = "UPDATE members SET role='" + ROLE + "'";
+			query(updateQuery);
 		}
 	}
 	
 	/**
 	 * Removes a member from the member list, i.e. removes a member from a project
 	 */
-	public void delete() {
+	public void delete() throws SQLException, Exception {
 		String deleteQuery = "DELETE FROM members WHERE username='" + USERNAME + "' AND PROJECT='" + PROJECT + "'";
 		query(deleteQuery);
 	}
