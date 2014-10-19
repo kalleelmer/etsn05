@@ -45,31 +45,26 @@ public class Project extends Entity {
 	 * @param username
 	 * @return
 	 */
-	public static List<Project> getByUser(String username) {
+	public static List<Project> getByUser(String username) throws SQLException, Exception {
 		String selectQuery = "SELECT project FROM members WHERE username='"
 				+ username + "'";
-		ResultSet membersSet = selectQuery(selectQuery);
+		ResultSet memberSet = selectQuery(selectQuery);
 		List<Project> foundList = new ArrayList<Project>();
-		try {
-			while (membersSet.next()) {
-				String projectQuery = "SELECT * FROM projects WHERE id="
-						+ membersSet.getInt("project");
-				ResultSet projectSet = selectQuery(projectQuery);
-				projectSet.next();
-				Project project = new Project(projectSet.getInt("id"),
-						projectSet.getString("name"),
-						projectSet.getBoolean("closed"));
-				foundList.add(project);
-			} 
-			if (foundList.size() == 0) {
-				return null;
-			} else {
-				return foundList;
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
+		while (memberSet.next()) {
+			String projectQuery = "SELECT * FROM projects WHERE id="
+					+ memberSet.getInt("project");
+			ResultSet projectSet = selectQuery(projectQuery);
+			projectSet.next();
+			Project project = new Project(projectSet.getInt("id"),
+					projectSet.getString("name"),
+					projectSet.getBoolean("closed"));
+			foundList.add(project);
 		}
-		return null;
+		if (foundList.size() == 0) {
+			return null;
+		} else {
+			return foundList;
+		}
 	}
 	
 	/**
@@ -77,37 +72,35 @@ public class Project extends Entity {
 	 * @param id
 	 * @return The corresponding project, otherwise null
 	 */
-	public static Project getByID(int id) {
-		String query = "SELECT * FROM projects WHERE id=" + id;
-		ResultSet rs = selectQuery(query);
-		if (rs == null)
+	public static Project getByID(int id) throws SQLException, Exception {
+		String selectQuery = "SELECT * FROM projects WHERE id=" + id;
+		ResultSet projectSet = selectQuery(selectQuery);
+		if (!projectSet.next())
 			return null;
-		Project project = null;
-		try {
-			rs.next();
-			project = new Project(rs.getInt("id"),rs.getString("name"),rs.getBoolean("closed"));
-		} catch(SQLException ex) {
-			ex.printStackTrace();
-		}
+		Project project = new Project(projectSet.getInt("id"),
+				projectSet.getString("name"), projectSet.getBoolean("closed"));
 		return project;
 	}
-	
+
 	/**
 	 * Inserts the project to the database
 	 */
-	public void insert() {
-		String query = "INSERT INTO projects(id,name,closed) VALUES(" + ID + ",'" + NAME + "'," + CLOSED + ")";
-		query(query);
+	public void insert() throws SQLException, Exception {
+		String insertQuery = "INSERT INTO projects(id,name,closed) VALUES(" + ID
+				+ ",'" + NAME + "'," + CLOSED + ")";
+		query(insertQuery);
 	}
-	
+
 	/**
 	 * Updates a current project with new information in the database
 	 */
-	public void update() {
-		//Detta behöver nog göras om. Skulle hända olika grejer beroende på om det fanns ett projekt 
-		//eller inte.... Kolla STLDD
-		String query = "UPDATE projects SET id=" + ID + ",name ='" + NAME + "',closed=" + CLOSED + ") WHERE id=" + ID;
-		query(query);
+	public void update() throws SQLException, Exception {
+		// Detta behöver nog göras om. Skulle hända olika grejer beroende på om
+		// det fanns ett projekt
+		// eller inte.... Kolla STLDD
+		String updateQuery = "UPDATE projects SET id=" + ID + ",name ='" + NAME
+				+ "',closed=" + CLOSED + ") WHERE id=" + ID;
+		query(updateQuery);
 	}
 }
 

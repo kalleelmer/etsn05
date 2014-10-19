@@ -14,46 +14,47 @@ import java.sql.Statement;
  *
  */
 public class Entity {
-
+	protected static final String inputSafety = "[^-abcdefghijklmnopqrstuvwxyzåäöABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ0123456789]";
+	protected static final String usernameSyntax = "(\\W)";
+	protected static final String passwordSyntax = "[^a-z]";
+	
 	public Entity() {
 		Database.getInstance();
 	}
 	
+	protected static boolean checkUsername(String username) {
+		String test = username.replaceAll(usernameSyntax, "");
+		return test.length() == username.length() && test.length() <= 10 && test.length() >= 5;
+	}
+	
+	protected static boolean checkPassword(String password) {
+		String test = password.replaceAll(passwordSyntax, "");
+		return test.length() == password.length() && test.length() == 6;
+	}
+
 	/**
 	 * Executes SQL-queries and returns the corresponding ResultSet
-	 * @param query The query to be executed
-	 * @return 
+	 * 
+	 * @param query
+	 *            The query to be executed
+	 * @return
 	 */
-	protected static ResultSet selectQuery(String query) {
-		try {
-			Database.getInstance();
-			//Denna statement stängs aldrig, ny öppnas varje gång, se över detta?
-			Statement stmt = Database.CONN.createStatement();
-			ResultSet rs = stmt.executeQuery(query);
-			return rs;
-		} catch (SQLException ex) {
-			ex.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
+	protected static ResultSet selectQuery(String query) throws SQLException, Exception{
+		Database.getInstance();
+		// Denna statement stängs aldrig, ny öppnas varje gång, se över detta?
+		Statement stmt = Database.CONN.createStatement();
+		ResultSet rs = stmt.executeQuery(query);
+		return rs;
 	}
 	
 	/**
 	 * Executes SQL-queries
 	 * @param query
 	 */
-	protected static void query(String query) {
-		try {
-			Database.getInstance();
-			Statement stmt = Database.CONN.createStatement();
-			stmt.executeUpdate(query);
-		} catch (SQLException ex) {
-			ex.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
+	protected static void query(String query) throws SQLException, Exception {
+		Database.getInstance();
+		Statement stmt = Database.CONN.createStatement();
+		stmt.executeUpdate(query);
 	}
 	
 	/**

@@ -51,7 +51,7 @@ public class TimeReport extends Entity {
 	/**
 	 * Inserts a time report to the database
 	 */
-	public void insert() {
+	public void insert() throws SQLException, Exception{
 		Calendar cal = Calendar.getInstance();
 		cal.getTime();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -79,30 +79,26 @@ public class TimeReport extends Entity {
 	/**
 	 * Updates an existing time report in the database
 	 */
-	public void update() {
+	public void update() throws SQLException, Exception {
 		// Denna ska kontrollera huruvida tidrapporten är signerad. Om den är
 		// signerad ska det inte gå att uppdatera den.
 		String selectQuery = "SELECT * FROM timeReports WHERE id=" + ID;
 		ResultSet rs = selectQuery(selectQuery);
-		try {
-			if (rs.next()) {
-				// Oklart hur date ska fungera här.... Fattar noll
-				String updateQuery = "UPDATE timeReports SET activityType="
-						+ ACTIVITY_TYPE + ",duration=" + DURATION + ",signer='"
-						+ SIGNER + "'";
-				query(updateQuery);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
+		if (rs.next()) {
+			// Oklart hur date ska fungera här.... Fattar noll
+			String updateQuery = "UPDATE timeReports SET activityType="
+					+ ACTIVITY_TYPE + ",duration=" + DURATION + ",signer='"
+					+ SIGNER + "'";
+			query(updateQuery);
 		}
 	}
-	
+
 	/**
 	 * Deletes a time report from the database. 
 	 * This method may only be called by the user who created this time report
 	 * or the administrator of the system
 	 */
-	public void delete() {
+	public void delete() throws SQLException, Exception {
 		String deleteQuery = "DELETE FROM timeReports WHERE id=" + ID;
 		query(deleteQuery);
 	}

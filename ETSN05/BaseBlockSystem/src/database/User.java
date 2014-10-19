@@ -26,94 +26,117 @@ public class User extends Entity {
 		FIRST_NAME = firstName;
 		LAST_NAME = lastName;
 	}
-
-	/**
-	 * Checks if this user is admin
-	 * 
-	 * @return true if selected user is admin, otherwise false
-	 */
-	public boolean isAdmin() {
-		return USERNAME == "admin";
-	}
-
-	/**
-	 * Inserts the user to the database
-	 */
-	public void insert() {
-		String query = "INSERT INTO users (username, password, firstname, lastname) VALUES('"
-				+ USERNAME
-				+ "', '"
-				+ PASSWORD
-				+ "','"
-				+ FIRST_NAME
-				+ "','"
-				+ LAST_NAME + "')";
-		query(query);
-	}
-
+	
 	/**
 	 * Returns a user object via the database given a certain username
-	 * 
 	 * @param username
 	 * @return The user that was found, otherwise null
 	 */
-	public static User getByUsername(String username) {
-		String query = "SELECT * FROM users WHERE username='" + username + "'";
-		ResultSet rs = selectQuery(query);
-		if (rs == null)
-			return null;
-		User user = null;
-		try {
-			rs.next();
-			user = new User(rs.getString("username"), rs.getString("password"),
-					rs.getString("firstname"), "lastname");
-		} catch (SQLException ex) {
-			ex.printStackTrace();
+	public static User getByUsername(String userName) throws SQLException, SecurityException,
+			Exception {
+		userName.replaceAll(inputSafety, "");
+		if (userName == "admin") {
+			throw new SecurityException();
 		}
-		return user;
+		String selectQuery = "SELECT * FROM users WHERE username='" + userName
+				+ "'";
+		ResultSet userSet = selectQuery(selectQuery);
+		if (!userSet.next()) {
+			return null;
+		} else {
+			User user = new User(userSet.getString("username"),
+					userSet.getString("password"),
+					userSet.getString("firstname"),
+					userSet.getString("lastname"));
+			return user;
+		}
 	}
-
+//	Från och med här behövs säkerhet kollas igenom (Man ska inte kunna plocka ut admin etc etc)
 	/**
 	 * Retrieves a list with all users that are currently in the system
 	 * 
-	 * @return A list of the users
+	 * @return A list of the users, or null if no users were found
 	 */
-	public static List<User> getAllUsers() {
-		String query = "SELECT * FROM users";
-		ResultSet rs = selectQuery(query);
-		List<User> allUsers = null;
+	public static List<User> getAllUsers() throws SQLException, Exception {
+		String selectQuery = "SELECT * FROM users";
+		ResultSet userSet = selectQuery(selectQuery);
+		List<User> allUsers = new ArrayList<User>();
 		try {
-			allUsers = new ArrayList<User>();
-			while (rs.next()) {
-				User user = new User(rs.getString("username"),
-						rs.getString("password"), rs.getString("firstname"),
-						rs.getString("lastname"));
+			while (userSet.next()) {
+				User user = new User(userSet.getString("username"),
+						userSet.getString("password"), userSet.getString("firstname"),
+						userSet.getString("lastname"));
 				allUsers.add(user);
+			} if (allUsers.size() == 0) {
+				return null;
+			} else {
+				return allUsers;
 			}
 		} catch (SQLException ex) {
 			ex.printStackTrace();
 		}
-		return allUsers;
+		return null;
+	}
+
+	/**
+	 * Checks if this user is admin
+	 * @return true if selected user is admin, otherwise false
+	 */
+	public boolean isAdmin() throws SQLException, Exception{
+		String selectQuery = "SELECT username,password FROM users WHERE username='admin'";
+		ResultSet userSet = selectQuery(selectQuery);
+		if (!userSet.next()) {
+			return false;
+		} else {
+			return USERNAME == userSet.getString("username") && PASSWORD == userSet.getString("password");
+		}
+	}
+
+	/**
+	 * 
+	 * @throws IllegalArgumentException
+	 */
+	public void insert() throws IllegalArgumentException, SQLException, Exception {
+		if (checkUsername(USERNAME) && checkPassword(PASSWORD)) {
+			String insertQuery = "INSERT INTO users (username, password, firstname, lastname) VALUES('"
+					+ USERNAME
+					+ "', '"
+					+ PASSWORD
+					+ "','"
+					+ FIRST_NAME.replaceAll(inputSafety, "")
+					+ "','"
+					+ LAST_NAME.replaceAll(inputSafety, "") + "')";
+			query(insertQuery);
+		} else {
+			throw new IllegalArgumentException();
+		}
 	}
 
 	/**
 	 * Updates a user with new information to the database
 	 */
-	public void update() {
-		String query = "UPDATE users SET password='"
-				+ PASSWORD + "' WHERE username ='" + USERNAME + "'";
-		query(query);
+	public void update() throws IllegalArgumentException, SQLException, Exception {
+		if (checkUsername(USERNAME) && checkPassword(PASSWORD)) {
+			String updateQuery = "UPDATE users SET password='" + PASSWORD
+					+ "' WHERE username ='" + USERNAME + "'";
+			query(updateQuery);
+		} else {
+			throw new IllegalArgumentException();
+		}
 	}
 
 	/**
 	 * Deletes a user from the database
 	 */
-	public void delete() {
+	public void delete() throws SQLException, Exception{
 		// OBS!!!!! Var detta ett av ställena där Foreign_KEY skulle komma att
 		// bli ett problem?
 		//Ta bort även i members-tabellen
 //		Denna kommer ändras....
-		String query = "DELETE FROM users WHERE username='" + USERNAME + "'";
-		query(query);
+		String deleteUsersQuery = "DELETE * FROM users WHERE username='" + USERNAME + "' AND password='" + PASSWORD + "'";
+		query(deleteUsersQuery);
+		String deleteMembersQuery = "DELETE * FROM members WHERE username='" + USERNAME + "'";
+		query(deleteMembersQuery);
+		
 	}
 }
