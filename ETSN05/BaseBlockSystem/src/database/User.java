@@ -32,7 +32,7 @@ public class User extends Entity {
 	 * @param username
 	 * @return The user that was found, otherwise null
 	 */
-	public static User getByUsername(String userName) throws SQLException, SecurityException,
+	public static User getByUsername(String userName) throws SecurityException, SQLException, 
 			Exception {
 		userName.replaceAll(inputSafety, "");
 		if (userName == "admin") {
@@ -51,7 +51,7 @@ public class User extends Entity {
 			return user;
 		}
 	}
-//	Från och med här behövs säkerhet kollas igenom (Man ska inte kunna plocka ut admin etc etc)
+
 	/**
 	 * Retrieves a list with all users that are currently in the system
 	 * 
@@ -61,21 +61,20 @@ public class User extends Entity {
 		String selectQuery = "SELECT * FROM users";
 		ResultSet userSet = selectQuery(selectQuery);
 		List<User> allUsers = new ArrayList<User>();
-		try {
-			while (userSet.next()) {
-				User user = new User(userSet.getString("username"),
-						userSet.getString("password"), userSet.getString("firstname"),
-						userSet.getString("lastname"));
+		while (userSet.next()) {
+			User user = new User(userSet.getString("username"),
+					userSet.getString("password"),
+					userSet.getString("firstname"),
+					userSet.getString("lastname"));
+			if (user.USERNAME != "admin") {
 				allUsers.add(user);
-			} if (allUsers.size() == 0) {
-				return null;
-			} else {
-				return allUsers;
 			}
-		} catch (SQLException ex) {
-			ex.printStackTrace();
 		}
-		return null;
+		if (allUsers.size() == 0) {
+			return null;
+		} else {
+			return allUsers;
+		}
 	}
 
 	/**
@@ -115,10 +114,13 @@ public class User extends Entity {
 	/**
 	 * Updates a user with new information to the database
 	 */
-	public void update() throws IllegalArgumentException, SQLException, Exception {
+	public void update() throws SecurityException, IllegalArgumentException, SQLException, Exception {
 		if (checkUsername(USERNAME) && checkPassword(PASSWORD)) {
+			if (USERNAME == "admin") {
+				throw new SecurityException();
+			}
 			String updateQuery = "UPDATE users SET password='" + PASSWORD
-					+ "' WHERE username ='" + USERNAME + "'";
+					+ "' WHERE username ='" + USERNAME +"'";
 			query(updateQuery);
 		} else {
 			throw new IllegalArgumentException();
@@ -128,15 +130,18 @@ public class User extends Entity {
 	/**
 	 * Deletes a user from the database
 	 */
-	public void delete() throws SQLException, Exception{
-		// OBS!!!!! Var detta ett av ställena där Foreign_KEY skulle komma att
-		// bli ett problem?
-		//Ta bort även i members-tabellen
-//		Denna kommer ändras....
+	public void delete() throws SecurityException, IllegalArgumentException, SQLException, Exception {
+		if (USERNAME == "admin") {
+			throw new SecurityException();
+		}
+		String selectQuery = "SELECT username,password FROM users WHERE user='" + USERNAME + "' AND PASSWORD='" + PASSWORD + "'";
+		ResultSet userSet = selectQuery(selectQuery);
+		if (!userSet.next()) {
+			throw new IllegalArgumentException();
+		}
 		String deleteUsersQuery = "DELETE * FROM users WHERE username='" + USERNAME + "' AND password='" + PASSWORD + "'";
 		query(deleteUsersQuery);
 		String deleteMembersQuery = "DELETE * FROM members WHERE username='" + USERNAME + "'";
-		query(deleteMembersQuery);
-		
+		query(deleteMembersQuery);	
 	}
 }
