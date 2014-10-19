@@ -18,9 +18,18 @@ protected String memberListRequestform() {
 protected void goGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 HttpSession session = request.getSession(true);
 PrintWriter out = response.getWriter();
+out.println(getPageIntro());
+Object nameObj = session.getAttribute("username");
+String myName = "";
+if (nameObj != null) {
+	myName = (String)nameObj;
+}
 	if(!loggedIn(request)) {
 		response.sendRedirect("LogIn");
-	} else {
+	} if (nameObj.Role.toString.equals("Manager")) { //hur anropar jag detta??
+		
+	}	else {
+	
 		out.println(memberListRequestform());
 	}
 }
