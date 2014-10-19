@@ -20,17 +20,17 @@ protected String projectListRequestForm(List<Project> list){
 	String html = "<html><body><p>Project List:</p>";
 	html += "<ol>";
 	for (Project s:list) {
-		html +="<li>" + s.NAME + "</li>";
+		html +="<li>" + s.NAME + "</li>"; //bör detta vara länkar till de olika projekten?
 	}
 	html += "</ol>";
 	return html;
 }
 protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	HttpSession session = request.getSession(true);
 	PrintWriter out = response.getWriter();
 	out.println(getPageIntro());
-	HttpSession session = request.getSession(true);
 	String myName = "";
-	Object nameObj = session.getAttribute("name"); //username??
+	Object nameObj = session.getAttribute("username");
 	if (nameObj != null) {
 		myName = (String)nameObj;
 	}
@@ -39,8 +39,8 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
 	} 
 	 else {
 	
-		String username = (String) session.getAttribute("username");
-		List<Project> list = Project.getByUser(username);
+		//String username = (String) session.getAttribute("username");
+		List<Project> list = Project.getByUser(myName);
 		out.print(projectListRequestForm(list));
 		if (myName.equals("admin")) {
 			out.println("<p><a href =" + formElement("CreateProject") + "> Create new project </p>");
