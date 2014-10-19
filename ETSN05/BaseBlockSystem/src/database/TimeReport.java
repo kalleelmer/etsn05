@@ -2,6 +2,7 @@ package database;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.sql.Date;
 
@@ -53,11 +54,79 @@ public class TimeReport extends Entity {
 	}
 	
 	public static List<TimeReport> get(User user, Project project,
-			boolean signed, String start, String end, Role role,
-			int activityType) throws IllegalArgumentException {
-		Date startDate = Date.valueOf(start);
-		Date endDate = Date.valueOf(end);
-		
+			Boolean signed, String start, String end, Role role,
+			Integer activityType) throws IllegalArgumentException, SQLException, Exception {
+		String input1;
+		if (user == null) {
+			input1 = " LIKE '%'";
+		} else {
+			input1 = "='" + user.USERNAME + "'"; 
+		}
+		String input2;
+		if (project == null) {
+			input2 = " LIKE '%'";
+		} else {
+			input2 = "=" + String.valueOf(project.ID);
+		}
+		String input3;
+		if (signed == null) {
+			input3 = " LIKE '%'";
+		} else {
+			if (signed) {
+				input3 = " NOT LIKE 'null'";
+			} else {
+				input3 = " LIKE 'null'";
+			}
+		}
+		String input4;
+		if (start == null) {
+			input4 = "'0000-00-00'";
+		} else {
+			input4 = "'" + start.toString() + "'";
+		}
+		String input5;
+		if (end == null) {
+			input5 = "'9999-12-31'";
+		} else {
+			input5 = "'" + end.toString() + "'";
+		}
+		String input6;
+		if (role == null) {
+			input6 = " LIKE '%'";
+		} else {
+			input6 = "='" + role.toString() + "'";
+		}
+		String input7;
+		if (activityType == null) {
+			input7 = " LIKE '%'";
+		} else {
+			input7 = "=" + String.valueOf(activityType);
+		}
+		String selectQuery = "SELECT * FROM timeReports WHERE user" + input1
+				+ " AND project" + input2 + " AND role" + input6
+				+ " AND activityType" + input7 + " AND date BETWEEN " + input4
+				+ " AND " + input5 + " AND signer" + input3;
+		ResultSet timeReportSet = selectQuery(selectQuery);
+		List<TimeReport> foundList = new ArrayList<TimeReport>();
+		while (timeReportSet.next()) {
+			Date date = Date.valueOf(timeReportSet.getString("date"));
+			TimeReport timeReport = new TimeReport(timeReportSet.getInt("id"),
+					timeReportSet.getString("user"),
+					timeReportSet.getInt("project"), Role.valueOf(timeReportSet
+							.getString("role")),
+					timeReportSet.getInt("activityType"), date,
+					timeReportSet.getInt("duration"),
+					timeReportSet.getString("signer"));
+			foundList.add(timeReport);
+		}
+		if (foundList.size() == 0) {
+			return null;
+		} else {
+			return foundList;
+		}
+	}
+	
+	public static List<TimeReport> getSummary(User user, Project project, boolean signed, String start, String end, Role role, int activityType, String summarizeBy) {
 		return null;
 	}
 
@@ -110,20 +179,5 @@ public class TimeReport extends Entity {
 	public void delete() throws SQLException, Exception {
 		String deleteQuery = "DELETE FROM timeReports WHERE id=" + ID;
 		query(deleteQuery);
-	}
-	
-	public static void main(String[] args) {
-		Date date = Date.valueOf("2014-08-12");
-		TimeReport r1 = new TimeReport(2,"Goran",2,Role.developer,13,date,200,"ville");
-		System.out.print(r1.DATE.toString());
-		try {
-			r1.insert();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 }

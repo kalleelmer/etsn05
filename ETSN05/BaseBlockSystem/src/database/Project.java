@@ -12,7 +12,7 @@ import java.util.List;
  *
  */
 public class Project extends Entity {
-	private final int ID;
+	protected final int ID;
 	public final String NAME;
 	private final boolean CLOSED;
 	

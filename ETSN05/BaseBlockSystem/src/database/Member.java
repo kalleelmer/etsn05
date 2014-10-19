@@ -83,4 +83,7 @@ public class Member extends Entity {
 		String deleteQuery = "DELETE FROM members WHERE username='" + USERNAME + "' AND PROJECT='" + PROJECT + "'";
 		query(deleteQuery);
 	}
+	public static void main(String[] args) {
+		
+	}
 }
