@@ -16,49 +16,60 @@ import database.Project;
 @WebServlet("/ProjectList")
 public class ProjectList extends servletBase {
 
+	/**
+	 * Instantiate a project list servlet
+	 */
 	public ProjectList() {
 		// TODO Auto-generated constructor stub
 	}
-protected String projectListRequestForm(List<Project> list){
-	String html = "<html><body><p>Project List:</p>";
-	html += "<ol>";
-	for (Project s:list) {
-		html +="<li>" + s.NAME + "</li>"; //bör detta vara länkar till de olika projekten?
-	}
-	html += "</ol>";
-	return html;
-}
-protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	HttpSession session = request.getSession(true);
-	PrintWriter out = response.getWriter();
-	out.println(getPageIntro());
-	String myName = "";
-	Object nameObj = session.getAttribute("username");
-	if (nameObj != null) {
-		myName = (String)nameObj;
-	}
-	if(!loggedIn(request)) {
-		response.sendRedirect("LogIn");
-	} 
-	 else {
 	
-		//String username = (String) session.getAttribute("username");
-		List<Project> list = new ArrayList<Project>();
-		try {
-			list = Project.getByUser(myName);
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
+	/**
+	 * Generates HTML code for project list
+	 * @param list Array of the projects
+	 * @return String containing HTML syntax
+	 */
+	protected String projectListRequestForm(List<Project> list){
+		String html = "<html><body><p>Project List:</p>";
+		html += "<ol>";
+		for (Project s:list) {
+			html +="<li>" + s.NAME + "</li>"; //bör detta vara länkar till de olika projekten?
 		}
-		out.print(projectListRequestForm(list));
-		if (myName.equals("admin")) {
-			out.println("<p><a href =" + formElement("CreateProject") + "> Create new project </p>");
-			out.println("<p><a href =" + formElement("DeleteProject") + "> Delete project </p>");
-		}
-		out.println("<p><a href =" + formElement("LogIn") + "> Log out </p>");
+		html += "</ol>";
+		return html;
 	}
-}
+	
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession(true);
+		PrintWriter out = response.getWriter();
+		out.println(getPageIntro());
+		String myName = "";
+		Object nameObj = session.getAttribute("username");
+		if (nameObj != null) {
+			myName = (String)nameObj;
+		}
+		if(!loggedIn(request)) {
+			response.sendRedirect("LogIn");
+		} 
+		else {
+
+			//String username = (String) session.getAttribute("username");
+			List<Project> list = null;
+			try {
+				list = Project.getByUser(myName);
+			} catch (SecurityException e) {
+				e.printStackTrace();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			out.print(projectListRequestForm(list));
+			if (myName.equals("admin")) {
+				out.println("<p><a href =" + formElement("CreateProject") + "> Create new project </p>");
+				out.println("<p><a href =" + formElement("DeleteProject") + "> Delete project </p>");
+			}
+			out.println("<p><a href =" + formElement("LogIn") + "> Log out </p>");
+		}
+	}
 }
