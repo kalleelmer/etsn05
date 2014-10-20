@@ -3,6 +3,7 @@ package web;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -15,6 +16,9 @@ import database.Project;
 @WebServlet("/ProjectList")
 public class ProjectList extends servletBase {
 
+	/**
+	 * Instantiate a project list servlet
+	 */
 	public ProjectList() {
 		// TODO Auto-generated constructor stub
 	}
@@ -35,29 +39,29 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
 	Object nameObj = session.getAttribute("name");
 	if (nameObj != null) {
 		myName = (String)nameObj;
-	}
-	if(!loggedIn(request)) {
-		response.sendRedirect("LogIn");
-	} 
-	 else {
-	
-		//String username = (String) session.getAttribute("username");
-		List<Project> list = null;
-		try {
-			list = Project.getByUser(myName);
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
-		out.print(projectListRequestForm(list));
-		if (myName.equals("admin")) {
-			out.println("<p><a href =" + formElement("CreateProject") + "> Create new project </p>");
-			out.println("<p><a href =" + formElement("DeleteProject") + "> Delete project </p>");
+		if(!loggedIn(request)) {
+			response.sendRedirect("LogIn");
+		} 
+		else {
+
+			//String username = (String) session.getAttribute("username");
+			List<Project> list = null;
+			try {
+				list = Project.getByUser(myName);
+			} catch (SecurityException e) {
+				e.printStackTrace();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			out.print(projectListRequestForm(list));
+			if (myName.equals("admin")) {
+				out.println("<p><a href =" + formElement("CreateProject") + "> Create new project </p>");
+				out.println("<p><a href =" + formElement("DeleteProject") + "> Delete project </p>");
+			}
+			out.println("<p><a href =" + formElement("LogIn") + "> Log out </p>");
 		}
-		out.println("<p><a href =" + formElement("LogIn") + "> Log out </p>");
 	}
-}
 }

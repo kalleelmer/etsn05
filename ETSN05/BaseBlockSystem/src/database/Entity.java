@@ -18,10 +18,15 @@ import com.sun.rowset.CachedRowSetImpl;
  *
  */
 public class Entity {
-	protected static final String INPUTSAFETY = "[^-abcdefghijklmnopqrstuvwxyzåäöABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ0123456789]";
+	protected static final String INPUTSAFETY = "[^-abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789]";
 	protected static final String USERNAMESYNTAX = "(\\W)";
 	protected static final String PASSWORDSYNTAX = "[^a-z]";
 	
+	/**
+	 * Verify validity of a username according to constraints
+	 * @param username The username to verify
+	 * @return true if valid, false otherwise
+	 */
 	protected static boolean checkUsername(String username) {
 		String test = username.replaceAll(USERNAMESYNTAX, "");
 		//Kontrollerar att inga otillåtna tecken finns
@@ -29,6 +34,11 @@ public class Entity {
 		//Kollar att användarnamnet ligger inom tillåtna gränser
 	}
 	
+	/**
+	 * Verify validity of a password according to constraints
+	 * @param password The password to verify
+	 * @return true if valid, false otherwise
+	 */
 	protected static boolean checkPassword(String password) {
 		String test = password.replaceAll(PASSWORDSYNTAX, "");
 		//Kollar otillåtna värden
