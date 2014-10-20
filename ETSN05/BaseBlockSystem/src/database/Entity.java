@@ -18,7 +18,7 @@ import com.sun.rowset.CachedRowSetImpl;
  *
  */
 public class Entity {
-	protected static final String INPUTSAFETY = "[^-abcdefghijklmnopqrstuvwxyzåäöABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ0123456789]";
+	protected static final String INPUTSAFETY = "[^-abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789]";
 	protected static final String USERNAMESYNTAX = "(\\W)";
 	protected static final String PASSWORDSYNTAX = "[^a-z]";
 	

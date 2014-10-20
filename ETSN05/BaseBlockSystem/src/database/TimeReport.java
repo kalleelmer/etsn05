@@ -36,6 +36,60 @@ public class TimeReport extends Entity {
 		SIGNER = signer;
 	}
 	
+	private static class ConditionBuilder {
+		
+		protected static String append(String modifier, Object object) throws ClassCastException {
+			switch(modifier) {
+			case "user":
+				User user = (User) object;
+				if (user == null) {
+					return "";
+				} else {
+					return "user='" + user.USERNAME + "'";
+				}
+			case "project":
+				Project project = (Project) object;
+				if (project == null) {
+					return "";
+				} else {
+					return "project=" + String.valueOf(project.ID);
+				}
+			case "signed":
+				Boolean bool = (Boolean) object;
+				if (bool == null) {
+					return "";
+				} else if (bool) {
+					return "signed NOT LIKE 'null'";
+				} else {
+					return "signed LIKE 'null'";
+				}
+			case "start":
+				String start = (String) object;
+				if (start == null) {
+					return "date BETWEEN '0000-00-00' AND ";
+				} else {
+					return "date BETWEEN '" + start + "' AND ";
+				}
+			case "end":
+				String end = (String) object;
+				if (end == null) {
+					return "'9999-12-31'";
+				} else {
+					return "'" + end + "'";
+				}
+			case "role":
+				String role = (String) object.toString();
+				if (role == null) {
+					return "";
+				} else {
+				}
+			}
+			return "";
+		}
+		
+		
+	}
+	
 	public static TimeReport getByID(int id) throws SQLException, Exception {
 		String timeReportQuery = "SELECT * FROM timeReports WHERE id=" + id;
 		ResultSet timeReportSet = selectQuery(timeReportQuery);
@@ -56,6 +110,8 @@ public class TimeReport extends Entity {
 	public static List<TimeReport> get(User user, Project project,
 			Boolean signed, String start, String end, Role role,
 			Integer activityType) throws IllegalArgumentException, SQLException, Exception {
+		StringBuilder query = new StringBuilder();
+		
 		String input1;
 		if (user == null) {
 			input1 = " LIKE '%'";
@@ -125,8 +181,10 @@ public class TimeReport extends Entity {
 			return foundList;
 		}
 	}
-	
-	public static List<TimeReport> getSummary(User user, Project project, boolean signed, String start, String end, Role role, int activityType, String summarizeBy) {
+
+	public static List<TimeReport> getSummary(User user, Project project,
+			boolean signed, String start, String end, Role role,
+			int activityType, String summarizeBy) {
 		return null;
 	}
 

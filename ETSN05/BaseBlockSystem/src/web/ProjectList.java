@@ -3,15 +3,17 @@ package web;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import database.Project;
-
+@WebServlet("/ProjectList")
 public class ProjectList extends servletBase {
 
 	public ProjectList() {
@@ -41,7 +43,7 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
 	 else {
 	
 		//String username = (String) session.getAttribute("username");
-		List<Project> list = null;
+		List<Project> list = new ArrayList<Project>();
 		try {
 			list = Project.getByUser(myName);
 		} catch (SecurityException e) {

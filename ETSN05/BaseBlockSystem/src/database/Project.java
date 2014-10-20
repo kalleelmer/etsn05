@@ -12,7 +12,7 @@ import java.util.List;
  *
  */
 public class Project extends Entity {
-	protected final int ID;
+	public final int ID;
 	public final String NAME;
 	protected boolean CLOSED;
 	
@@ -45,9 +45,18 @@ public class Project extends Entity {
 	 * @param username
 	 * @return
 	 */
-	public static List<Project> getByUser(String username) throws SecurityException, SQLException, Exception {
+	public static List<Project> getByUser(String username) throws SQLException, Exception {
 		if (username == "admin") {
-			throw new SecurityException();
+			String selectQuery = "SELECT * FROM projects;";
+			ResultSet rs = selectQuery(selectQuery);
+			List<Project> list = new ArrayList<Project>();
+			while (rs.next()) {
+				Project project = new Project(rs.getInt("id"),
+						rs.getString("name"),
+						rs.getBoolean("closed"));
+				list.add(project);
+			}
+			return list;
 		}
 		String selectQuery = "SELECT project FROM members WHERE username='"
 				+ username + "'";
@@ -106,6 +115,19 @@ public class Project extends Entity {
 		String updateQuery = "UPDATE projects SET id=" + ID + ",name ='" + NAME.replaceAll(INPUTSAFETY,"")
 				+ "',closed=" + CLOSED + ") WHERE id=" + ID;
 		query(updateQuery);
+	}
+	
+	public static void main(String[] args) {
+		try {
+			List<Project> list = Project.getByUser("admin");
+			System.out.print(list.get(2).NAME);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
 
