@@ -3,7 +3,12 @@ package database;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 import java.sql.Date;
 
 import database.Member.Role;
@@ -38,35 +43,35 @@ public class TimeReport extends Entity {
 	
 	private static class ConditionBuilder {
 		
-		protected static String append(String modifier, Object object) throws ClassCastException {
+		private static String append(String modifier, Object object) throws ClassCastException {
 			switch(modifier) {
 			case "user":
 				User user = (User) object;
 				if (user == null) {
 					return "";
 				} else {
-					return "user='" + user.USERNAME + "'";
+					return "user='" + user.USERNAME + "' AND ";
 				}
 			case "project":
 				Project project = (Project) object;
 				if (project == null) {
 					return "";
 				} else {
-					return "project=" + String.valueOf(project.ID);
+					return "project=" + String.valueOf(project.ID) + " AND ";
 				}
 			case "signed":
 				Boolean bool = (Boolean) object;
 				if (bool == null) {
 					return "";
 				} else if (bool) {
-					return "signed NOT LIKE 'null'";
+					return "signer NOT LIKE 'null' AND ";
 				} else {
-					return "signed LIKE 'null'";
+					return "signer LIKE 'null' AND ";
 				}
 			case "start":
 				String start = (String) object;
 				if (start == null) {
-					return "date BETWEEN '0000-00-00' AND ";
+					return "date BETWEEN '1900-01-01' AND ";
 				} else {
 					return "date BETWEEN '" + start + "' AND ";
 				}
@@ -78,10 +83,18 @@ public class TimeReport extends Entity {
 					return "'" + end + "'";
 				}
 			case "role":
-				String role = (String) object.toString();
+				Member.Role role = (Member.Role) object;
 				if (role == null) {
 					return "";
 				} else {
+					return "role='" + role.toString() + "' AND ";
+				}
+			case "activityType":
+				Integer activityType = (Integer) object;
+				if (activityType == null) {
+					return "";
+				} else {
+					return "activityType=" + activityType.toString() + " AND ";
 				}
 			}
 			return "";
@@ -110,58 +123,15 @@ public class TimeReport extends Entity {
 	public static List<TimeReport> get(User user, Project project,
 			Boolean signed, String start, String end, Role role,
 			Integer activityType) throws IllegalArgumentException, SQLException, Exception {
-		StringBuilder query = new StringBuilder();
-		
-		String input1;
-		if (user == null) {
-			input1 = " LIKE '%'";
-		} else {
-			input1 = "='" + user.USERNAME + "'"; 
-		}
-		String input2;
-		if (project == null) {
-			input2 = " LIKE '%'";
-		} else {
-			input2 = "=" + String.valueOf(project.ID);
-		}
-		String input3;
-		if (signed == null) {
-			input3 = " LIKE '%'";
-		} else {
-			if (signed) {
-				input3 = " NOT LIKE 'null'";
-			} else {
-				input3 = " LIKE 'null'";
-			}
-		}
-		String input4;
-		if (start == null) {
-			input4 = "'0000-00-00'";
-		} else {
-			input4 = "'" + start.toString() + "'";
-		}
-		String input5;
-		if (end == null) {
-			input5 = "'9999-12-31'";
-		} else {
-			input5 = "'" + end.toString() + "'";
-		}
-		String input6;
-		if (role == null) {
-			input6 = " LIKE '%'";
-		} else {
-			input6 = "='" + role.toString() + "'";
-		}
-		String input7;
-		if (activityType == null) {
-			input7 = " LIKE '%'";
-		} else {
-			input7 = "=" + String.valueOf(activityType);
-		}
-		String selectQuery = "SELECT * FROM timeReports WHERE user" + input1
-				+ " AND project" + input2 + " AND role" + input6
-				+ " AND activityType" + input7 + " AND date BETWEEN " + input4
-				+ " AND " + input5 + " AND signer" + input3;
+		StringBuilder condition = new StringBuilder();
+		condition.append(ConditionBuilder.append("user", user));
+		condition.append(ConditionBuilder.append("project",project));
+		condition.append(ConditionBuilder.append("signed",signed));
+		condition.append(ConditionBuilder.append("role", role));
+		condition.append(ConditionBuilder.append("activityType",activityType));
+		condition.append(ConditionBuilder.append("start", start));
+		condition.append(ConditionBuilder.append("end", end));
+		String selectQuery = "SELECT * FROM timeReports WHERE " + condition.toString() + ";";
 		ResultSet timeReportSet = selectQuery(selectQuery);
 		List<TimeReport> foundList = new ArrayList<TimeReport>();
 		while (timeReportSet.next()) {
@@ -182,10 +152,35 @@ public class TimeReport extends Entity {
 		}
 	}
 
-	public static List<TimeReport> getSummary(User user, Project project,
-			boolean signed, String start, String end, Role role,
-			int activityType, String summarizeBy) {
-		return null;
+	public static Map<String,Integer> getSummary(User user, Project project,
+			Boolean signed, String start, String end, Role role,
+			Integer activityType, SumChooser summarizeBy) throws SQLException, Exception {
+		StringBuilder condition = new StringBuilder();
+		condition.append(ConditionBuilder.append("user", user));
+		condition.append(ConditionBuilder.append("project", project));
+		condition.append(ConditionBuilder.append("signed", signed));
+		condition.append(ConditionBuilder.append("role", role));
+		condition.append(ConditionBuilder.append("activityType",activityType));
+		condition.append(ConditionBuilder.append("start", start));
+		condition.append(ConditionBuilder.append("end", end));
+		if (summarizeBy.equals(SumChooser.week)) {
+			String selectWeekQuery = "SELECT date, SUM(duration) from timeReports WHERE " + condition.toString() + " GROUP BY date;";
+			ResultSet weekReportSet = selectQuery(selectWeekQuery);
+			Map<String, Integer> foundWeekMap = new TreeMap<String, Integer>();
+			Calendar calendar = Calendar.getInstance();
+
+		}
+		String selectQuery = "SELECT " + summarizeBy + ", SUM(duration) FROM timeReports WHERE " + condition.toString() + " GROUP BY " + summarizeBy + ";";
+		ResultSet timeReportSet = selectQuery(selectQuery);
+		Map<String, Integer> foundMap = new TreeMap<String, Integer>();
+		while (timeReportSet.next()) {
+			foundMap.put(timeReportSet.getString(1), timeReportSet.getInt(2));
+		}
+		return foundMap;
+	}
+	
+	public enum SumChooser {
+		user, project, role, activityType, week
 	}
 
 	/**
@@ -237,5 +232,20 @@ public class TimeReport extends Entity {
 	public void delete() throws SQLException, Exception {
 		String deleteQuery = "DELETE FROM timeReports WHERE id=" + ID;
 		query(deleteQuery);
+	}
+	
+	public static void main(String[] args) {
+//		try {
+////			Map<String,Integer> map = TimeReport.getSummary(null, null, true, null, null, null, null, "activityType");
+//			Set set = map.entrySet();
+//			Iterator itr = set.iterator();
+//			while (itr.hasNext()) {
+//				System.out.print(itr.next().toString());
+//			}
+//			
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 	}
 }

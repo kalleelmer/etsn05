@@ -61,7 +61,7 @@ public class Entity {
 		//Skapar rowset som håller datan för att kunna stänga connection
 		rowSet.populate(rs);
 		stmt.close();
-		Database.CONN.close();
+//		Database.CONN.close();
 		return rowSet;
 	}
 	
@@ -74,7 +74,7 @@ public class Entity {
 		Statement stmt = Database.CONN.createStatement();
 		stmt.executeUpdate(query);
 		stmt.close();
-		Database.CONN.close();
+//		Database.CONN.close();
 	}
 	
 	/**

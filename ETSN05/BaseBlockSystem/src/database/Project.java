@@ -46,7 +46,7 @@ public class Project extends Entity {
 	 * @return
 	 */
 	public static List<Project> getByUser(String username) throws SQLException, Exception {
-		if (username == "admin") {
+		if (username.equals("admin")) {
 			String selectQuery = "SELECT * FROM projects;";
 			ResultSet rs = selectQuery(selectQuery);
 			List<Project> list = new ArrayList<Project>();
@@ -119,8 +119,8 @@ public class Project extends Entity {
 	
 	public static void main(String[] args) {
 		try {
-			List<Project> list = Project.getByUser("admin");
-			System.out.print(list.get(2).NAME);
+			List<Project> list = Project.getByUser("Christina");
+			System.out.print(list.get(0).NAME);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -129,6 +129,7 @@ public class Project extends Entity {
 			e.printStackTrace();
 		}
 	}
+
 }
 
 
