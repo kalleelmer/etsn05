@@ -34,7 +34,7 @@ public class User extends Entity {
 	 */
 	public static User getByUsername(String userName) throws SecurityException, SQLException, 
 			Exception {
-		userName.replaceAll(inputSafety, "");
+		userName.replaceAll(INPUTSAFETY, "");
 		if (userName == "admin") {
 			throw new SecurityException();
 		}
@@ -66,7 +66,7 @@ public class User extends Entity {
 					userSet.getString("password"),
 					userSet.getString("firstname"),
 					userSet.getString("lastname"));
-			if (user.USERNAME != "admin") {
+			if (!user.isAdmin()) {
 				allUsers.add(user);
 			}
 		}
@@ -102,9 +102,9 @@ public class User extends Entity {
 					+ "', '"
 					+ PASSWORD
 					+ "','"
-					+ FIRST_NAME.replaceAll(inputSafety, "")
+					+ FIRST_NAME.replaceAll(INPUTSAFETY, "")
 					+ "','"
-					+ LAST_NAME.replaceAll(inputSafety, "") + "')";
+					+ LAST_NAME.replaceAll(INPUTSAFETY, "") + "')";
 			query(insertQuery);
 		} else {
 			throw new IllegalArgumentException();

@@ -14,22 +14,26 @@ import java.sql.Statement;
  *
  */
 public class Entity {
-	protected static final String inputSafety = "[^-abcdefghijklmnopqrstuvwxyzåäöABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ0123456789]";
-	protected static final String usernameSyntax = "(\\W)";
-	protected static final String passwordSyntax = "[^a-z]";
+	protected static final String INPUTSAFETY = "[^-abcdefghijklmnopqrstuvwxyzåäöABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ0123456789]";
+	protected static final String USERNAMESYNTAX = "(\\W)";
+	protected static final String PASSWORDSYNTAX = "[^a-z]";
 	
 	public Entity() {
 		Database.getInstance();
 	}
 	
 	protected static boolean checkUsername(String username) {
-		String test = username.replaceAll(usernameSyntax, "");
+		String test = username.replaceAll(USERNAMESYNTAX, "");
+		//Kontrollerar att inga otillåtna tecken finns
 		return test.length() == username.length() && test.length() <= 10 && test.length() >= 5;
+		//Kollar att användarnamnet ligger inom tillåtna gränser
 	}
 	
 	protected static boolean checkPassword(String password) {
-		String test = password.replaceAll(passwordSyntax, "");
+		String test = password.replaceAll(PASSWORDSYNTAX, "");
+		//Kollar otillåtna värden
 		return test.length() == password.length() && test.length() == 6;
+		//Kollar att längden stämmer
 	}
 
 	/**
@@ -41,9 +45,14 @@ public class Entity {
 	 */
 	protected static ResultSet selectQuery(String query) throws SQLException, Exception{
 		Database.getInstance();
-		// Denna statement stängs aldrig, ny öppnas varje gång, se över detta?
-		Statement stmt = Database.CONN.createStatement();
+		Statement stmt = Database.CONN.createStatement(); 
+		//Skapar statement som borde stängas, ska tas upp senare
 		ResultSet rs = stmt.executeQuery(query);
+//		CachedRowSet rowSet = new CachedRowSetImpl();
+//		//Skapar rowset som håller datan för att kunna stänga connection
+//		rowSet.populate(rs);
+//		stmt.close();
+//		Database.CONN.close();
 		return rs;
 	}
 	
@@ -55,13 +64,16 @@ public class Entity {
 		Database.getInstance();
 		Statement stmt = Database.CONN.createStatement();
 		stmt.executeUpdate(query);
+//		Database.CONN.close();
 	}
 	
 	/**
 	 * This class is a singleton that creates the connection to the database.
-	 * Once the getInstance() method is run this class cannot be created again, and will return null instead.
-	 * When the database is created, getInstance() will only return the current database class
-	 * which doesn't include any variables or data.
+	 * Once the getInstance() method is run this class cannot be created again,
+	 * and will return the previously created database. When the database is
+	 * created, getInstance() will only return the current database class which
+	 * doesn't include any variables or data.
+	 * 
 	 * @author etsn05
 	 *
 	 */
@@ -72,11 +84,14 @@ public class Entity {
 		private Database() {
 			try{
 	    		DriverManager.registerDriver(new com.mysql.jdbc.Driver ());
-				CONN = DriverManager.getConnection("jdbc:mysql://vm26.cs.lth.se/puss1402?" +
-	            "user=puss1402&password=pwi8ww1k");
-				if (CONN == null) {
-					System.out.print("Skit också");
-				}
+	    		String serverURL = "jdbc:mysql://vm26.cs.lth.se/puss1402?" +
+	    	            "user=puss1402&password=pwi8ww1k";
+				CONN = DriverManager.getConnection(serverURL);
+				// Skapar connection till databasen. Ifall något går fel borde
+				// denna kanske kasta exception, typ connectexception
+				// if (CONN == null) {
+				// throw new Exception();
+//				}
 			} catch (SQLException ex) {
 			    System.out.println("SQLException: " + ex.getMessage());
 			    System.out.println("SQLState: " + ex.getSQLState());
@@ -87,7 +102,9 @@ public class Entity {
 	    }
 		
 		/**
-		 * The only accessible function, which controls whether or not a database object already has been created.
+		 * The only accessible function, which controls whether or not a
+		 * database object already has been created.
+		 * 
 		 * @return
 		 */
 		public static synchronized Database getInstance() {
@@ -96,7 +113,6 @@ public class Entity {
 			}
 			return INSTANCE;
 		}
-		
 	}
 }
 

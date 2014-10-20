@@ -48,7 +48,10 @@ public class Member extends Entity {
 			Member member = new Member(memberSet.getString("username"),
 					memberSet.getInt("project"), Role.valueOf(memberSet
 							.getString("role")));
-			foundList.add(member);
+			if (member.USERNAME != "admin") {
+				//Returnerar inte admin-uppgifterna, även om admin är member
+				foundList.add(member);
+			}
 		}
 		if (foundList.size() == 0) {
 			return null;
@@ -80,10 +83,9 @@ public class Member extends Entity {
 	 * Removes a member from the member list, i.e. removes a member from a project
 	 */
 	public void delete() throws SQLException, Exception {
-		String deleteQuery = "DELETE FROM members WHERE username='" + USERNAME + "' AND PROJECT='" + PROJECT + "'";
-		query(deleteQuery);
-	}
-	public static void main(String[] args) {
-		
+		if (USERNAME != "admin") {
+			String deleteQuery = "DELETE FROM members WHERE username='" + USERNAME + "' AND PROJECT='" + PROJECT + "'";
+			query(deleteQuery);
+		}
 	}
 }

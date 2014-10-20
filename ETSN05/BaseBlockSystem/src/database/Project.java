@@ -14,7 +14,7 @@ import java.util.List;
 public class Project extends Entity {
 	protected final int ID;
 	public final String NAME;
-	private final boolean CLOSED;
+	protected boolean CLOSED;
 	
 	/**
 	 * Constructs a new project, and automatically marks it as an open project
@@ -45,12 +45,16 @@ public class Project extends Entity {
 	 * @param username
 	 * @return
 	 */
-	public static List<Project> getByUser(String username) throws SQLException, Exception {
+	public static List<Project> getByUser(String username) throws SecurityException, SQLException, Exception {
+		if (username == "admin") {
+			throw new SecurityException();
+		}
 		String selectQuery = "SELECT project FROM members WHERE username='"
 				+ username + "'";
 		ResultSet memberSet = selectQuery(selectQuery);
 		List<Project> foundList = new ArrayList<Project>();
 		while (memberSet.next()) {
+			//Itererar igenom resultset
 			String projectQuery = "SELECT * FROM projects WHERE id="
 					+ memberSet.getInt("project");
 			ResultSet projectSet = selectQuery(projectQuery);
@@ -61,6 +65,7 @@ public class Project extends Entity {
 			foundList.add(project);
 		}
 		if (foundList.size() == 0) {
+			//Gav inga träffar
 			return null;
 		} else {
 			return foundList;
@@ -87,7 +92,7 @@ public class Project extends Entity {
 	 */
 	public void insert() throws SQLException, Exception {
 		String insertQuery = "INSERT INTO projects(id,name,closed) VALUES(" + ID
-				+ ",'" + NAME + "'," + CLOSED + ")";
+				+ ",'" + NAME.replaceAll(INPUTSAFETY, "") + "'," + CLOSED + ")";
 		query(insertQuery);
 	}
 
@@ -98,7 +103,7 @@ public class Project extends Entity {
 		// Detta behöver nog göras om. Skulle hända olika grejer beroende på om
 		// det fanns ett projekt
 		// eller inte.... Kolla STLDD
-		String updateQuery = "UPDATE projects SET id=" + ID + ",name ='" + NAME
+		String updateQuery = "UPDATE projects SET id=" + ID + ",name ='" + NAME.replaceAll(INPUTSAFETY,"")
 				+ "',closed=" + CLOSED + ") WHERE id=" + ID;
 		query(updateQuery);
 	}
