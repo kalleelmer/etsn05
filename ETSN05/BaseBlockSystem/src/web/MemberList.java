@@ -1,4 +1,5 @@
 package web;
+import database.Member;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -26,7 +27,7 @@ if (nameObj != null) {
 }
 	if(!loggedIn(request)) {
 		response.sendRedirect("LogIn");
-	} if (nameObj.Role.toString.equals("Manager")) { //hur anropar jag detta??
+	} if (((Member)nameObj).ROLE == Member.Role.manager) { //hur anropar jag detta??
 		
 	}	else {
 	

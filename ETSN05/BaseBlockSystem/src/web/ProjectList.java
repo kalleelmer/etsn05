@@ -2,6 +2,7 @@ package web;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -40,7 +41,16 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
 	 else {
 	
 		//String username = (String) session.getAttribute("username");
-		List<Project> list = Project.getByUser(myName);
+		List<Project> list = null;
+		try {
+			list = Project.getByUser(myName);
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		out.print(projectListRequestForm(list));
 		if (myName.equals("admin")) {
 			out.println("<p><a href =" + formElement("CreateProject") + "> Create new project </p>");
