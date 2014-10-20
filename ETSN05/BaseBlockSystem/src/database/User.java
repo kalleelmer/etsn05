@@ -21,10 +21,10 @@ public class User extends Entity {
 	 */
 	public User(String username, String password, String firstName,
 			String lastName) {
-		USERNAME = username;
-		PASSWORD = password;
-		FIRST_NAME = firstName;
-		LAST_NAME = lastName;
+		USERNAME = username.replaceAll(INPUTSAFETY, "");
+		PASSWORD = password.replaceAll(INPUTSAFETY, "");
+		FIRST_NAME = firstName.replaceAll(INPUTSAFETY, "");
+		LAST_NAME = lastName.replaceAll(INPUTSAFETY, "");
 	}
 	
 	/**

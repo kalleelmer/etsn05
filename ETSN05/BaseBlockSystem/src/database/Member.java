@@ -19,7 +19,7 @@ public class Member extends Entity {
 	public final Role ROLE;
 
 	public Member(String userName, int project, Role role) {
-		USERNAME = userName;
+		USERNAME = userName.replaceAll(INPUTSAFETY, "");
 		PROJECT = project;
 		ROLE = role;
 	}

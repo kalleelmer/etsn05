@@ -6,6 +6,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import javax.sql.rowset.CachedRowSet;
+
+import com.sun.rowset.CachedRowSetImpl;
+
 /**
  * This class is the superclass for all other classes in the database package.
  * It is the only class that communicates directly with the database.
@@ -17,10 +21,6 @@ public class Entity {
 	protected static final String INPUTSAFETY = "[^-abcdefghijklmnopqrstuvwxyzåäöABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ0123456789]";
 	protected static final String USERNAMESYNTAX = "(\\W)";
 	protected static final String PASSWORDSYNTAX = "[^a-z]";
-	
-	public Entity() {
-		Database.getInstance();
-	}
 	
 	protected static boolean checkUsername(String username) {
 		String test = username.replaceAll(USERNAMESYNTAX, "");
@@ -46,14 +46,13 @@ public class Entity {
 	protected static ResultSet selectQuery(String query) throws SQLException, Exception{
 		Database.getInstance();
 		Statement stmt = Database.CONN.createStatement(); 
-		//Skapar statement som borde stängas, ska tas upp senare
 		ResultSet rs = stmt.executeQuery(query);
-//		CachedRowSet rowSet = new CachedRowSetImpl();
-//		//Skapar rowset som håller datan för att kunna stänga connection
-//		rowSet.populate(rs);
-//		stmt.close();
-//		Database.CONN.close();
-		return rs;
+		CachedRowSet rowSet = new CachedRowSetImpl();
+		//Skapar rowset som håller datan för att kunna stänga connection
+		rowSet.populate(rs);
+		stmt.close();
+		Database.CONN.close();
+		return rowSet;
 	}
 	
 	/**
@@ -64,7 +63,8 @@ public class Entity {
 		Database.getInstance();
 		Statement stmt = Database.CONN.createStatement();
 		stmt.executeUpdate(query);
-//		Database.CONN.close();
+		stmt.close();
+		Database.CONN.close();
 	}
 	
 	/**
@@ -81,33 +81,24 @@ public class Entity {
 		private static Database INSTANCE = null;
 		private static Connection CONN;
 		
-		private Database() {
-			try{
-	    		DriverManager.registerDriver(new com.mysql.jdbc.Driver ());
-	    		String serverURL = "jdbc:mysql://vm26.cs.lth.se/puss1402?" +
-	    	            "user=puss1402&password=pwi8ww1k";
-				CONN = DriverManager.getConnection(serverURL);
-				// Skapar connection till databasen. Ifall något går fel borde
-				// denna kanske kasta exception, typ connectexception
-				// if (CONN == null) {
-				// throw new Exception();
-//				}
-			} catch (SQLException ex) {
-			    System.out.println("SQLException: " + ex.getMessage());
-			    System.out.println("SQLState: " + ex.getSQLState());
-			    System.out.println("VendorError: " + ex.getErrorCode());
-			} catch (Exception e) {
-				System.out.println("SQL error: " + e.getMessage());
+		private Database() throws Exception {
+			DriverManager.registerDriver(new com.mysql.jdbc.Driver());
+			String serverURL = "jdbc:mysql://vm26.cs.lth.se/puss1402?"
+					+ "user=puss1402&password=pwi8ww1k";
+			CONN = DriverManager.getConnection(serverURL);
+			if (CONN == null) {
+				throw new NullPointerException();
 			}
-	    }
-		
+		}
+
 		/**
 		 * The only accessible function, which controls whether or not a
 		 * database object already has been created.
 		 * 
 		 * @return
 		 */
-		public static synchronized Database getInstance() {
+		public static synchronized Database getInstance()
+				throws NullPointerException, SQLException, Exception {
 			if (INSTANCE == null) {
 				INSTANCE = new Database();
 			}
