@@ -6,12 +6,13 @@ import java.sql.SQLException;
 import java.util.List;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import database.Project;
-
+@WebServlet("/ProjectList")
 public class ProjectList extends servletBase {
 
 	public ProjectList() {
@@ -21,7 +22,7 @@ protected String projectListRequestForm(List<Project> list){
 	String html = "<html><body><p>Project List:</p>";
 	html += "<ol>";
 	for (Project s:list) {
-		html +="<li>" + s.NAME + "</li>"; //bör detta vara länkar till de olika projekten?
+		html +="<li> <a href=" + formElement("MemberList") + ">" + formElement((String)s.NAME) + "</a>" + "</li>";
 	}
 	html += "</ol>";
 	return html;
@@ -31,7 +32,7 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
 	PrintWriter out = response.getWriter();
 	out.println(getPageIntro());
 	String myName = "";
-	Object nameObj = session.getAttribute("username");
+	Object nameObj = session.getAttribute("name");
 	if (nameObj != null) {
 		myName = (String)nameObj;
 	}
