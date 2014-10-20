@@ -14,11 +14,14 @@ import javax.servlet.http.HttpSession;
 @WebServlet("/TimeReportList")
 public class TimeReportList extends servletBase {
 
+	/**
+	 * Instantiate a time report list servlet
+	 */
 	public TimeReportList() {
 		// TODO Auto-generated constructor stub
 	}
 	
-	   /**
+	 /**
      * Generates a form for Time Report  List. 
      * @return HTML code for the form
      */
@@ -36,6 +39,11 @@ public class TimeReportList extends servletBase {
     			
     }
     
+    /**
+     * Generates HTML code for table rows
+     * @param list String array
+     * @return String containing HTML syntax
+     */
     private String tableRow(String[] list){
     	String html = "<tr>";
     	for (String s:list){
@@ -44,6 +52,9 @@ public class TimeReportList extends servletBase {
     	return html;
     }
     
+    /**
+     * TEMPORARY: REMOVE BEFORE FINAL RELEASE
+     */
     private List<String> tmp(){
     	LinkedList<String> tmp = new LinkedList<String>();
     	tmp.add("hej");
@@ -52,6 +63,13 @@ public class TimeReportList extends servletBase {
     	return tmp;
     }
     
+    /**
+     * Produces HTML code for the drop down menu
+     * @param list Array of drop down options
+     * @param name Name of the field to select
+     * @param intro Start value
+     * @return String containing HTML syntax
+     */
     private String dropDownMenu(String[] list, String name,String intro){
     	String html = "<select name ="+formElement(name)+">";
     	html += "<option value="+intro+">"+intro+"</option>";
