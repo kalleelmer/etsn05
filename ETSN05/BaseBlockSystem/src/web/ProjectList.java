@@ -26,7 +26,7 @@ protected String projectListRequestForm(List<Project> list){
 	String html = "<html><body><p>Project List:</p>";
 	html += "<ol>";
 	for (Project s:list) {
-		html +="<li> <a href=" + formElement("MemberList") + ">" + formElement((String)s.NAME) + "</a>" + "</li>";
+		html +="<li> <a href=" + formElement("MemberList") + ">" + s.NAME + "</a>" + "</li>";
 	}
 	html += "</ol>";
 	return html;
@@ -44,8 +44,6 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
 			response.sendRedirect("LogIn");
 		} 
 		else {
-
-			//String username = (String) session.getAttribute("username");
 			List<Project> list = null;
 			try {
 				list = Project.getByUser(myName);
