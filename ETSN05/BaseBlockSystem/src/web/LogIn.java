@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/LogIn")
 public class LogIn extends servletBase {
 	private static final long serialVersionUID = 1L;
+	private enum LoginStatus {ok, passInvalid, userInvalid};
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -57,7 +58,7 @@ public class LogIn extends servletBase {
      * @param password The password of the user
      * @return true if the user should be accepted
      */
-    private int checkUser(String name, String password) {
+    private LoginStatus checkUser(String name, String password) {
 		
 		boolean userOk = false;
 		boolean userChecked = false;
@@ -74,12 +75,12 @@ public class LogIn extends servletBase {
 		    		userChecked = true;
 		    		userOk = password.equals(passwordSaved);
 		    		if(userOk==false){
-		    			return 2; //password wrong
+		    			return LoginStatus.passInvalid;
 		    		}
 		    	}
 		    }
 	    	if(userOk==false){
-	    		return 1; //username wrong
+	    		return LoginStatus.userInvalid;
 	    	}
 		    stmt.close();
 		} catch (SQLException ex) {
@@ -87,7 +88,7 @@ public class LogIn extends servletBase {
 		    System.out.println("SQLState: " + ex.getSQLState());
 		    System.out.println("VendorError: " + ex.getErrorCode());
 		}
-		return 0; //username & password OK
+		return LoginStatus.ok;
 	}
 
     
@@ -123,13 +124,13 @@ public class LogIn extends servletBase {
         name = request.getParameter("user"); // get the string that the user entered in the form
         password = request.getParameter("password"); // get the entered password
         if (name != null && password != null) {
-        	if (checkUser(name, password) == 0) {
+        	if (checkUser(name, password) == LoginStatus.ok) {
         		state = LOGIN_TRUE;
        			session.setAttribute("state", state);  // save the state in the session
        			session.setAttribute("name", name);  // save the name in the session
        			response.sendRedirect("functionality.html");
        		}
-       		else if(checkUser(name, password) == 1) {
+       		else if(checkUser(name, password) == LoginStatus.userInvalid) {
        			out.println("<p>Incorrect username </p>");
        			out.println(loginRequestForm());
        		}else{
