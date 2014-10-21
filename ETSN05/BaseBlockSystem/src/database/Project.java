@@ -28,6 +28,16 @@ public class Project extends Entity {
 	}
 	
 	/**
+	 * Constructs a new project, and automatically marks it as an open project
+	 * @param name
+	 */
+	public Project(String name) {
+		ID = 0;
+		NAME = name;
+		CLOSED = false;
+	}
+	
+	/**
 	 * Constructs a new project, but with the option to have it either open or closed
 	 * @param id
 	 * @param name
@@ -100,8 +110,7 @@ public class Project extends Entity {
 	 * Inserts the project to the database
 	 */
 	public void insert() throws SQLException, Exception {
-		String insertQuery = "INSERT INTO projects(id,name,closed) VALUES(" + ID
-				+ ",'" + NAME.replaceAll(INPUTSAFETY, "") + "'," + CLOSED + ")";
+		String insertQuery = "INSERT INTO projects(name,closed) VALUES('" + NAME.replaceAll(INPUTSAFETY, "") + "'," + CLOSED + ")";
 		query(insertQuery);
 	}
 
@@ -118,9 +127,11 @@ public class Project extends Entity {
 	}
 	
 	public static void main(String[] args) {
+		Project p3 = new Project(2, "funnyproject");
+		Project p4 = new Project("boringproject");
 		try {
-			List<Project> list = Project.getByUser("Christina");
-			System.out.print(list.get(0).NAME);
+			p3.insert();
+			p4.insert();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -130,5 +141,4 @@ public class Project extends Entity {
 		}
 	}
 }
-
 
