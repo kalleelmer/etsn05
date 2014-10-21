@@ -56,8 +56,9 @@ public class UserList extends servletBase {
     	String html;
     	html = "<p><form name=" + formElement("input");
     	html += " method=" + formElement("get");
-    	html += "<p><input type=" + formElement("text") + " password=" + formElement("password") + " name='" + name + "'>";    	
-    	html += "<input type=" + formElement("submit") + "value=" + formElement("Change password") + '>';
+    	html += "<p><input type=" + formElement("text") + " name=" + formElement("password") + '>';    	
+    	html += "<input type='hidden' name=" + formElement("name") + " value=" + formElement(name) + '>';
+    	html += "<input type=" + formElement("submit") + " value='Change PW'>";
     	html += "</form>";
     	return html;
     }
@@ -171,6 +172,8 @@ public class UserList extends servletBase {
 				out.println("<h1>Administration page " + "</h1>");
 				
 				// check if the administrator wants to add a new user in the form
+				System.out.println(request.getParameter("password"));
+				System.out.println(request.getParameter("name"));
 				String newName = request.getParameter("addname");
 				if (newName != null) {
 					if (checkNewName(newName)) {
