@@ -88,9 +88,9 @@ public class Entity {
 		
 		private Database() throws Exception {
 			DriverManager.registerDriver(new com.mysql.jdbc.Driver());
-//			String serverURL = "jdbc:mysql://vm26.cs.lth.se/puss1402?"
-//					+ "user=puss1402&password=pwi8ww1k";
-			String serverURL = "jdbc:mysql://localhost/test_base?" + "user=root&password=etsn05";
+			String serverURL = "jdbc:mysql://vm26.cs.lth.se/puss1402?"
+					+ "user=puss1402&password=pwi8ww1k";
+//			String serverURL = "jdbc:mysql://localhost/test_base?" + "user=root&password=etsn05";
 			CONN = DriverManager.getConnection(serverURL);
 			if (CONN == null) {
 				throw new NullPointerException();
