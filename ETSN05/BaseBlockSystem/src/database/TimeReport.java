@@ -167,8 +167,30 @@ public class TimeReport extends Entity {
 			String selectWeekQuery = "SELECT date, SUM(duration) from timeReports WHERE " + condition.toString() + " GROUP BY date;";
 			ResultSet weekReportSet = selectQuery(selectWeekQuery);
 			Map<String, Integer> foundWeekMap = new TreeMap<String, Integer>();
-			Calendar calendar = Calendar.getInstance();
-
+			Calendar cldCurrent = Calendar.getInstance();
+			Calendar cldNext = Calendar.getInstance();
+			if (!weekReportSet.next()) {
+				return null;
+			}
+			do {
+				cldCurrent.setTime(weekReportSet.getDate(1));
+				cldNext.setTime(weekReportSet.getDate(1));
+				int duration = 0;
+				boolean withinRange = true;
+				while (cldCurrent.get(Calendar.WEEK_OF_YEAR) == cldNext
+						.get(Calendar.WEEK_OF_YEAR) && withinRange) {
+					duration += weekReportSet.getInt(2);
+					if (weekReportSet.next()) {
+						cldNext.setTime(weekReportSet.getDate(1));
+						withinRange = false;
+					}
+				}
+				String week = "" + cldCurrent.get(Calendar.WEEK_OF_YEAR);
+				foundWeekMap.put(week, duration);
+				
+			} while (weekReportSet.next());
+			return foundWeekMap;
+			
 		}
 		String selectQuery = "SELECT " + summarizeBy + ", SUM(duration) FROM timeReports WHERE " + condition.toString() + " GROUP BY " + summarizeBy + ";";
 		ResultSet timeReportSet = selectQuery(selectQuery);
@@ -247,5 +269,15 @@ public class TimeReport extends Entity {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
+		try {
+			Map<String, Integer> testMap = TimeReport.getSummary(null, null, null, null, null, null, 13, SumChooser.week);
+			Iterator itr = testMap.entrySet().iterator();
+			while (itr.hasNext()) {
+				System.out.println(itr.next());
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
