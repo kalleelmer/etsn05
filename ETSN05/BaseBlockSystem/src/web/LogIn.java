@@ -57,7 +57,7 @@ public class LogIn extends servletBase {
      * @param password The password of the user
      * @return true if the user should be accepted
      */
-    private boolean checkUser(String name, String password) {
+    private int checkUser(String name, String password) {
 		
 		boolean userOk = false;
 		boolean userChecked = false;
@@ -73,15 +73,21 @@ public class LogIn extends servletBase {
 		    	if (name.equals(nameSaved)) {
 		    		userChecked = true;
 		    		userOk = password.equals(passwordSaved);
+		    		if(userOk==false){
+		    			return 2; //password wrong
+		    		}
 		    	}
 		    }
+	    	if(userOk==false){
+	    		return 1; //username wrong
+	    	}
 		    stmt.close();
 		} catch (SQLException ex) {
 		    System.out.println("SQLException: " + ex.getMessage());
 		    System.out.println("SQLState: " + ex.getSQLState());
 		    System.out.println("VendorError: " + ex.getErrorCode());
 		}
-		return userOk;
+		return 0; //username & password OK
 	}
 
     
@@ -117,15 +123,18 @@ public class LogIn extends servletBase {
         name = request.getParameter("user"); // get the string that the user entered in the form
         password = request.getParameter("password"); // get the entered password
         if (name != null && password != null) {
-        	if (checkUser(name, password)) {
+        	if (checkUser(name, password) == 0) {
         		state = LOGIN_TRUE;
        			session.setAttribute("state", state);  // save the state in the session
        			session.setAttribute("name", name);  // save the name in the session
        			response.sendRedirect("functionality.html");
        		}
-       		else {
-       			out.println("<p>That was not a valid user name / password. </p>");
+       		else if(checkUser(name, password) == 1) {
+       			out.println("<p>Incorrect username </p>");
        			out.println(loginRequestForm());
+       		}else{
+       			out.println("<p>Incorrect password </p>");
+       			out.println(loginRequestForm());       			
        		}
        	}else{ // name was null, probably because no form has been filled out yet. Display form.
        		out.println(loginRequestForm());
