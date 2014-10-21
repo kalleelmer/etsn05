@@ -3,7 +3,6 @@ package web;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -44,14 +43,14 @@ public class UserList extends servletBase {
      */
     private String addUserForm() {
     	String html;
-    	html = "<table border=" + formElement("1") + "><td><tr>";
-    	html = "<p>Add new user: <form name=" + formElement("input");
+    	html = "<p>Add new user: <br><table border=" + formElement("1") + "><tr><td>";
+    	html += "<form name=" + formElement("input");
     	html += " method=" + formElement("get");
     	html += "<p> User name: <input type=" + formElement("text") + " name=" + formElement("addname") + '>';    	
     	html += "<p> First name: <input type=" + formElement("text") + " name=" + formElement("firstname") + '>';    	
     	html += "<p> Last name: <input type=" + formElement("text") + " name=" + formElement("lastname") + '>';    	    	
     	html += "<input type=" + formElement("submit") + "value=" + formElement("Add user") + '>';
-    	html += "</form></tr></td></table>";
+    	html += "</form></td></tr></table><br>";
     	return html;
     }
     
@@ -191,6 +190,8 @@ public class UserList extends servletBase {
 				}
 				out.println("<h1>Administration page " + "</h1>");
 				
+				out.println(addUserForm());
+				
 				// check if the administrator wants to add a new user in the form
 				System.out.println(request.getParameter("password"));
 				System.out.println(request.getParameter("name"));
@@ -251,7 +252,6 @@ public class UserList extends servletBase {
 				    System.out.println("SQLState: " + ex.getSQLState());
 				    System.out.println("VendorError: " + ex.getErrorCode());
 				}
-				out.println(addUserForm());
 				out.println("</body></html>");
 			} else  // name not admin
 				response.sendRedirect("blank.html");
