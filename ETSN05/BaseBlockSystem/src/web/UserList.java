@@ -169,6 +169,22 @@ public class UserList extends servletBase {
 			response.sendRedirect("LogIn");
 		else
 			if (myName.equals("admin")) {
+				String cpwPass = request.getParameter("password");
+				String cpwUser = request.getParameter("name");
+				if (cpwPass != null){
+					Statement stmt;
+					try {
+						stmt = conn.createStatement();
+					    int result = stmt.executeUpdate("update users set password='" + cpwPass + "' where username='" + cpwUser + "'");
+					    if (result==0){
+					    	out.println("Password change failed.");
+					    }else{
+					    	out.println("Password change successful.");
+					    }
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}		 
+				}
 				out.println("<h1>Administration page " + "</h1>");
 				
 				// check if the administrator wants to add a new user in the form
@@ -232,7 +248,7 @@ public class UserList extends servletBase {
 				out.println(addUserForm());
 				out.println("</body></html>");
 			} else  // name not admin
-				response.sendRedirect("functionality.html");
+				response.sendRedirect("blank.html");
 	}
 
 	/**
