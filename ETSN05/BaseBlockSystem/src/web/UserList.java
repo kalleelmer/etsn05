@@ -52,6 +52,16 @@ public class UserList extends servletBase {
     	return html;
     }
     
+    private String addChangePWForm(String name) {
+    	String html;
+    	html = "<p><form name=" + formElement("input");
+    	html += " method=" + formElement("get");
+    	html += "<p><input type=" + formElement("text") + " password=" + formElement("password") + " name='" + name + "'>";    	
+    	html += "<input type=" + formElement("submit") + "value=" + formElement("Change password") + '>';
+    	html += "</form>";
+    	return html;
+    }
+    
     /**
      * Checks if a username corresponds to the requirements for user names. 
      * @param name The investigated username
@@ -195,12 +205,11 @@ public class UserList extends servletBase {
 				    	String deleteCode = "<a href=" + formElement(deleteURL) +
 				    			            " onclick="+formElement("return confirm('Are you sure you want to delete "+name+"?')") + 
 				    			            "> delete </a>";
-				    	String cpwURL = "UserList?changepw="+name;
-				    	String cpwCode = "<a href=" + formElement(cpwURL) +
-				    			            " onclick="+formElement("return prompt('Input new password for "+name+"')") + 
-				    			            "> change password </a>";
-				    	if (name.equals("admin")) 
+				    	String cpwCode = addChangePWForm(name);
+				    	if (name.equals("admin")){
 				    		deleteCode = "";
+				    		cpwCode = "";
+				    	}
 				    	out.println("<tr>");
 				    	out.println("<td>" + name + "</td>");
 				    	out.println("<td>" + pw + "</td>");
@@ -218,9 +227,6 @@ public class UserList extends servletBase {
 				    System.out.println("VendorError: " + ex.getErrorCode());
 				}
 				out.println(addUserForm());
-				
-				out.println("<p><a href =" + formElement("functionality.html") + "> Functionality selection page </p>");
-				out.println("<p><a href =" + formElement("LogIn") + "> Log out </p>");
 				out.println("</body></html>");
 			} else  // name not admin
 				response.sendRedirect("functionality.html");
