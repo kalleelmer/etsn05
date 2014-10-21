@@ -201,7 +201,7 @@ public class UserList extends servletBase {
 							e.printStackTrace();
 						}		 
 					}else{
-						out.println("Password change failed: password must be 6 character with ASCII code 97-122.");
+						out.println("Password change failed: password must be 6 lower-case letters.");
 					}
 				}
 				out.println("<h1>Administration page " + "</h1>");
@@ -270,7 +270,7 @@ public class UserList extends servletBase {
 				}
 				out.println("</body></html>");
 			} else  // name not admin
-				response.sendRedirect("blank.html");
+				out.println("Access denied.");
 	}
 
 	/**
