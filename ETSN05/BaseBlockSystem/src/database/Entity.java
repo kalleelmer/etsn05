@@ -57,12 +57,7 @@ public class Entity {
 		Database.getInstance();
 		Statement stmt = Database.CONN.createStatement(); 
 		ResultSet rs = stmt.executeQuery(query);
-		CachedRowSet rowSet = new CachedRowSetImpl();
-		//Skapar rowset som håller datan för att kunna stänga connection
-		rowSet.populate(rs);
-		stmt.close();
-//		Database.CONN.close();
-		return rowSet;
+		return rs;
 	}
 	
 	/**
@@ -74,7 +69,6 @@ public class Entity {
 		Statement stmt = Database.CONN.createStatement();
 		stmt.executeUpdate(query);
 		stmt.close();
-//		Database.CONN.close();
 	}
 	
 	/**

@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 import java.sql.Date;
@@ -111,7 +112,17 @@ public class TimeReport extends Entity {
 			return "";
 		}
 		
-		
+		public static StringBuilder appendAll(User user, Project project, Boolean signed, Role role, Integer activityType, String start, String end) {
+			StringBuilder condition = new StringBuilder();
+			condition.append(ConditionBuilder.append("user", user));
+			condition.append(ConditionBuilder.append("project",project));
+			condition.append(ConditionBuilder.append("signed",signed));
+			condition.append(ConditionBuilder.append("role", role));
+			condition.append(ConditionBuilder.append("activityType",activityType));
+			condition.append(ConditionBuilder.append("start", start));
+			condition.append(ConditionBuilder.append("end", end));
+			return condition;
+		}
 	}
 	
 	public static TimeReport getByID(int id) throws SQLException, Exception {
@@ -134,14 +145,7 @@ public class TimeReport extends Entity {
 	public static List<TimeReport> get(User user, Project project,
 			Boolean signed, String start, String end, Role role,
 			Integer activityType) throws IllegalArgumentException, SQLException, Exception {
-		StringBuilder condition = new StringBuilder();
-		condition.append(ConditionBuilder.append("user", user));
-		condition.append(ConditionBuilder.append("project",project));
-		condition.append(ConditionBuilder.append("signed",signed));
-		condition.append(ConditionBuilder.append("role", role));
-		condition.append(ConditionBuilder.append("activityType",activityType));
-		condition.append(ConditionBuilder.append("start", start));
-		condition.append(ConditionBuilder.append("end", end));
+		StringBuilder condition = ConditionBuilder.appendAll( user, project, signed, role, activityType, start, end);
 		String selectQuery = "SELECT * FROM timeReports WHERE " + condition.toString() + ";";
 		ResultSet timeReportSet = selectQuery(selectQuery);
 		List<TimeReport> foundList = new ArrayList<TimeReport>();
@@ -163,56 +167,68 @@ public class TimeReport extends Entity {
 		}
 	}
 
-	public static Map<String,Integer> getSummary(User user, Project project,
+	public static Map<String, Integer> getSummary(User user, Project project,
 			Boolean signed, String start, String end, Role role,
-			Integer activityType, SumChooser summarizeBy) throws SQLException, Exception {
-		StringBuilder condition = new StringBuilder();
-		condition.append(ConditionBuilder.append("user", user));
-		condition.append(ConditionBuilder.append("project", project));
-		condition.append(ConditionBuilder.append("signed", signed));
-		condition.append(ConditionBuilder.append("role", role));
-		condition.append(ConditionBuilder.append("activityType",activityType));
-		condition.append(ConditionBuilder.append("start", start));
-		condition.append(ConditionBuilder.append("end", end));
+			Integer activityType, SumChooser summarizeBy) throws IllegalArgumentException, SQLException,
+			Exception {
+		StringBuilder condition = ConditionBuilder.appendAll(user, project,
+				signed, role, activityType, start, end);
 		if (summarizeBy.equals(SumChooser.week)) {
-			String selectWeekQuery = "SELECT date, SUM(duration) from timeReports WHERE " + condition.toString() + " GROUP BY date;";
-			ResultSet weekReportSet = selectQuery(selectWeekQuery);
-			Map<String, Integer> foundWeekMap = new TreeMap<String, Integer>();
-			Calendar cldCurrent = Calendar.getInstance();
-			Calendar cldNext = Calendar.getInstance();
-			if (!weekReportSet.next()) {
-				return null;
+			if (start == null || end == null) {
+				throw new IllegalArgumentException();
 			}
-			do {
-				cldCurrent.setTime(weekReportSet.getDate(1));
-				cldNext.setTime(weekReportSet.getDate(1));
-				int duration = 0;
-				boolean withinRange = true;
-				while (cldCurrent.get(Calendar.WEEK_OF_YEAR) == cldNext
-						.get(Calendar.WEEK_OF_YEAR) && withinRange) {
-					duration += weekReportSet.getInt(2);
-					if (weekReportSet.next()) {
-						cldNext.setTime(weekReportSet.getDate(1));
-					} else {
-						withinRange = false;
-					}
-				}
-				String week = "" + cldCurrent.get(Calendar.WEEK_OF_YEAR);
-				foundWeekMap.put(week, duration);
-				if (weekReportSet.isAfterLast()) {
-					break;
-				}
-			} while (weekReportSet.next());
-			return foundWeekMap;
-			
+			Calendar startCal = Calendar.getInstance();
+			startCal.setTime(Date.valueOf(start));
+			Calendar endCal = Calendar.getInstance();
+			endCal.setTime(Date.valueOf(end));
+			if (startCal.get(Calendar.YEAR) != endCal.get(Calendar.YEAR)) {
+				throw new IllegalArgumentException();
+			}
+			String selectWeekQuery = "SELECT date, SUM(duration) from timeReports WHERE "
+					+ condition.toString() + " GROUP BY date;";
+			ResultSet weekReportSet = selectQuery(selectWeekQuery);
+			return sumByWeeks(weekReportSet);
 		}
-		String selectQuery = "SELECT " + summarizeBy + ", SUM(duration) FROM timeReports WHERE " + condition.toString() + " GROUP BY " + summarizeBy + ";";
+		String selectQuery = "SELECT " + summarizeBy
+				+ ", SUM(duration) FROM timeReports WHERE "
+				+ condition.toString() + " GROUP BY " + summarizeBy + ";";
 		ResultSet timeReportSet = selectQuery(selectQuery);
 		Map<String, Integer> foundMap = new TreeMap<String, Integer>();
 		while (timeReportSet.next()) {
 			foundMap.put(timeReportSet.getString(1), timeReportSet.getInt(2));
 		}
 		return foundMap;
+	}
+	
+	private static Map<String, Integer> sumByWeeks(ResultSet weekReportSet) throws SQLException, Exception {
+		Map<String, Integer> foundWeekMap = new TreeMap<String, Integer>();
+		Calendar cldCurrent = Calendar.getInstance();
+		Calendar cldNext = Calendar.getInstance();
+		if (!weekReportSet.next()) {
+			return null;
+		}
+		do {
+			cldCurrent.setTime(weekReportSet.getDate(1));
+			cldNext.setTime(weekReportSet.getDate(1));
+			int duration = 0;
+			boolean withinRange = true;
+			while (cldCurrent.get(Calendar.WEEK_OF_YEAR) == cldNext
+					.get(Calendar.WEEK_OF_YEAR) && withinRange) {
+				duration += weekReportSet.getInt(2);
+				if (weekReportSet.next()) {
+					cldNext.setTime(weekReportSet.getDate(1));
+				} else {
+					withinRange = false;
+				}
+			}
+			String week = "" + cldCurrent.get(Calendar.WEEK_OF_YEAR);
+			foundWeekMap.put(week, duration);
+			if (weekReportSet.isAfterLast()) {
+				break;
+			}
+		} while (weekReportSet.next());
+		return foundWeekMap;
+		
 	}
 	
 	public enum SumChooser {
@@ -257,19 +273,13 @@ public class TimeReport extends Entity {
 	}
 	
 	public static void main(String[] args) {
-//		try {
-//			Map<String, Integer> testMap = TimeReport.getSummary(null, null, null, "2014", null, null, null, SumChooser.week);
-//			Iterator itr = testMap.entrySet().iterator();
-//			while (itr.hasNext()) {
-//				System.out.println(itr.next());
-//			}
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		TimeReport r1 = new TimeReport(1,"Goran",4,Member.Role.manager,15,Date.valueOf("2014-11-26"),150,null);
+		TimeReport r1 = new TimeReport(1,"Nisse",3,Member.Role.developer,15,Date.valueOf("2014-10-22"),150,null);
 		try {
-			r1.insert();
+			Map<String, Integer> map = TimeReport.getSummary(null, null, null, "1111-01-01", "1112-12-31", null, null, SumChooser.week);
+			Iterator<Entry<String, Integer>> itr = map.entrySet().iterator();
+			while (itr.hasNext()) {
+				System.out.println(itr.next().toString());
+			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
