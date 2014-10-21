@@ -41,6 +41,17 @@ public class TimeReport extends Entity {
 		SIGNER = signer;
 	}
 	
+	public TimeReport(String userName, int projectID, Member.Role role, int activityType, Date date, int duration, String signer) {
+		ID = 0;
+		USERNAME = userName;
+		PROJECT_ID = projectID;
+		ROLE = role;
+		ACTIVITY_TYPE = activityType;
+		DATE = date;
+		DURATION = duration;
+		SIGNER = signer;
+	}
+	
 	private static class ConditionBuilder {
 		
 		private static String append(String modifier, Object object) throws ClassCastException {
@@ -182,12 +193,15 @@ public class TimeReport extends Entity {
 					duration += weekReportSet.getInt(2);
 					if (weekReportSet.next()) {
 						cldNext.setTime(weekReportSet.getDate(1));
+					} else {
 						withinRange = false;
 					}
 				}
 				String week = "" + cldCurrent.get(Calendar.WEEK_OF_YEAR);
 				foundWeekMap.put(week, duration);
-				
+				if (weekReportSet.isAfterLast()) {
+					break;
+				}
 			} while (weekReportSet.next());
 			return foundWeekMap;
 			
@@ -208,24 +222,10 @@ public class TimeReport extends Entity {
 	/**
 	 * Inserts a time report to the database
 	 */
-	public void insert() throws SQLException, Exception{
-		String addQuery = "INSERT INTO timeReports VALUES("
-				+ ID
-				+ ",'"
-				+ USERNAME
-				+ "',"
-				+ PROJECT_ID
-				+ ",'"
-				+ ROLE
-				+ "',"
-				+ ACTIVITY_TYPE
-				+ ",'"
-				+ DATE
-				+ "',"
-				+ DURATION
-				+ ",'"
-				+ SIGNER
-				+ "')";
+	public void insert() throws SQLException, Exception {
+		String addQuery = "INSERT INTO timeReports (user,project,role,activityType,date,duration,signer) VALUES('" + USERNAME + "',"
+				+ PROJECT_ID + ",'" + ROLE + "'," + ACTIVITY_TYPE + ",'" + DATE
+				+ "'," + DURATION + ",'" + SIGNER + "')";
 		query(addQuery);
 	}
 	
@@ -258,23 +258,18 @@ public class TimeReport extends Entity {
 	
 	public static void main(String[] args) {
 //		try {
-////			Map<String,Integer> map = TimeReport.getSummary(null, null, true, null, null, null, null, "activityType");
-//			Set set = map.entrySet();
-//			Iterator itr = set.iterator();
+//			Map<String, Integer> testMap = TimeReport.getSummary(null, null, null, "2014", null, null, null, SumChooser.week);
+//			Iterator itr = testMap.entrySet().iterator();
 //			while (itr.hasNext()) {
-//				System.out.print(itr.next().toString());
+//				System.out.println(itr.next());
 //			}
-//			
 //		} catch (Exception e) {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
+		TimeReport r1 = new TimeReport(1,"Goran",4,Member.Role.manager,15,Date.valueOf("2014-11-26"),150,null);
 		try {
-			Map<String, Integer> testMap = TimeReport.getSummary(null, null, null, null, null, null, 13, SumChooser.week);
-			Iterator itr = testMap.entrySet().iterator();
-			while (itr.hasNext()) {
-				System.out.println(itr.next());
-			}
+			r1.insert();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
