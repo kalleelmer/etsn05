@@ -18,10 +18,7 @@ import javax.servlet.http.HttpServletResponse;
  * 
  * The first thing that happens is that the user is logged out if he/she is logged in. 
  * Then the user is asked for name and password. 
- * If the user is logged in he/she is directed to the functionality page. 
- * 
- * @author Martin Host
- * @version 1.0
+ * If the user is logged in he/she is directed to the start page. 
  * 
  */
 @WebServlet("/LogIn")
@@ -99,7 +96,7 @@ public class LogIn extends servletBase {
 	 * First logout the user, then check if he/she has provided a username and a password. 
 	 * If he/she has, it is checked with the database and if it matches then the session state is 
 	 * changed to login, the username that is saved in the session is updated, and the user is 
-	 * relocated to the functionality page. 
+	 * relocated to the start page. 
 	 * 
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
@@ -128,7 +125,7 @@ public class LogIn extends servletBase {
         		state = LOGIN_TRUE;
        			session.setAttribute("state", state);  // save the state in the session
        			session.setAttribute("name", name);  // save the name in the session
-       			response.sendRedirect("functionality.html");
+       			response.sendRedirect("blank.html");
        		}
        		else if(checkUser(name, password) == LoginStatus.userInvalid) {
        			out.println("<p>Incorrect username </p>");
