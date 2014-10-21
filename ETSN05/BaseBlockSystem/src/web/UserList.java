@@ -44,11 +44,14 @@ public class UserList extends servletBase {
      */
     private String addUserForm() {
     	String html;
-    	html = "<p> <form name=" + formElement("input");
+    	html = "<table border=" + formElement("1") + "><td><tr>";
+    	html = "<p>Add new user: <form name=" + formElement("input");
     	html += " method=" + formElement("get");
-    	html += "<p> Add user name: <input type=" + formElement("text") + " name=" + formElement("addname") + '>';    	
+    	html += "<p> User name: <input type=" + formElement("text") + " name=" + formElement("addname") + '>';    	
+    	html += "<p> First name: <input type=" + formElement("text") + " name=" + formElement("firstname") + '>';    	
+    	html += "<p> Last name: <input type=" + formElement("text") + " name=" + formElement("lastname") + '>';    	    	
     	html += "<input type=" + formElement("submit") + "value=" + formElement("Add user") + '>';
-    	html += "</form>";
+    	html += "</form></tr></td></table>";
     	return html;
     }
     
@@ -103,11 +106,12 @@ public class UserList extends servletBase {
      * @return true if it was possible to add the name. False if it was not, e.g. 
      * because the name already exist in the database. 
      */
-    private boolean addUser(String name) {
+    private boolean addUser(String name, String firstName, String lastName) {
     	boolean resultOk = true;
     	try{
 			Statement stmt = conn.createStatement();
-			String statement = "insert into users (username, password) values('" + name + "', '" + 
+			String statement = "insert into users (username, firstname, lastname, password) values('" + name + "', '" + firstName + "',"
+					+ "'" + lastName + "', '" + 
 			                     createPassword() + "')";
 			System.out.println(statement);
 		    stmt.executeUpdate(statement); 
@@ -191,9 +195,11 @@ public class UserList extends servletBase {
 				System.out.println(request.getParameter("password"));
 				System.out.println(request.getParameter("name"));
 				String newName = request.getParameter("addname");
-				if (newName != null) {
+				String firstName = request.getParameter("firstname");
+				String lastName = request.getParameter("lastname");
+				if (newName != null && firstName !=null && lastName !=null) {
 					if (checkNewName(newName)) {
-						boolean addPossible = addUser(newName);
+						boolean addPossible = addUser(newName, firstName, lastName);
 						if (!addPossible)
 							out.println("<p>Error: Suggested user name not possible to add</p>");
 					}	else
