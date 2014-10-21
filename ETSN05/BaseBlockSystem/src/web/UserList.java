@@ -168,7 +168,7 @@ public class UserList extends servletBase {
 						if (!addPossible)
 							out.println("<p>Error: Suggested user name not possible to add</p>");
 					}	else
-						out.println("<p>Error: Suggesten name not allowed</p>");
+						out.println("<p>Error: Suggested name not allowed</p>");
 				}
 					
 				// check if the administrator wants to delete a user by clicking the URL in the list
@@ -185,19 +185,28 @@ public class UserList extends servletBase {
 				    ResultSet rs = stmt.executeQuery("select * from users order by username asc");
 				    out.println("<p>Registered users:</p>");
 				    out.println("<table border=" + formElement("1") + ">");
-				    out.println("<tr><td>NAME</td><td>PASSWORD</td><td></td></tr>");
+				    out.println("<tr><td>USER NAME</td><td>PASSWORD</td><td>FIRST NAME</td><td>LAST NAME</td></tr>");
 				    while (rs.next( )) {
 				    	String name = rs.getString("username");
 				    	String pw = rs.getString("password");
-				    	String deleteURL = "Administration?deletename="+name;
+				    	String fname = rs.getString("firstname");
+				    	String lname = rs.getString("lastname");
+				    	String deleteURL = "UserList?deletename="+name;
 				    	String deleteCode = "<a href=" + formElement(deleteURL) +
 				    			            " onclick="+formElement("return confirm('Are you sure you want to delete "+name+"?')") + 
 				    			            "> delete </a>";
+				    	String cpwURL = "UserList?changepw="+name;
+				    	String cpwCode = "<a href=" + formElement(cpwURL) +
+				    			            " onclick="+formElement("return prompt('Input new password for "+name+"')") + 
+				    			            "> change password </a>";
 				    	if (name.equals("admin")) 
 				    		deleteCode = "";
 				    	out.println("<tr>");
 				    	out.println("<td>" + name + "</td>");
 				    	out.println("<td>" + pw + "</td>");
+				    	out.println("<td>" + fname + "</td>");
+				    	out.println("<td>" + lname + "</td>");
+				    	out.println("<td>" + cpwCode + "</td>");
 				    	out.println("<td>" + deleteCode + "</td>");
 				    	out.println("</tr>");
 				    }
