@@ -66,8 +66,6 @@ public class Member extends Entity {
 		String selectQuery = "SELECT * FROM members WHERE username='" + USERNAME + "' AND project='" + PROJECT +"';";
 		ResultSet memberSet = selectQuery(selectQuery);
 		if (!memberSet.next()) {
-//			String addQuery = "INSERT INTO members(username,project,role) VALUES('"
-//					+ USERNAME + "'," + PROJECT + ",'" + ROLE + "')";
 			String addQuery = "INSERT INTO members SET username='" + USERNAME
 					+ "',project=" + PROJECT + ",role='" + ROLE + "';";
 			query(addQuery);
@@ -84,7 +82,7 @@ public class Member extends Entity {
 	 */
 	public void delete() throws SQLException, Exception {
 		String deleteQuery = "DELETE FROM members WHERE username='" + USERNAME
-				+ "' AND PROJECT='" + PROJECT + "'";
+				+ "' AND PROJECT='" + PROJECT + "';";
 		query(deleteQuery);
 	}
 }
