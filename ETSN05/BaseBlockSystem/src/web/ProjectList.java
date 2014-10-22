@@ -41,7 +41,6 @@ public class ProjectList extends servletBase {
 		String htmlD = "<html><body>";
 		htmlD += "<p>Close Project</p>" + "<p>Project ID:</p>";
 		htmlD += "<p><form name=" + formElement("id");
-		//htmlD += " action=" + formElement("");
 		htmlD += " method=" + formElement("get") + ">";
 		htmlD += "<imput type=" + formElement("number") + "name="
 				+ formElement("close") + " value=" + formElement("Project ID")
@@ -53,7 +52,7 @@ public class ProjectList extends servletBase {
 	}
 	
 	protected String newProjectRequestForm() {
-		String htmlC = "<html>";
+		/*String htmlC = "<html>";
 		htmlC = "<p>Create new project</p>";
 		htmlC += "<form name=" + formElement("newProject");
 		htmlC += " method=" + formElement("get") + ">";
@@ -66,11 +65,21 @@ public class ProjectList extends servletBase {
 		htmlC += "<imput type=" + formElement("submit") + "onclick=" + formElement("return confirm('Are you sure?')") + " value="
 				+ formElement("Create project") + ">";
 		htmlC += "</form></html>";
-		return htmlC;
+		return htmlC;*/
+		String html;
+		html = "<p>Add new user: <br><table border=" + formElement("1") + "><tr><td>";
+		html += "<form name=" + formElement("input");
+		html += " method=" + formElement("get");
+		html += "<p> Project ID: <input type=" + formElement("text") + " name=" + formElement("addname") + '>';    	
+		html += "<p> First name: <input type=" + formElement("text") + " name=" + formElement("firstname") + '>';    	
+		html += "<p> Last name: <input type=" + formElement("text") + " name=" + formElement("lastname") + '>';    	    	
+		html += "<input type=" + formElement("submit") + "value=" + formElement("Add user") + '>';
+		html += "</form></td></tr></table><br>";
+		return html;
 	}
 
 	protected void doGet(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+		HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession(true);
 		PrintWriter out = response.getWriter();
 		out.println(getPageIntro());

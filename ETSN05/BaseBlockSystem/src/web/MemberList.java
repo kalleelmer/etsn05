@@ -125,8 +125,5 @@ public class MemberList extends servletBase {
 				out.println(managerRequestForm(members));
 			}
 		}
-		if (((Member) nameObj).ROLE == Member.Role.manager) {
-
-		} 
 	}
 }
