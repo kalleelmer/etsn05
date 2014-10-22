@@ -43,10 +43,10 @@ public class ProjectList extends servletBase {
 		htmlD += "<p><form name=" + formElement("id");
 		//htmlD += " action=" + formElement("");
 		htmlD += " method=" + formElement("get") + ">";
-		htmlD += "<imput type=" + formElement("text") + "name="
+		htmlD += "<imput type=" + formElement("number") + "name="
 				+ formElement("close") + " value=" + formElement("Project ID")
 				+ ">";
-		htmlD += "<imput type=" + formElement("submit") + " value="
+		htmlD += "<imput type=" + formElement("submit") + "onclick=" + formElement("return confirm('Are you sure?')") + " value="
 				+ formElement("Close Project2") + ">";
 		htmlD += "</form></p></body>";
 		return htmlD;
@@ -63,7 +63,7 @@ public class ProjectList extends servletBase {
 		htmlC += "Project Name: <imput type=" + formElement("text") + "name="
 				+ formElement("createName") + " value=" + formElement("Project name")
 				+ "><br>";
-		htmlC += "<imput type=" + formElement("submit") + " value="
+		htmlC += "<imput type=" + formElement("submit") + "onclick=" + formElement("return confirm('Are you sure?')") + " value="
 				+ formElement("Create project") + ">";
 		htmlC += "</form></html>";
 		return htmlC;
@@ -81,9 +81,10 @@ public class ProjectList extends servletBase {
 		Object close = request.getParameter("close");
 		Object createID = request.getParameter("createID");
 		Object createName = request.getParameter("createName");
-		if (createNewProject != null) {
-			System.out.print("create");
+		if (!loggedIn(request)) {
+			response.sendRedirect("LogIn");
 		}
+		
 		if (deleteProject != null) {
 			out.println(closeProjectRequestForm());
 		}
@@ -93,14 +94,28 @@ public class ProjectList extends servletBase {
 		if (nameObj != null) {
 			myName = (String) nameObj;
 		}
-		if (!loggedIn(request)) {
-			response.sendRedirect("LogIn");
-		}
+		
 		if (createID != null && createName != null) {
-			
+		/*	Project p = new Project((Integer) createID,(String) createName);
+			try {
+				p.insert();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}*/
 		}
 		if (close != null) {
-			
+			/*Project p;
+			try {
+				p = Project.getByID((Integer) close);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			p.CLOSED = true;*/
 		}
 
 		else {
