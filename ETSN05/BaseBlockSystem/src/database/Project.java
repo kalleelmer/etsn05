@@ -43,7 +43,7 @@ public class Project extends Entity {
 	 * @param name
 	 * @param closed
 	 */
-	public Project(int id, String name, boolean closed) {
+	private Project(int id, String name, boolean closed) {
 		ID = id;
 		NAME = name;
 		CLOSED = closed;
