@@ -4,11 +4,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 import java.util.TreeMap;
 import java.sql.Date;
 
@@ -250,15 +247,17 @@ public class TimeReport extends Entity {
 	 * Updates an existing time report in the database
 	 */
 	public void update() throws SQLException, Exception {
-		// Denna ska kontrollera huruvida tidrapporten är signerad. Om den är
-		// signerad ska det inte gå att uppdatera den.
 		String selectQuery = "SELECT * FROM timeReports WHERE id=" + ID;
 		ResultSet rs = selectQuery(selectQuery);
 		if (rs.next()) {
-			// Oklart hur date ska fungera här.... Fattar noll
-			String updateQuery = "UPDATE timeReports SET activityType="
-					+ ACTIVITY_TYPE + ",duration=" + DURATION + ",signer='"
-					+ SIGNER + "'";
+			String updateQuery = "";
+			if (rs.getString("signer").equals(null)) {
+				updateQuery = "UPDATE timeReports SET signer='" + SIGNER + "';";
+			} else {
+				updateQuery = "UPDATE timeReports SET activityType="
+						+ ACTIVITY_TYPE + ",duration=" + DURATION + ",signer='"
+						+ SIGNER + "';";
+			}
 			query(updateQuery);
 		}
 	}
@@ -269,7 +268,7 @@ public class TimeReport extends Entity {
 	 * or the administrator of the system
 	 */
 	public void delete() throws SQLException, Exception {
-		String deleteQuery = "DELETE FROM timeReports WHERE id=" + ID;
+		String deleteQuery = "DELETE FROM timeReports WHERE id=" + ID + ";";
 		query(deleteQuery);
 	}
 }
