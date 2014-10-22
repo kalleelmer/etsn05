@@ -33,24 +33,24 @@ public class TimeReport extends Entity {
 	public TimeReport(int id, String userName, int projectID, Member.Role role,
 			int activityType, Date date, int duration, String signer) {
 		ID = id;
-		USERNAME = userName;
+		USERNAME = safetyInput(userName);
 		PROJECT_ID = projectID;
 		ROLE = role;
 		ACTIVITY_TYPE = activityType;
 		DATE = date;
 		DURATION = duration;
-		SIGNER = signer;
+		SIGNER = safetyInput(signer);
 	}
 	
 	public TimeReport(String userName, int projectID, Member.Role role, int activityType, Date date, int duration, String signer) {
 		ID = 0;
-		USERNAME = userName;
+		USERNAME = safetyInput(userName);
 		PROJECT_ID = projectID;
 		ROLE = role;
 		ACTIVITY_TYPE = activityType;
 		DATE = date;
 		DURATION = duration;
-		SIGNER = signer;
+		SIGNER = safetyInput(signer);
 	}
 	
 	private static class ConditionBuilder {
@@ -239,12 +239,13 @@ public class TimeReport extends Entity {
 	 * Inserts a time report to the database
 	 */
 	public void insert() throws SQLException, Exception {
-		String addQuery = "INSERT INTO timeReports (user,project,role,activityType,date,duration,signer) VALUES('" + USERNAME + "',"
-				+ PROJECT_ID + ",'" + ROLE + "'," + ACTIVITY_TYPE + ",'" + DATE
-				+ "'," + DURATION + ",'" + SIGNER + "')";
+		String addQuery = "INSERT INTO timeReports SET user='" + USERNAME
+				+ "',project=" + PROJECT_ID + ",role='" + ROLE
+				+ "',activityType=" + ACTIVITY_TYPE + ",date='" + DATE
+				+ "',duration=" + DURATION + ",signer='" + SIGNER + "';";
 		query(addQuery);
 	}
-	
+
 	/**
 	 * Updates an existing time report in the database
 	 */
@@ -270,19 +271,5 @@ public class TimeReport extends Entity {
 	public void delete() throws SQLException, Exception {
 		String deleteQuery = "DELETE FROM timeReports WHERE id=" + ID;
 		query(deleteQuery);
-	}
-	
-	public static void main(String[] args) {
-		TimeReport r1 = new TimeReport(1,"Nisse",3,Member.Role.developer,15,Date.valueOf("2014-10-22"),150,null);
-		try {
-			Map<String, Integer> map = TimeReport.getSummary(null, null, null, "1111-01-01", "1112-12-31", null, null, SumChooser.week);
-			Iterator<Entry<String, Integer>> itr = map.entrySet().iterator();
-			while (itr.hasNext()) {
-				System.out.println(itr.next().toString());
-			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 }

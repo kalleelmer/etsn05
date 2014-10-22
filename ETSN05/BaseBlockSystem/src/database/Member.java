@@ -19,7 +19,7 @@ public class Member extends Entity {
 	public final Role ROLE;
 
 	public Member(String userName, int project, Role role) {
-		USERNAME = userName.replaceAll(INPUTSAFETY, "");
+		USERNAME = safetyInput(userName);
 		PROJECT = project;
 		ROLE = role;
 	}
@@ -41,15 +41,14 @@ public class Member extends Entity {
 	 * @return
 	 */
 	public static List<Member> getMembers(int id) throws SQLException, Exception {
-		String selectQuery = "SELECT * FROM members WHERE project=" + id;
+		String selectQuery = "SELECT * FROM members WHERE project=" + id + ";";
 		ResultSet memberSet = selectQuery(selectQuery);
 		List<Member> foundList = new ArrayList<Member>();
 		while (memberSet.next()) {
 			Member member = new Member(memberSet.getString("username"),
 					memberSet.getInt("project"), Role.valueOf(memberSet
 							.getString("role")));
-			if (member.USERNAME != "admin") {
-				//Returnerar inte admin-uppgifterna, även om admin är member
+			if (!member.USERNAME.equals("admin")) {
 				foundList.add(member);
 			}
 		}
@@ -64,12 +63,13 @@ public class Member extends Entity {
 	 * Inserts a member to the database. If the member already exists, it updates with new data
 	 */
 	public void set() throws SQLException, Exception {
-//		Finns redan member i databasen
-		String selectQuery = "SELECT * FROM members WHERE username='" + USERNAME + "' AND project='" + PROJECT +"'";
+		String selectQuery = "SELECT * FROM members WHERE username='" + USERNAME + "' AND project='" + PROJECT +"';";
 		ResultSet memberSet = selectQuery(selectQuery);
 		if (!memberSet.next()) {
-			String addQuery = "INSERT INTO members(username,project,role) VALUES('"
-					+ USERNAME + "'," + PROJECT + ",'" + ROLE + "')";
+//			String addQuery = "INSERT INTO members(username,project,role) VALUES('"
+//					+ USERNAME + "'," + PROJECT + ",'" + ROLE + "')";
+			String addQuery = "INSERT INTO members SET username='" + USERNAME
+					+ "',project=" + PROJECT + ",role='" + ROLE + "';";
 			query(addQuery);
 		} else {
 			// Ska denna eventuellt berätta att rollen inte förändrats om
@@ -83,9 +83,8 @@ public class Member extends Entity {
 	 * Removes a member from the member list, i.e. removes a member from a project
 	 */
 	public void delete() throws SQLException, Exception {
-		if (USERNAME != "admin") {
-			String deleteQuery = "DELETE FROM members WHERE username='" + USERNAME + "' AND PROJECT='" + PROJECT + "'";
-			query(deleteQuery);
-		}
+		String deleteQuery = "DELETE FROM members WHERE username='" + USERNAME
+				+ "' AND PROJECT='" + PROJECT + "'";
+		query(deleteQuery);
 	}
 }

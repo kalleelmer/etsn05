@@ -6,10 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import javax.sql.rowset.CachedRowSet;
-
-import com.sun.rowset.CachedRowSetImpl;
-
 /**
  * This class is the superclass for all other classes in the database package.
  * It is the only class that communicates directly with the database.
@@ -21,6 +17,10 @@ public class Entity {
 	protected static final String INPUTSAFETY = "[^-abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789]";
 	protected static final String USERNAMESYNTAX = "(\\W)";
 	protected static final String PASSWORDSYNTAX = "[^a-z]";
+	
+	protected static String safetyInput(String input) {
+		return input.replaceAll(INPUTSAFETY, "");
+	}
 	
 	/**
 	 * Verify validity of a username according to constraints
@@ -69,6 +69,7 @@ public class Entity {
 		Statement stmt = Database.CONN.createStatement();
 		stmt.executeUpdate(query);
 		stmt.close();
+		Database.CONN.close();
 	}
 	
 	/**
@@ -89,6 +90,7 @@ public class Entity {
 			DriverManager.registerDriver(new com.mysql.jdbc.Driver());
 			String serverURL = "jdbc:mysql://vm26.cs.lth.se/puss1402?"
 					+ "user=puss1402&password=pwi8ww1k";
+//			String serverURL = "jdbc:mysql://localhost/test_base?" + "user=root&password=etsn05";
 			CONN = DriverManager.getConnection(serverURL);
 			if (CONN == null) {
 				throw new NullPointerException();
