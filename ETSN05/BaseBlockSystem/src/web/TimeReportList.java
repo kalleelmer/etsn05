@@ -218,7 +218,7 @@ public class TimeReportList extends servletBase {
 		if (activityType.equals("select")){
 			return "<p>Select a activity type</p>";
 		}
-		TimeReport newTimeReport = new TimeReport(1,userName, projectID, getRole(userName,projectID),
+		TimeReport newTimeReport = new TimeReport(userName, projectID, getRole(userName,projectID),
 				Integer.parseInt(activityType), dateObj, durationInt, null);
 		try {
 			newTimeReport.insert();
