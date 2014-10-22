@@ -41,9 +41,10 @@ public class ProjectList extends servletBase {
 		String htmlD = "<html><body>";
 		htmlD += "<p>Close Project</p>" + "<p>Project ID:</p>";
 		htmlD += "<p><form name=" + formElement("id");
+		//htmlD += " action=" + formElement("");
 		htmlD += " method=" + formElement("get") + ">";
-		htmlD += "<imput type=" + formElement("number") + "name="
-				+ formElement("create") + " value=" + formElement("Project ID")
+		htmlD += "<imput type=" + formElement("text") + "name="
+				+ formElement("close") + " value=" + formElement("Project ID")
 				+ ">";
 		htmlD += "<imput type=" + formElement("submit") + " value="
 				+ formElement("Close Project2") + ">";
@@ -52,16 +53,19 @@ public class ProjectList extends servletBase {
 	}
 	
 	protected String newProjectRequestForm() {
-		String htmlC = "<html><body>";
-		htmlC = "<p>Create new project</p>"+"<p>Project Name:</p> ";
-		htmlC += "<p><form name=" + formElement("id");
+		String htmlC = "<html>";
+		htmlC = "<p>Create new project</p>";
+		htmlC += "<form name=" + formElement("newProject");
 		htmlC += " method=" + formElement("get") + ">";
-		htmlC += "<imput type=" + formElement("text") + "name="
-				+ formElement("create") + " value=" + formElement("Project ID")
-				+ ">";
+		htmlC += "Project ID: <imput type=" + formElement("text") + "name="
+				+ formElement("createID") + " value=" + formElement("Project ID")
+				+ "><br>";
+		htmlC += "Project Name: <imput type=" + formElement("text") + "name="
+				+ formElement("createName") + " value=" + formElement("Project name")
+				+ "><br>";
 		htmlC += "<imput type=" + formElement("submit") + " value="
-				+ formElement("Close Project2") + ">";
-		htmlC += "</form></p></body>";
+				+ formElement("Create project") + ">";
+		htmlC += "</form></html>";
 		return htmlC;
 	}
 
@@ -74,6 +78,9 @@ public class ProjectList extends servletBase {
 		Object nameObj = session.getAttribute("name");
 		Object createNewProject = request.getParameter("createNewProject");
 		Object deleteProject = request.getParameter("deleteProject");
+		Object close = request.getParameter("close");
+		Object createID = request.getParameter("createID");
+		Object createName = request.getParameter("createName");
 		if (createNewProject != null) {
 			System.out.print("create");
 		}
@@ -88,6 +95,12 @@ public class ProjectList extends servletBase {
 		}
 		if (!loggedIn(request)) {
 			response.sendRedirect("LogIn");
+		}
+		if (createID != null && createName != null) {
+			
+		}
+		if (close != null) {
+			
 		}
 
 		else {
