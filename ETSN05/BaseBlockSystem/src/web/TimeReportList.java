@@ -66,17 +66,7 @@ public class TimeReportList extends servletBase {
    
     protected String timeReportListRequestForm(String userName,String user,String project,String type,
     		String startDate,String endDate,String summary) {
-    	
-    	try {
-    		projects=Project.getByUser(userName);
-    		users =getUsers(userName);
-    	}catch(Exception e){
-    		e.printStackTrace();
-    	}
-    	
-    	
-    	html += "</form>";
-    	return html;
+    	return "";
     			
     }
     
@@ -278,6 +268,7 @@ public class TimeReportList extends servletBase {
 		}
 		if (type.equals("select")){
 		}
+
 		System.out.println(user);
 		System.out.println(projectID);
 		System.out.println(getRole(user,projectID));
@@ -285,6 +276,7 @@ public class TimeReportList extends servletBase {
 
 		TimeReport newTimeReport = new TimeReport(user, projectID, getRole(user,projectID),
 				Integer.parseInt(type), dateObj, durationInt, "");
+
 		try {
 			newTimeReport.insert();
 		} catch (Exception e) {

@@ -27,7 +27,7 @@ public class TimeReport extends Entity {
 	public final int DURATION;
 	public final String SIGNER;
 	
-	public TimeReport(int id, String userName, int projectID, Member.Role role,
+	private TimeReport(int id, String userName, int projectID, Member.Role role,
 			int activityType, Date date, int duration, String signer) {
 		ID = id;
 		USERNAME = safetyInput(userName);

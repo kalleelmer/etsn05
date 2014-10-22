@@ -66,9 +66,9 @@ public class UserList extends servletBase {
 	}
 
 	/**
-	 * Checks if a username corresponds to the requirements for user names. 
-	 * @param name The investigated username
-	 * @return True if the username corresponds to the requirements
+	 * Checks if a username conforms to the requirements for user names. 
+	 * @param name The username
+	 * @return True if the username conforms to the requirements
 	 */
 	private boolean checkNewName(String name) {
 		int length = name.length();
@@ -86,6 +86,11 @@ public class UserList extends servletBase {
 		return ok;
 	}
 
+	/**
+	 * Checks if a password corresponds to the requirements for passwords 
+	 * @param name The password
+	 * @return true if valid
+	 */
 	private boolean checkNewPassword(String name) {
 		int length = name.length();
 		boolean ok = (length==6);

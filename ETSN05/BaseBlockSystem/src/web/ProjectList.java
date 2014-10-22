@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import database.Project;
+
 @WebServlet("/ProjectList")
 public class ProjectList extends servletBase {
 
@@ -22,27 +23,73 @@ public class ProjectList extends servletBase {
 	public ProjectList() {
 		// TODO Auto-generated constructor stub
 	}
-protected String projectListRequestForm(List<Project> list){
-	String html = "<html><body><p>Project List:</p>";
-	html += "<ol>";
-	for (Project s:list) {
-		html +="<li> <a href=" + formElement("MemberList") + ">" + s.NAME + "</a>" + "</li>";
-	}
-	html += "</ol>";
-	return html;
-}
-protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	HttpSession session = request.getSession(true);
-	PrintWriter out = response.getWriter();
-	out.println(getPageIntro());
-	String myName = "";
-	Object nameObj = session.getAttribute("name");
-	if (nameObj != null) {
-		myName = (String)nameObj;
+
+	protected String projectListRequestForm(List<Project> list) {
+		String html = "<html><body><p>Project List:</p>";
+		html += "<ol>";
+		for (Project p : list) {
+			html += "<li> <a href="
+					+ formElement("MemberList" + "?project=" + p.ID) + ">"
+					+ p.NAME + " ID:" + p.ID + "</a>" + "</li>";
 		}
-		if(!loggedIn(request)) {
+		html += "</ol>";
+		return html;
+	}
+
+	protected String closeProjectRequestForm() {
+		// Project id = request.getParameter("id");
+		String htmlD = "<html><body>";
+		htmlD += "<p>Close Project</p>" + "<p>Project ID:</p>";
+		htmlD += "<p><form name=" + formElement("id");
+		htmlD += " method=" + formElement("get") + ">";
+		htmlD += "<imput type=" + formElement("number") + "name="
+				+ formElement("create") + " value=" + formElement("Project ID")
+				+ ">";
+		htmlD += "<imput type=" + formElement("submit") + " value="
+				+ formElement("Close Project2") + ">";
+		htmlD += "</form></p></body>";
+		return htmlD;
+	}
+	
+	protected String newProjectRequestForm() {
+		String htmlC = "<html><body>";
+		htmlC = "<p>Create new project</p>"+"<p>Project Name:</p> ";
+		htmlC += "<p><form name=" + formElement("id");
+		htmlC += " method=" + formElement("get") + ">";
+		htmlC += "<imput type=" + formElement("text") + "name="
+				+ formElement("create") + " value=" + formElement("Project ID")
+				+ ">";
+		htmlC += "<imput type=" + formElement("submit") + " value="
+				+ formElement("Close Project2") + ">";
+		htmlC += "</form></p></body>";
+		return htmlC;
+	}
+
+	protected void doGet(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession(true);
+		PrintWriter out = response.getWriter();
+		out.println(getPageIntro());
+		String myName = "";
+		Object nameObj = session.getAttribute("name");
+		Object createNewProject = request.getParameter("createNewProject");
+		Object deleteProject = request.getParameter("deleteProject");
+		if (createNewProject != null) {
+			System.out.print("create");
+		}
+		if (deleteProject != null) {
+			out.println(closeProjectRequestForm());
+		}
+		if (createNewProject != null){
+			out.println(newProjectRequestForm());
+		}
+		if (nameObj != null) {
+			myName = (String) nameObj;
+		}
+		if (!loggedIn(request)) {
 			response.sendRedirect("LogIn");
-		} 
+		}
+
 		else {
 			List<Project> list = null;
 			try {
@@ -56,10 +103,21 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
 			}
 			out.print(projectListRequestForm(list));
 			if (myName.equals("admin")) {
-				out.println("<p><a href =" + formElement("CreateProject") + "> Create new project </p>");
-				out.println("<p><a href =" + formElement("DeleteProject") + "> Delete project </p>");
+				String htmlA = "<html><body><form action=" + formElement("")
+						+ ">";
+				htmlA += "<input type=" + formElement("submit") + "name="
+						+ formElement("createNewProject");
+				htmlA += " value=" + formElement("Create new project") + ">";
+				htmlA += "</form>";
+				htmlA += "<form action=" + formElement("") + ">";
+				htmlA += "<input type=" + formElement("submit") + "name="
+						+ formElement("deleteProject");
+				htmlA += " value=" + formElement("Close project") + ">";
+				htmlA += "</form>";
+				out.println(htmlA);
 			}
-			out.println("<p><a href =" + formElement("LogIn") + "> Log out </p>");
+			out.println("<p><a href =" + formElement("LogIn")
+					+ "> Log out </p>");
 		}
 	}
 }

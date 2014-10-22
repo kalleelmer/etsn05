@@ -92,48 +92,52 @@ public class User extends Entity {
 	 */
 	public void insert() throws IllegalArgumentException, SQLException,
 			Exception {
-		if (checkUsername(USERNAME) && checkPassword(PASSWORD)) {
-			String insertQuery = "INSERT INTO users SET username='" + USERNAME
-					+ "',PASSWORD='" + PASSWORD + "',firstname='"
-					+ FIRST_NAME + "',lastname='"
-					+ LAST_NAME + "';";
-			query(insertQuery);
-		} else {
-			throw new IllegalArgumentException();
-		}
+		// if (checkUsername(USERNAME) && checkPassword(PASSWORD)) {
+		String insertQuery = "INSERT INTO users SET username='" + USERNAME
+				+ "',PASSWORD='" + PASSWORD + "',firstname='" + FIRST_NAME
+				+ "',lastname='" + LAST_NAME + "';";
+		query(insertQuery);
+		// } else {
+		// throw new IllegalArgumentException();
+		// }
 	}
 
 	/**
 	 * Updates a user with new information to the database
 	 */
-	public void update() throws SecurityException, IllegalArgumentException, SQLException, Exception {
-		if (checkUsername(USERNAME) && checkPassword(PASSWORD)) {
-			if (isAdmin()) {
-				throw new SecurityException();
-			}
-			String updateQuery = "UPDATE users SET password='" + PASSWORD
-					+ "' WHERE username ='" + USERNAME +"';";
-			query(updateQuery);
-		} else {
-			throw new IllegalArgumentException();
+	public void update() throws SecurityException, IllegalArgumentException,
+			SQLException, Exception {
+		// /if (checkUsername(USERNAME) && checkPassword(PASSWORD)) {
+		if (isAdmin()) {
+			throw new SecurityException();
 		}
+		String updateQuery = "UPDATE users SET password='" + PASSWORD
+				+ "' WHERE username ='" + USERNAME + "';";
+		query(updateQuery);
+		// } else {
+		// throw new IllegalArgumentException();
+		// }
 	}
 
 	/**
 	 * Deletes a user from the database
 	 */
-	public void delete() throws SecurityException, IllegalArgumentException, SQLException, Exception {
+	public void delete() throws SecurityException, IllegalArgumentException,
+			SQLException, Exception {
 		if (isAdmin()) {
 			throw new SecurityException();
 		}
-		String selectQuery = "SELECT username,password FROM users WHERE username='" + USERNAME + "' AND PASSWORD='" + PASSWORD + "';";
+		String selectQuery = "SELECT username,password FROM users WHERE username='"
+				+ USERNAME + "' AND PASSWORD='" + PASSWORD + "';";
 		ResultSet userSet = selectQuery(selectQuery);
 		if (!userSet.next()) {
 			throw new IllegalArgumentException();
 		}
-		String deleteUsersQuery = "DELETE FROM users WHERE username='" + USERNAME + "' AND password='" + PASSWORD + "';";
+		String deleteUsersQuery = "DELETE FROM users WHERE username='"
+				+ USERNAME + "' AND password='" + PASSWORD + "';";
 		query(deleteUsersQuery);
-		String deleteMembersQuery = "DELETE FROM members WHERE username='" + USERNAME + "';";
-		query(deleteMembersQuery);	
+		String deleteMembersQuery = "DELETE FROM members WHERE username='"
+				+ USERNAME + "';";
+		query(deleteMembersQuery);
 	}
 }
