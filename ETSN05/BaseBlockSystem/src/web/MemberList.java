@@ -66,7 +66,7 @@ public class MemberList extends servletBase {
 		String html = "<html><body><p> Member list:</p>";
 		html += "<ol>";
 		for (Member p : list) {
-			html += "<li>" +"Username:" + p.USERNAME + "Role:" + p.ROLE + "</li>";
+			html += "<li>" +"Username: " + p.USERNAME + " Role: " + p.ROLE + "</li>";
 		}
 		html += "</ol>";
 		return html;
@@ -119,10 +119,12 @@ public class MemberList extends servletBase {
 			e.printStackTrace();
 		}
 		out.println(memberListRequestForm(members));
+		String u;
 		for(Member m:members){
-			String u = m.USERNAME;
-			if(m.ROLE == Member.Role.manager && u.equals(myName)){
+			u = m.USERNAME;
+			if(m.ROLE.equals(Member.Role.manager) && u.equals(myName)){
 				out.println(managerRequestForm(members));
+				out.println("<p> test</p>");
 			}
 		}
 	}
