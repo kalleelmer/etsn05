@@ -39,23 +39,30 @@ public class ProjectList extends servletBase {
 	protected String closeProjectRequestForm() {
 		// Project id = request.getParameter("id");
 		String htmlD = "<html><body>";
+		htmlD += "<p>Close Project</p>" + "<p>Project ID:</p>";
 		htmlD += "<p><form name=" + formElement("id");
 		htmlD += " method=" + formElement("get") + ">";
-		htmlD += "Project ID: <imput type=" + formElement("number") + "name="
+		htmlD += "<imput type=" + formElement("number") + "name="
 				+ formElement("create") + " value=" + formElement("Project ID")
 				+ ">";
 		htmlD += "<imput type=" + formElement("submit") + " value="
 				+ formElement("Close Project2") + ">";
 		htmlD += "</form></p></body>";
-		/*
-		 * htmlD += "<form name=" + formElement("ID") + "action=" +
-		 * formElement(Project.getByID(id)) + " method=" + formElement("get") +
-		 * ">"; htmlD += "ID of project: <imput type=" + formElement("text") +
-		 * " name=" + formElement("id") +">"; htmlD += "<imput type=" +
-		 * formElement("submit") + " value=" + formElement("Close"); htmlD +=
-		 * "</form>";
-		 */
 		return htmlD;
+	}
+	
+	protected String newProjectRequestForm() {
+		String htmlC = "<html><body>";
+		htmlC = "<p>Create new project</p>"+"<p>Project Name:</p> ";
+		htmlC += "<p><form name=" + formElement("id");
+		htmlC += " method=" + formElement("get") + ">";
+		htmlC += "<imput type=" + formElement("text") + "name="
+				+ formElement("create") + " value=" + formElement("Project ID")
+				+ ">";
+		htmlC += "<imput type=" + formElement("submit") + " value="
+				+ formElement("Close Project2") + ">";
+		htmlC += "</form></p></body>";
+		return htmlC;
 	}
 
 	protected void doGet(HttpServletRequest request,
@@ -72,6 +79,9 @@ public class ProjectList extends servletBase {
 		}
 		if (deleteProject != null) {
 			out.println(closeProjectRequestForm());
+		}
+		if (createNewProject != null){
+			out.println(newProjectRequestForm());
 		}
 		if (nameObj != null) {
 			myName = (String) nameObj;
@@ -105,10 +115,6 @@ public class ProjectList extends servletBase {
 				htmlA += " value=" + formElement("Close project") + ">";
 				htmlA += "</form>";
 				out.println(htmlA);
-				// out.println("<p><a href =" + formElement("CreateProject") +
-				// "> Create new project </p>");
-				// out.println("<p><a href =" + formElement("DeleteProject") +
-				// "> Delete project </p>");
 			}
 			out.println("<p><a href =" + formElement("LogIn")
 					+ "> Log out </p>");
