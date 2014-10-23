@@ -136,8 +136,19 @@ public class TimeReportList extends servletBase {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		String activityType = "INVALID ACTIVITY TYPE CODE: " + t.ACTIVITY_TYPE;
+		int activityNum = t.ACTIVITY_TYPE;
+		List<String> activityNames = getTypes();
+		for (String s : activityNames){
+			String firstthree = s.substring(0, 3);
+			int mynum = Integer.parseInt((firstthree.charAt(2) == '-' ? s.substring(0, 2) : firstthree));
+			if (activityNum == mynum){
+				activityType = s;
+				break;
+			}
+		}
 		html += "<td>" + t.USERNAME + "</td>" + "<td>" + p.ID + "-" + p.NAME
-				+ "</td>" + "<td>" + t.ACTIVITY_TYPE + "</td>" + "<td>"
+				+ "</td>" + "<td>" + activityType + "</td>" + "<td>"
 				+ t.ROLE + "</td>" + "<td>" + t.DATE + "</td>" + "<td>"
 				+ t.DURATION + "</td>";
 
