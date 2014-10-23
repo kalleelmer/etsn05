@@ -24,9 +24,6 @@ import database.User;
 @WebServlet("/TimeReportList")
 public class TimeReportList extends servletBase {
 
-	public TimeReportList() {
-	}
-
 	/**
 	 * Generates a form for Time Report List.
 	 * 

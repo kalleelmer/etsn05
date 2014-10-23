@@ -17,13 +17,6 @@ import database.Project;
 @WebServlet("/ProjectList")
 public class ProjectList extends servletBase {
 
-	/**
-	 * Instantiate a project list servlet
-	 */
-	public ProjectList() {
-		// TODO Auto-generated constructor stub
-	}
-
 	protected String projectListRequestForm(List<Project> list) {
 		String html = "<html><body><p>Project List:</p>";
 		html += "<ol>";

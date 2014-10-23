@@ -18,13 +18,6 @@ import javax.servlet.http.HttpSession;
 @WebServlet("/MemberList")
 public class MemberList extends servletBase {
 
-	/**
-	 * Instantiate a member list servlet
-	 */
-	public MemberList() {
-		super();
-	}
-
 	private <E> String dropDownMenu(List<E> list, String name, String intro) {
 		String html = "<select name =" + formElement(name) + ">";
 		html += "<option value=" + intro + ">" + intro + "</option>";
