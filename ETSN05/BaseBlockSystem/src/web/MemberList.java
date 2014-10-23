@@ -3,14 +3,12 @@ package web;
 import database.Member;
 import database.Project;
 import database.User;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -131,7 +129,7 @@ public class MemberList extends servletBase {
 		String u;
 		for (Member m : members) {
 			u = m.USERNAME;
-			if (m.ROLE.equals(Member.Role.manager) && u.equals(myName)) {
+			if (m.ROLE.equals(Member.Role.valueOf("manager")) && u.equals(myName)) {
 				out.println(managerRequestForm(members));
 				out.println("<p> test</p>");
 			}

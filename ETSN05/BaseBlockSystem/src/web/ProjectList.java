@@ -96,30 +96,33 @@ public class ProjectList extends servletBase {
 
 		if (createID != null && createName != null) {
 			int y = Integer.parseInt(createID);
-			Project p = new Project(y, createName);
+			Project p = null;
 			try {
-				p.insert();
+				p = Project.getByID(y);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			if(p == null){
+				out.println("Project ID already in use");
+			}
+			p = new Project(y, createName);
 		}
 		if (close != null) {
 			Project p = null;
 			int x = Integer.parseInt(close);
 			try {
-				p = Project.getByID(x);
+				if(Project.getByID(x) == null) {
+					out.println("No project with that ID");
+				} else {
+					p = Project.getByID(x);
+					p.CLOSED = true;
+				}
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
-			p.CLOSED = true;
-		}
-
-		else {
+		} else {
 			List<Project> list = null;
 			try {
 				list = Project.getByUser(myName);
