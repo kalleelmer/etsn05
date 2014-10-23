@@ -94,7 +94,7 @@ public class MemberList extends servletBase {
 		HttpSession session = request.getSession(true);
 		PrintWriter out = response.getWriter();
 		out.println(getPageIntro());
-		Object nameObj = session.getAttribute("username");
+		Object nameObj = session.getAttribute("name");
 		int projectID;
 		String myName = "";
 		try {
@@ -122,9 +122,8 @@ public class MemberList extends servletBase {
 		String u;
 		for (Member m : members) {
 			u = m.USERNAME;
-			if (m.ROLE.equals(Member.Role.valueOf("manager")) && u.equals(myName)) {
+			if (m.ROLE == Member.Role.manager && u.equals(myName)) {
 				out.println(managerRequestForm(members));
-				out.println("<p> test</p>");
 			}
 		}
 	}
