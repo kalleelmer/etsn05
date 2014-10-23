@@ -30,7 +30,7 @@ public class ProjectList extends servletBase {
 		for (Project p : list) {
 			html += "<li> <a href="
 					+ formElement("MemberList" + "?project=" + p.ID) + ">"
-					+ p.NAME + "</a>" + "</li>";
+					+ p.NAME + " ID:" + p.ID + "</a>" + "</li>";
 		}
 		html += "</ol>";
 		return html;
@@ -42,8 +42,11 @@ public class ProjectList extends servletBase {
 				+ "><tr><td>";
 		html += "<form name=" + formElement("input");
 		html += " method=" + formElement("get");
-		html += "<p> Project ID: <input type=" + formElement("number")
-				+ " name=" + formElement("close") + '>';
+//		html += "<p> Project ID: <input type=" + formElement("number")
+//				+ " name=" + formElement("close") + '>';
+		html += "<form action=''>";
+		html += "<select name=" + formElement("cars") + " width =" + formElement("300") + ">";
+		html += "<option value=" + formElement("volvo") + ">Volvo</option></select></form>";
 		html += "<input type=" + formElement("submit") + "onclick="
 				+ formElement("return confirm('Are you sure?')") + "value="
 				+ formElement("Close") + '>';
@@ -53,10 +56,12 @@ public class ProjectList extends servletBase {
 
 	protected String newProjectRequestForm() {
 		String html;
-		html = "<p>Add new project: <br><table border=" + formElement("1")
+		html = "<p>Add new user: <br><table border=" + formElement("1")
 				+ "><tr><td>";
 		html += "<form name=" + formElement("input");
 		html += " method=" + formElement("get");
+		html += "<p> Project ID: <input type=" + formElement("number")
+				+ " name=" + formElement("createID") + '>';
 		html += "<p> Project name: <input type=" + formElement("text")
 				+ " name=" + formElement("createName") + '>';
 		html += "<input type=" + formElement("submit") + "onclick="
@@ -76,6 +81,7 @@ public class ProjectList extends servletBase {
 		Object createNewProject = request.getParameter("createNewProject");
 		Object deleteProject = request.getParameter("deleteProject");
 		String close = request.getParameter("close");
+		String createID = request.getParameter("createID");
 		String createName = request.getParameter("createName");
 		if (!loggedIn(request)) {
 			response.sendRedirect("LogIn");
@@ -83,23 +89,27 @@ public class ProjectList extends servletBase {
 
 		if (deleteProject != null) {
 			out.println(closeProjectRequestForm());
-			return;
 		}
 		if (createNewProject != null) {
 			out.println(newProjectRequestForm());
-			return;
 		}
 		if (nameObj != null) {
 			myName = (String) nameObj;
 		}
 
-		if (createName != null) {
-			Project p = new Project(createName);
+		if (createID != null && createName != null) {
+			int y = Integer.parseInt(createID);
+			Project p = null;
 			try {
-				p.insert();
+				p = Project.getByID(y);
 			} catch (SQLException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			if(p == null){
+				out.println("Project ID already in use");
+			}
+			p = new Project(y, createName);
 		}
 		if (close != null) {
 			Project p = null;
