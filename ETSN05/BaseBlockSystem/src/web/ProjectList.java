@@ -36,7 +36,7 @@ public class ProjectList extends servletBase {
 		return html;
 	}
 
-	protected String closeProjectRequestForm() {
+	protected String closeProjectRequestForm(List<Project> list) {
 		String html;
 		html = "<p>Close project: <br><table border=" + formElement("1")
 				+ "><tr><td>";
@@ -45,11 +45,14 @@ public class ProjectList extends servletBase {
 //		html += "<p> Project ID: <input type=" + formElement("number")
 //				+ " name=" + formElement("close") + '>';
 		html += "<form action=''>";
-		html += "<select name=" + formElement("cars") + " width =" + formElement("300") + ">";
-		html += "<option value=" + formElement("volvo") + ">Volvo</option></select></form>";
-		html += "<input type=" + formElement("submit") + "onclick="
+		html += "<select name=" + formElement("close") + ">";
+		for(Project p : list){
+			html += "<option value=" + formElement(p.ID+"") + ">" + formElement(p.NAME).replace("\"", "") + " ID=" + formElement(p.ID + "") + "</option>";
+		}
+			
+		html += "</select></form><input type=" + formElement("submit") + "onclick="
 				+ formElement("return confirm('Are you sure?')") + "value="
-				+ formElement("Close") + '>';
+				+ formElement("close") + '>';
 		html += "</form></td></tr></table><br>";
 		return html;
 	}
@@ -81,21 +84,29 @@ public class ProjectList extends servletBase {
 		String close = request.getParameter("close");
 		String createID = request.getParameter("createID");
 		String createName = request.getParameter("createName");
+		List<Project> list = null;
+		if (nameObj != null) {
+			myName = (String) nameObj;
+		}
+		try {
+			list = Project.getByUser(myName);
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
 		if (!loggedIn(request)) {
 			response.sendRedirect("LogIn");
 		}
-
 		if (deleteProject != null) {
-			out.println(closeProjectRequestForm());
+			out.println(closeProjectRequestForm(list));
 			return;
 		}
 		if (createNewProject != null) {
 			out.println(newProjectRequestForm());
 			return;
 		}
-		if (nameObj != null) {
-			myName = (String) nameObj;
-		}
+
 
 		if (createName != null) {
 			Project p = new Project(createName);
@@ -108,28 +119,21 @@ public class ProjectList extends servletBase {
 		if (close != null) {
 			Project p = null;
 			int x = Integer.parseInt(close);
+			System.out.println(close);
 			try {
 				if(Project.getByID(x) == null) {
 					out.println("No project with that ID");
 				} else {
 					p = Project.getByID(x);
 					p.CLOSED = true;
+					p.update();
 				}
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} else {
-			List<Project> list = null;
-			try {
-				list = Project.getByUser(myName);
-			} catch (SecurityException e) {
-				e.printStackTrace();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+
 			out.print(projectListRequestForm(list));
 			if (myName.equals("admin")) {
 				String htmlA = "<html><body><form action=" + formElement("")

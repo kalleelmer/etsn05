@@ -117,8 +117,9 @@ public class Project extends Entity {
 	 * Updates a current project with new information in the database
 	 */
 	public void update() throws SQLException {
+		System.out.println(ID);
 		String updateQuery = "UPDATE projects SET name ='" + NAME
-				+ "',closed=" + CLOSED + " WHERE id=" + ID + ";";
+				+ "',closed=" + (CLOSED ? 1 : 0) + " WHERE id=" + ID + ";";
 		query(updateQuery);
 	}
 }
