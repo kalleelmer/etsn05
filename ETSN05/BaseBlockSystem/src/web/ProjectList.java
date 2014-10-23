@@ -138,8 +138,6 @@ public class ProjectList extends servletBase {
 				htmlA += "</form>";
 				out.println(htmlA);
 			}
-			out.println("<p><a href =" + formElement("LogIn")
-					+ "> Log out </p>");
 		}
 	}
 }
