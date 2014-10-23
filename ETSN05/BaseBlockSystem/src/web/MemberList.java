@@ -48,7 +48,9 @@ public class MemberList extends servletBase {
 			return ((User) s).USERNAME;
 		} else if (s instanceof Project) {
 			return ((Project) s).ID + "- " + ((Project) s).NAME;
-		} else {
+		} else if (s instanceof Member) {
+			return ((Member) s).USERNAME;
+			} else {
 			return "";
 		}
 	}
