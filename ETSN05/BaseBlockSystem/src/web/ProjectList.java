@@ -56,12 +56,10 @@ public class ProjectList extends servletBase {
 
 	protected String newProjectRequestForm() {
 		String html;
-		html = "<p>Add new user: <br><table border=" + formElement("1")
+		html = "<p>Add new project: <br><table border=" + formElement("1")
 				+ "><tr><td>";
 		html += "<form name=" + formElement("input");
 		html += " method=" + formElement("get");
-		html += "<p> Project ID: <input type=" + formElement("number")
-				+ " name=" + formElement("createID") + '>';
 		html += "<p> Project name: <input type=" + formElement("text")
 				+ " name=" + formElement("createName") + '>';
 		html += "<input type=" + formElement("submit") + "onclick="
@@ -89,27 +87,23 @@ public class ProjectList extends servletBase {
 
 		if (deleteProject != null) {
 			out.println(closeProjectRequestForm());
+			return;
 		}
 		if (createNewProject != null) {
 			out.println(newProjectRequestForm());
+			return;
 		}
 		if (nameObj != null) {
 			myName = (String) nameObj;
 		}
 
-		if (createID != null && createName != null) {
-			int y = Integer.parseInt(createID);
-			Project p = null;
+		if (createName != null) {
+			Project p = new Project(createName);
 			try {
-				p = Project.getByID(y);
+				p.insert();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			if(p == null){
-				out.println("Project ID already in use");
-			}
-			p = new Project(y, createName);
 		}
 		if (close != null) {
 			Project p = null;
