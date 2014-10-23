@@ -126,23 +126,33 @@ public class UserList extends servletBase {
 	 * because the name already exist in the database. 
 	 */
 	private boolean addUser(String name, String firstName, String lastName) {
-		boolean resultOk = true;
-		try{
-			Statement stmt = conn.createStatement();
-			String statement = "insert into users (username, firstname, lastname, password) values('" + name + "', '" + firstName + "',"
-					+ "'" + lastName + "', '" + 
-					createPassword() + "')";
-			System.out.println(statement);
-			stmt.executeUpdate(statement); 
-			stmt.close();
-
-		} catch (SQLException ex) {
-			resultOk = false;
-			// System.out.println("SQLException: " + ex.getMessage());
-			System.out.println("SQLState: " + ex.getSQLState());
-			System.out.println("VendorError: " + ex.getErrorCode());
+		
+		User user = new User(name, createPassword(), firstName, lastName);
+		try {
+			user.insert();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
 		}
-		return resultOk;
+		return true;
+//		boolean resultOk = true;
+//		try{
+//			Statement stmt = conn.createStatement();
+//			String statement = "insert into users (username, firstname, lastname, password) values('" + name + "', '" + firstName + "',"
+//					+ "'" + lastName + "', '" + 
+//					createPassword() + "')";
+//			System.out.println(statement);
+//			stmt.executeUpdate(statement); 
+//			stmt.close();
+//
+//		} catch (SQLException ex) {
+//			resultOk = false;
+//			// System.out.println("SQLException: " + ex.getMessage());
+//			System.out.println("SQLState: " + ex.getSQLState());
+//			System.out.println("VendorError: " + ex.getErrorCode());
+//		}
+//		return resultOk;
 	}
 
 	/**
