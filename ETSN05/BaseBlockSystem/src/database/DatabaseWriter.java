@@ -15,8 +15,6 @@ import database.Member.Role;
 public class DatabaseWriter extends Entity{
 	
 	public static void write() throws IOException, SQLException {
-		query("create database test_base");
-		query("use database test_base");
 		try {
 		query("drop table users");
 		query("drop table projects");
