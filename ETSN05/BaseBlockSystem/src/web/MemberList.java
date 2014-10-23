@@ -1,14 +1,17 @@
 package web;
 
 import database.Member;
+import database.Member.Role;
 import database.Project;
 import database.User;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -75,7 +78,7 @@ public class MemberList extends servletBase {
 		List<String> tableRow1 = Arrays.asList("", "User", "Role");
 		List<String> tableRow2 = Arrays.asList("Display",
 				dropDownMenu(memberList, "filterUser"),
-				dropDownMenu(role, "filterProject"));
+				dropDownMenu(role, "filterRole"));
 		String html = "<p> <form name=" + formElement("input");
 		html += " method=" + formElement("get") + ">";
 		html += "<table style=" + formElement("width:80%")
@@ -95,7 +98,11 @@ public class MemberList extends servletBase {
 		out.println(getPageIntro());
 		Object nameObj = session.getAttribute("name");
 		int projectID;
+		String filterUser = null;
+		String filterRole = null;
 		String myName = "";
+		filterUser = request.getParameter(filterUser);
+		filterRole = request.getParameter(filterRole);
 		try {
 			projectID = Integer.parseInt(request.getParameter("project"));
 		} catch (NumberFormatException e) {
@@ -118,11 +125,19 @@ public class MemberList extends servletBase {
 		try {
 			members = Member.getMembers(projectID);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		if(members == null) {
 			members = new ArrayList<Member>();
+		}
+		if(filterUser != null && filterRole != null){
+			Role role = Member.Role.valueOf(filterRole);
+			Member newMember = new Member(filterUser, projectID, role);
+			try {
+				newMember.set();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 		out.println(memberListRequestForm(members));
 		String u;
