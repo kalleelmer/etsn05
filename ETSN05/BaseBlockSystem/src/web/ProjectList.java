@@ -30,7 +30,7 @@ public class ProjectList extends servletBase {
 		for (Project p : list) {
 			html += "<li> <a href="
 					+ formElement("MemberList" + "?project=" + p.ID) + ">"
-					+ p.NAME + " ID:" + p.ID + "</a>" + "</li>";
+					+ p.NAME + "</a>" + "</li>";
 		}
 		html += "</ol>";
 		return html;
