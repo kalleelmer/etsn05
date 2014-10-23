@@ -109,7 +109,7 @@ public class Project extends Entity {
 	 */
 	public void insert() throws SQLException {
 		String insertQuery = "INSERT INTO projects SET name='"
-				+ NAME + "',closed=" + CLOSED + ";";
+				+ NAME + "',closed=" + (CLOSED ? 1 : 0) + ";";
 		query(insertQuery);
 	}
 

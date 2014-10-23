@@ -427,8 +427,6 @@ public class TimeReportList extends servletBase {
 						+ formElement("TimeReportList?val=createInit")
 						+ "> Create new time report </p>");
 			}
-			out.println("<p><a href =" + formElement("LogIn")
-					+ "> Log out </p>");
 			out.println("</body></html>");
 		}
 	}

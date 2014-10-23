@@ -3,7 +3,6 @@ package web;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -19,13 +18,13 @@ public class ProjectList extends servletBase {
 
 	protected String projectListRequestForm(List<Project> list) {
 		String html = "<html><body><p>Project List:</p>";
-		html += "<ol>";
+		html += "<table border = " + formElement("1") + "><tr><td>ID</td><td>Name</td><td>Active</td>";
 		for (Project p : list) {
-			html += "<li> <a href="
+			html += "<tr><td>" + p.ID + "</td> <td> <a href="
 					+ formElement("MemberList" + "?project=" + p.ID) + ">"
-					+ p.NAME + " ID:" + p.ID + "</a>" + "</li>";
+					+ p.NAME + "</a>" + "</td><td>" + !p.CLOSED + "</td></tr>";
 		}
-		html += "</ol>";
+		html += "</table>";
 		return html;
 	}
 
@@ -35,17 +34,14 @@ public class ProjectList extends servletBase {
 				+ "><tr><td>";
 		html += "<form name=" + formElement("input");
 		html += " method=" + formElement("get");
-//		html += "<p> Project ID: <input type=" + formElement("number")
-//				+ " name=" + formElement("close") + '>';
 		html += "<form action=''>";
 		html += "<select name=" + formElement("close") + ">";
 		for(Project p : list){
 			html += "<option value=" + formElement(p.ID+"") + ">" + formElement(p.NAME).replace("\"", "") + " ID=" + formElement(p.ID + "") + "</option>";
 		}
-			
-		html += "</select></form><input type=" + formElement("submit") + "onclick="
+		html += "</select><input type=" + formElement("submit") + "onclick="
 				+ formElement("return confirm('Are you sure?')") + "value="
-				+ formElement("close") + '>';
+				+ formElement("Close") + '>';
 		html += "</form></td></tr></table><br>";
 		return html;
 	}
@@ -142,8 +138,6 @@ public class ProjectList extends servletBase {
 				htmlA += "</form>";
 				out.println(htmlA);
 			}
-			out.println("<p><a href =" + formElement("LogIn")
-					+ "> Log out </p>");
 		}
 	}
 }
