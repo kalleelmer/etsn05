@@ -57,11 +57,10 @@ public class User extends Entity {
 		ResultSet userSet = selectQuery(selectQuery);
 		List<User> allUsers = new ArrayList<User>();
 		while (userSet.next()) {
-			User user = new User(userSet.getString("username"),
+			allUsers.add(new User(userSet.getString("username"),
 					userSet.getString("password"),
 					userSet.getString("firstname"),
-					userSet.getString("lastname"));
-			allUsers.add(user);
+					userSet.getString("lastname")));
 		}
 		if (allUsers.isEmpty()) {
 			return null;
