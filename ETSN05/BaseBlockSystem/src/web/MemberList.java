@@ -18,9 +18,9 @@ import javax.servlet.http.HttpSession;
 @WebServlet("/MemberList")
 public class MemberList extends servletBase {
 
-	private <E> String dropDownMenu(List<E> list, String name, String intro) {
+	private <E> String dropDownMenu(List<E> list, String name) {
 		String html = "<select name =" + formElement(name) + ">";
-		html += "<option value=" + intro + ">" + intro + "</option>";
+		//html += "<option value=" + intro + ">" + intro + "</option>";
 		if (list == null) {
 			html += "</select>";
 			return html;
@@ -77,8 +77,8 @@ public class MemberList extends servletBase {
 		role.add("tester");
 		List<String> tableRow1 = Arrays.asList("", "User", "Role");
 		List<String> tableRow2 = Arrays.asList("Display",
-				dropDownMenu(memberList, "filterUser", "all members"),
-				dropDownMenu(role, "filterProject", "roles"));
+				dropDownMenu(memberList, "filterUser"),
+				dropDownMenu(role, "filterProject"));
 		String html = "<p> <form name=" + formElement("input");
 		html += " method=" + formElement("get") + ">";
 		html += "<table style=" + formElement("width:80%")
