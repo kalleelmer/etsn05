@@ -57,8 +57,6 @@ public class ProjectList extends servletBase {
 				+ "><tr><td>";
 		html += "<form name=" + formElement("input");
 		html += " method=" + formElement("get");
-		html += "<p> Project ID: <input type=" + formElement("number")
-				+ " name=" + formElement("createID") + '>';
 		html += "<p> Project name: <input type=" + formElement("text")
 				+ " name=" + formElement("createName") + '>';
 		html += "<input type=" + formElement("submit") + "onclick="
@@ -78,7 +76,6 @@ public class ProjectList extends servletBase {
 		Object createNewProject = request.getParameter("createNewProject");
 		Object deleteProject = request.getParameter("deleteProject");
 		String close = request.getParameter("close");
-		String createID = request.getParameter("createID");
 		String createName = request.getParameter("createName");
 		if (!loggedIn(request)) {
 			response.sendRedirect("LogIn");
@@ -96,19 +93,13 @@ public class ProjectList extends servletBase {
 			myName = (String) nameObj;
 		}
 
-		if (createID != null && createName != null) {
-			int y = Integer.parseInt(createID);
-			Project p = null;
+		if (createName != null) {
+			Project p = new Project(createName);
 			try {
-				p = Project.getByID(y);
+				p.insert();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			if(p == null){
-				out.println("Project ID already in use");
-			}
-			p = new Project(y, createName);
 		}
 		if (close != null) {
 			Project p = null;
