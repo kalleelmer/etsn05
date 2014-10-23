@@ -27,7 +27,7 @@ public class TimeReport extends Entity {
 	public final int DURATION;
 	public final String SIGNER;
 	
-	private TimeReport(int id, String userName, int projectID, Member.Role role,
+	public TimeReport(int id, String userName, int projectID, Member.Role role,
 			int activityType, Date date, int duration, String signer) {
 		ID = id;
 		USERNAME = safetyInput(userName);
@@ -250,12 +250,12 @@ public class TimeReport extends Entity {
 		ResultSet timeReportSet = selectQuery(selectQuery);
 		if (timeReportSet.next()) {
 			String updateQuery = "";
-			if (timeReportSet.getString("signer").equals(null)) {
-				updateQuery = "UPDATE timeReports SET signer='" + SIGNER + "';";
+			if (!timeReportSet.getString("signer").equals(null)) {
+				updateQuery = "UPDATE timeReports SET signer='" + SIGNER + "' WHERE id=" + ID +";";
 			} else {
 				updateQuery = "UPDATE timeReports SET activityType="
 						+ ACTIVITY_TYPE + ",duration=" + DURATION + ",signer='"
-						+ SIGNER + "';";
+						+ SIGNER + "' WHERE id=" + ID +";";
 			}
 			query(updateQuery);
 		}

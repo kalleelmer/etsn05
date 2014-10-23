@@ -57,9 +57,9 @@ public class TimeReportList extends servletBase {
 				dropDownMenu(types, "filterType", "all activity types"),
 				dropDownMenu(roles, "filterRole", "all roles"), "<input type="
 						+ formElement("text") + "name="
-						+ formElement("filterStartDate") + "value="
+						+ formElement("filterStartDate") + "size="+formElement("8") +"value="
 						+ formElement("") + ">", "<input type="
-						+ formElement("text") + "name="
+						+ formElement("text") + "size="+formElement("8") + "name="
 						+ formElement("filterEndDate") + "value="
 						+ formElement("") + ">",
 				dropDownMenu(summary, "filterSummary", "none"));
@@ -113,7 +113,7 @@ public class TimeReportList extends servletBase {
 			} catch (Exception e) {
 			}
 			List<String> tableRow1 = Arrays.asList("User", "Project",
-					"Acticvity type", "Role", "Date", "Duration");
+					"Acticvity type", "Role", "Date", "Duration","Update","Remove","Sign/Unsign");
 			html += "<table border=" + formElement("1") + tableRow(tableRow1)
 					+ "</tr>";
 			if (timeReports != null) {
@@ -158,7 +158,7 @@ public class TimeReportList extends servletBase {
 					+ formElement("TimeReportList?val=update&t=" + t.ID)
 					+ ">update</td>";
 		} else {
-			html += "<td></td>";
+			html += "<td>-</td>";
 		}
 		if (t.SIGNER.equals("null")
 				&& (userName.equals("admin") || t.USERNAME.equals(userName))) {
@@ -166,7 +166,7 @@ public class TimeReportList extends servletBase {
 					+ formElement("TimeReportList?val=remove&t=" + t.ID)
 					+ ">remove</td>";
 		} else {
-			html += "<td></td>";
+			html += "<td>-</td>";
 		}
 		Role role = Member.Role.valueOf("tester");
 		if (!userName.equals("admin")) {
@@ -183,6 +183,8 @@ public class TimeReportList extends servletBase {
 						+ formElement("TimeReportList?val=unsign&t=" + t.ID)
 						+ ">unsign</td>";
 			}
+		}else{
+			html+="<td></td>";
 		}
 
 		html += "</tr>";
@@ -257,9 +259,9 @@ public class TimeReportList extends servletBase {
 				dropDownMenu(activityType, "createNewType",
 						"select activity type"), "<input type="
 						+ formElement("text") + "name="
-						+ formElement("createNewDate") + ">", "<input type="
+						+ formElement("createNewDate") + "size="+formElement("8")+ ">", "<input type="
 						+ formElement("text") + "name="
-						+ formElement("createNewDuration") + ">");
+						+ formElement("createNewDuration") + "size="+formElement("6") + ">");
 		html = "<p> <form name=" + formElement("input");
 		html += " method=" + formElement("get") + ">";
 		html += "<table border=" + formElement("1") + tableRow(tableRow1)
@@ -272,16 +274,30 @@ public class TimeReportList extends servletBase {
 		return html;
 
 	}
-
-	/**
-	 * Generates a form for Time Report List.
-	 * 
-	 * @param logged
-	 *            in user
-	 * @return HTML code for the form
-	 */
-	protected String generateTimeReportList(String userName) {
-		return null;
+	
+	protected String updateTimeReportRequestForm(String userName,int project_id, Date date,int activityType,int duration,String ID) throws SQLException {
+		// Retrieving projects that user is member in
+		String html = "";
+		List<String> activityTypes = getTypes();
+		List<String> projects = new LinkedList<String>();
+		List<String> tableRow1 = Arrays.asList("Project", "Activity type","Date", "Duration","ID");
+		List<String> tableRow2 = Arrays.asList(dropDownMenu(projects, "updateProject",getString(Project.getByID(project_id))),
+				dropDownMenu(activityTypes, "updateType",Integer.toString(activityType)+"-TODO"),
+				 "<input type=" + formElement("text") + "name="+ formElement("updateDate") +"value="+formElement(date.toString())+ "size="+formElement("8")+ ">",
+				 "<input type=" + formElement("text") + "name="+ formElement("updateDuration") + "value="
+								+ formElement(Integer.toString(duration)) + "size="+formElement("6") + ">",
+				 "<input type=" + formElement("text") + "name="+ formElement("t") + "value="
+								+ formElement(ID) + "size="+formElement("6") + ">");
+		html = "<p> <form name=" + formElement("input");
+		html += " method=" + formElement("get") + ">";
+		html += "<table border=" + formElement("1") + tableRow(tableRow1)
+				+ "</tr><tr>" + tableRow(tableRow2);
+		html += "<td><input type=" + formElement("submit") + "name="
+				+ formElement("val") + "value=" + formElement("save")
+				+ "></td></tr>";
+		html += "</table>";
+		html += "</form>";
+		return html;
 
 	}
 
@@ -382,6 +398,12 @@ public class TimeReportList extends servletBase {
 		String createNewType = request.getParameter("createNewType");
 		String createNewDate = request.getParameter("createNewDate");
 		String createNewDuration = request.getParameter("createNewDuration");
+		
+		String updateType = request.getParameter("updateType");
+		String updateDuration = request.getParameter("updateDuration");
+		String updateDate = request.getParameter("updateDate");
+		String updateProject = request.getParameter("updateProject");
+		//System.out.println(updateDuration);
 
 		String filterUser = request.getParameter("filterUser");
 		String filterProject = request.getParameter("filterProject");
@@ -393,7 +415,7 @@ public class TimeReportList extends servletBase {
 
 		PrintWriter out = response.getWriter();
 		out.println(getPageIntro());
-		out.println("<html><body><p>Time Report List:</p>");
+		out.println("<html>");
 
 		// check that the user is logged in
 		if (!loggedIn(request)) {
@@ -406,18 +428,47 @@ public class TimeReportList extends servletBase {
 					out.println(newTimeReportRequestForm(userName));
 				} else if (val.equals("create")) {
 					out.println(createTimeReport(userName, createNewProject,
-							createNewType, createNewDate, createNewDuration));
+							createNewType, createNewDate, createNewDuration,true,0));
 					out.println(newTimeReportRequestForm(userName));
 				} else if (val.equals("update")) {
-					// TODO
+					try {
+						TimeReport t = TimeReport.getByID(Integer.parseInt(timeReportID));
+						out.println(updateTimeReportRequestForm(userName,t.PROJECT_ID,t.DATE,t.ACTIVITY_TYPE,t.DURATION,timeReportID));
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				} else if (val.equals("save")) {
+					out.println(createTimeReport(userName, updateProject,
+							updateType, updateDate, updateDuration,false,Integer.parseInt(timeReportID)));
+					out.println(timeReportListMenuRequestForm(userName));
 				} else if (val.equals("sign")) {
+					try {
+						TimeReport t = TimeReport.getByID(Integer.parseInt(timeReportID));
+						TimeReport updateT =new TimeReport(t.ID,t.USERNAME,t.PROJECT_ID,t.ROLE,
+								t.ACTIVITY_TYPE,t.DATE,t.DURATION,userName);
+						updateT.update();
+						out.println(timeReportListMenuRequestForm(userName));
 
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				} else if (val.equals("unsign")) {
+					try {
+						TimeReport t = TimeReport.getByID(Integer.parseInt(timeReportID));
+						TimeReport updateT =new TimeReport(t.ID,t.USERNAME,t.PROJECT_ID,t.ROLE,
+								t.ACTIVITY_TYPE,t.DATE,t.DURATION,null);
+						updateT.update();
+						out.println(timeReportListMenuRequestForm(userName));
 
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				} else if (val.equals("remove")) {
 					try {
-						TimeReport t = TimeReport.getByID(Integer
-								.parseInt(timeReportID));
+						TimeReport t = TimeReport.getByID(Integer.parseInt(timeReportID));
 						t.delete();
 						out.println(timeReportListMenuRequestForm(userName));
 
@@ -448,7 +499,7 @@ public class TimeReportList extends servletBase {
 	}
 
 	private String createTimeReport(String user, String project, String type,
-			String date, String duration) {
+			String date, String duration,boolean create,int ID) {
 		Date dateObj = null;
 		int durationInt = 0;
 		int projectID = 0;
@@ -475,16 +526,28 @@ public class TimeReportList extends servletBase {
 			typeInt = getID(type);
 		}
 
-		TimeReport newTimeReport = new TimeReport(user, projectID, getRole(
-				user, projectID), typeInt, dateObj, durationInt, "");
+		if (create){
+			TimeReport newTimeReport = new TimeReport(user, projectID, getRole(
+					user, projectID), typeInt, dateObj, durationInt, null);
+			try {
+				newTimeReport.insert();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return "<p>Time report created</p>";
+		}else{
+			TimeReport updatedTimeReport = new TimeReport(ID,user, projectID, getRole(
+					user, projectID), typeInt, dateObj, durationInt, null);
 
-		try {
-			newTimeReport.insert();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			try {
+				updatedTimeReport.update();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return "<p>Time report updated</p>";
 		}
-		return "<p>Time report created</p>";
 	}
 
 	private Role getRole(String user, int projectID) {

@@ -65,7 +65,7 @@ public class Entity {
 		private static Database INSTANCE = null;
 		private Connection CONN;
 		//private static String serverURL = "jdbc:mysql://vm26.cs.lth.se/puss1402?"
-		//		+ "user=puss1402&password=pwi8ww1k";
+			//	+ "user=puss1402&password=pwi8ww1k";
 		private static String serverURL = "jdbc:mysql://localhost/test_base?user=root&password=etsn05";
 
 		private Database() throws SQLException {
