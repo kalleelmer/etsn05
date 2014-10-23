@@ -20,7 +20,6 @@ public class MemberList extends servletBase {
 
 	private <E> String dropDownMenu(List<E> list, String name) {
 		String html = "<select name =" + formElement(name) + ">";
-		//html += "<option value=" + intro + ">" + intro + "</option>";
 		if (list == null) {
 			html += "</select>";
 			return html;
@@ -54,8 +53,6 @@ public class MemberList extends servletBase {
 			return "";
 		}
 	}
-
-	// Member.role.valueOf("manager");
 
 	protected String memberListRequestForm(List<Member> list) {
 		String html = "<html><body><p> Member list:</p>";
