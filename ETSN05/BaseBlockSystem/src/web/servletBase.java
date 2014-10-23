@@ -114,8 +114,8 @@ public class servletBase extends HttpServlet {
 	 */
 	protected String getPageIntro() {
 		String intro = "<html>"
-				+ "<head><title> The Base Block System </title></head>"
-				+ "<body>";
+				+ "<head><title>ETSN05 1402</title><style>a { color: #6A5A5B; }</style></head>"
+				+ "<body bgcolor=\"#F5F4F4\"><font color=\"#6A5A5B\">";
 		return intro;
 	}
 
