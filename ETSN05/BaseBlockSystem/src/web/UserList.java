@@ -191,16 +191,11 @@ public class UserList extends servletBase {
 				String cpwPass = request.getParameter("password");
 				String cpwUser = request.getParameter("name");
 				if (cpwPass != null){
-					Statement stmt;
 					if (checkNewPassword(cpwPass)){
 						try {
-							stmt = conn.createStatement();
-							int result = stmt.executeUpdate("update users set password='" + cpwPass + "' where username='" + cpwUser + "'");
-							if (result==0){
-								out.println("Password change failed.");
-							}else{
-								out.println("Password change successful.");
-							}
+							User cpw = User.getByUsername(cpwUser);
+							User newUser = new User(cpw.USERNAME, cpwPass, cpw.FIRST_NAME, cpw.LAST_NAME);
+							newUser.update();
 						} catch (SQLException e) {
 							e.printStackTrace();
 						}		 
