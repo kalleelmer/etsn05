@@ -79,7 +79,7 @@ public class ProjectList extends servletBase {
 			myName = (String) nameObj;
 		}
 		if (myName.equals("admin")) {
-			String htmlA = "<html><body><table border =" + formElement("1") + "><tr><td><br><form action=" + formElement("")
+			String htmlA = "<html><h1>Project List</h1><body><table border =" + formElement("1") + "><tr><td><br><form action=" + formElement("")
 					+ ">";
 			htmlA += "<input type=" + formElement("submit") + "name="
 					+ formElement("createNewProject");
