@@ -159,20 +159,6 @@ public class UserList extends servletBase {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		
-//		try{
-//			Statement stmt = conn.createStatement();
-//			String statement = "delete from users where username='" + name + "'"; 
-//			System.out.println(statement);
-//			stmt.executeUpdate(statement); 
-//			stmt.close();
-//
-//		} catch (SQLException ex) {
-//			System.out.println("SQLException: " + ex.getMessage());
-//			System.out.println("SQLState: " + ex.getSQLState());
-//			System.out.println("VendorError: " + ex.getErrorCode());
-//		}
 	}
 
 

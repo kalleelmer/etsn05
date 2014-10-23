@@ -29,8 +29,9 @@ public class Entity {
 	 */
 	protected static ResultSet selectQuery(String query) throws SQLException {
 		Database.getInstance();
-		Statement stmt = Database.CONN.createStatement();
+		Statement stmt = Database.getInstance().CONN.createStatement();
 		ResultSet rs = stmt.executeQuery(query);
+		Database.getInstance().CONN.close();
 		return rs;
 	}
 
@@ -41,10 +42,10 @@ public class Entity {
 	 */
 	protected static void query(String query) throws SQLException {
 		Database.getInstance();
-		Statement stmt = Database.CONN.createStatement();
+		Statement stmt = Database.getInstance().CONN.createStatement();
 		stmt.executeUpdate(query);
 		stmt.close();
-		Database.CONN.close();
+		Database.getInstance().CONN.close();
 	}
 
 	/**
@@ -59,14 +60,12 @@ public class Entity {
 	 */
 	private static class Database {
 		private static Database INSTANCE = null;
-		private static Connection CONN;
+		private Connection CONN;
+		private static String serverURL = "jdbc:mysql://vm26.cs.lth.se/puss1402?"
+				+ "user=puss1402&password=pwi8ww1k";
 
 		private Database() throws SQLException {
 			DriverManager.registerDriver(new com.mysql.jdbc.Driver());
-			String serverURL = "jdbc:mysql://vm26.cs.lth.se/puss1402?"
-					+ "user=puss1402&password=pwi8ww1k";
-			// String serverURL = "jdbc:mysql://localhost/test_base?" +
-			// "user=root&password=etsn05";
 			CONN = DriverManager.getConnection(serverURL);
 			if (CONN == null) {
 				throw new NullPointerException();
@@ -83,6 +82,7 @@ public class Entity {
 			if (INSTANCE == null) {
 				INSTANCE = new Database();
 			}
+			INSTANCE.CONN = DriverManager.getConnection(serverURL);
 			return INSTANCE;
 		}
 	}
