@@ -227,8 +227,6 @@ public class UserList extends servletBase {
 				out.println(addUserForm());
 
 				// check if the administrator wants to add a new user in the form
-				System.out.println(request.getParameter("password"));
-				System.out.println(request.getParameter("name"));
 				String newName = request.getParameter("addname");
 				String firstName = request.getParameter("firstname");
 				String lastName = request.getParameter("lastname");
@@ -254,7 +252,8 @@ public class UserList extends servletBase {
 					out.println("<p>Registered users:</p>");
 					out.println("<table border=" + formElement("1") + ">");
 					out.println("<tr><td>USER NAME</td><td>PASSWORD</td><td>FIRST NAME</td><td>LAST NAME</td></tr>");
-					List<User> users = User.getAllUsers(); 
+					List<User> users = User.getAllUsers();
+					System.out.println(users);
 					for (User u : users) {
 						String name = u.USERNAME;
 						String pw = u.PASSWORD;

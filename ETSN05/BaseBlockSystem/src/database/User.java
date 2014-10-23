@@ -63,9 +63,7 @@ public class User extends Entity {
 					userSet.getString("password"),
 					userSet.getString("firstname"),
 					userSet.getString("lastname"));
-			if (!user.isAdmin()) {
-				allUsers.add(user);
-			}
+			allUsers.add(user);
 		}
 		if (allUsers.size() == 0) {
 			return null;
