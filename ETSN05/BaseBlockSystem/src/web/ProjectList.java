@@ -18,13 +18,13 @@ public class ProjectList extends servletBase {
 
 	protected String projectListRequestForm(List<Project> list) {
 		String html = "<html><body><p>Project List:</p>";
-		html += "<ol>";
+		html += "<table border = " + formElement("1") + "><tr><td>ID</td><td>Name</td><td>Active</td>";
 		for (Project p : list) {
-			html += "<li> <a href="
+			html += "<tr><td>" + p.ID + "</td> <td> <a href="
 					+ formElement("MemberList" + "?project=" + p.ID) + ">"
-					+ p.NAME + " ID:" + p.ID + "</a>" + "</li>";
+					+ p.NAME + "</a>" + "</td><td>" + !p.CLOSED + "</td></tr>";
 		}
-		html += "</ol>";
+		html += "</table>";
 		return html;
 	}
 
