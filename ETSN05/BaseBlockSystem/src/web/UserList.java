@@ -13,6 +13,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import database.User;
+
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -123,23 +126,33 @@ public class UserList extends servletBase {
 	 * because the name already exist in the database. 
 	 */
 	private boolean addUser(String name, String firstName, String lastName) {
-		boolean resultOk = true;
-		try{
-			Statement stmt = conn.createStatement();
-			String statement = "insert into users (username, firstname, lastname, password) values('" + name + "', '" + firstName + "',"
-					+ "'" + lastName + "', '" + 
-					createPassword() + "')";
-			System.out.println(statement);
-			stmt.executeUpdate(statement); 
-			stmt.close();
-
-		} catch (SQLException ex) {
-			resultOk = false;
-			// System.out.println("SQLException: " + ex.getMessage());
-			System.out.println("SQLState: " + ex.getSQLState());
-			System.out.println("VendorError: " + ex.getErrorCode());
+		
+		User user = new User(name, createPassword(), firstName, lastName);
+		try {
+			user.insert();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
 		}
-		return resultOk;
+		return true;
+//		boolean resultOk = true;
+//		try{
+//			Statement stmt = conn.createStatement();
+//			String statement = "insert into users (username, firstname, lastname, password) values('" + name + "', '" + firstName + "',"
+//					+ "'" + lastName + "', '" + 
+//					createPassword() + "')";
+//			System.out.println(statement);
+//			stmt.executeUpdate(statement); 
+//			stmt.close();
+//
+//		} catch (SQLException ex) {
+//			resultOk = false;
+//			// System.out.println("SQLException: " + ex.getMessage());
+//			System.out.println("SQLState: " + ex.getSQLState());
+//			System.out.println("VendorError: " + ex.getErrorCode());
+//		}
+//		return resultOk;
 	}
 
 	/**
@@ -148,17 +161,13 @@ public class UserList extends servletBase {
 	 * @param name name of user to be deleted. 
 	 */
 	private void deleteUser(String name) {
-		try{
-			Statement stmt = conn.createStatement();
-			String statement = "delete from users where username='" + name + "'"; 
-			System.out.println(statement);
-			stmt.executeUpdate(statement); 
-			stmt.close();
-
-		} catch (SQLException ex) {
-			System.out.println("SQLException: " + ex.getMessage());
-			System.out.println("SQLState: " + ex.getSQLState());
-			System.out.println("VendorError: " + ex.getErrorCode());
+		User user = null;
+		try {
+			user = User.getByUsername(name);
+			user.delete();
+		} catch (SecurityException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
@@ -192,16 +201,11 @@ public class UserList extends servletBase {
 				String cpwPass = request.getParameter("password");
 				String cpwUser = request.getParameter("name");
 				if (cpwPass != null){
-					Statement stmt;
 					if (checkNewPassword(cpwPass)){
 						try {
-							stmt = conn.createStatement();
-							int result = stmt.executeUpdate("update users set password='" + cpwPass + "' where username='" + cpwUser + "'");
-							if (result==0){
-								out.println("Password change failed.");
-							}else{
-								out.println("Password change successful.");
-							}
+							User cpw = User.getByUsername(cpwUser);
+							User newUser = new User(cpw.USERNAME, cpwPass, cpw.FIRST_NAME, cpw.LAST_NAME);
+							newUser.update();
 						} catch (SQLException e) {
 							e.printStackTrace();
 						}		 
@@ -214,8 +218,6 @@ public class UserList extends servletBase {
 				out.println(addUserForm());
 
 				// check if the administrator wants to add a new user in the form
-				System.out.println(request.getParameter("password"));
-				System.out.println(request.getParameter("name"));
 				String newName = request.getParameter("addname");
 				String firstName = request.getParameter("firstname");
 				String lastName = request.getParameter("lastname");
@@ -238,16 +240,16 @@ public class UserList extends servletBase {
 				}
 
 				try {
-					Statement stmt = conn.createStatement();		    
-					ResultSet rs = stmt.executeQuery("select * from users order by username asc");
 					out.println("<p>Registered users:</p>");
 					out.println("<table border=" + formElement("1") + ">");
 					out.println("<tr><td>USER NAME</td><td>PASSWORD</td><td>FIRST NAME</td><td>LAST NAME</td></tr>");
-					while (rs.next( )) {
-						String name = rs.getString("username");
-						String pw = rs.getString("password");
-						String fname = rs.getString("firstname");
-						String lname = rs.getString("lastname");
+					List<User> users = User.getAllUsers();
+					System.out.println(users);
+					for (User u : users) {
+						String name = u.USERNAME;
+						String pw = u.PASSWORD;
+						String fname = u.FIRST_NAME;
+						String lname = u.LAST_NAME;
 						String deleteURL = "UserList?deletename="+name;
 						String deleteCode = "<a href=" + formElement(deleteURL) +
 								" onclick="+formElement("return confirm('Are you sure you want to delete "+name+"?')") + 
@@ -267,7 +269,6 @@ public class UserList extends servletBase {
 						out.println("</tr>");
 					}
 					out.println("</table>");
-					stmt.close();
 				} catch (SQLException ex) {
 					System.out.println("SQLException: " + ex.getMessage());
 					System.out.println("SQLState: " + ex.getSQLState());

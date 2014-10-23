@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class User extends Entity {
 	public final String USERNAME;
-	private final String PASSWORD;
+	public final String PASSWORD;
 	public final String FIRST_NAME;
 	public final String LAST_NAME;
 
@@ -35,9 +35,6 @@ public class User extends Entity {
 	 */
 	public static User getByUsername(String userName) throws SecurityException,
 			SQLException {
-		if (userName.equals("admin")) {
-			throw new SecurityException();
-		}
 		String selectQuery = "SELECT * FROM users WHERE username='" + userName
 				+ "';";
 		ResultSet userSet = selectQuery(selectQuery);
@@ -66,9 +63,7 @@ public class User extends Entity {
 					userSet.getString("password"),
 					userSet.getString("firstname"),
 					userSet.getString("lastname"));
-			if (!user.isAdmin()) {
-				allUsers.add(user);
-			}
+			allUsers.add(user);
 		}
 		if (allUsers.size() == 0) {
 			return null;

@@ -11,6 +11,8 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import database.User;
+
 /**
  * Servlet implementation class LogIn
  * 
@@ -56,36 +58,15 @@ public class LogIn extends servletBase {
      * @return true if the user should be accepted
      */
     private LoginStatus checkUser(String name, String password) {
-		
-		boolean userOk = false;
-		boolean userChecked = false;
-		
-		try{
-			Statement stmt = conn.createStatement();
-			//if (User user = User.getByUsername("name") != null) {
-				//return false;
-		    ResultSet rs = stmt.executeQuery("select * from users"); 
-		    while (rs.next( ) && !userChecked) {
-		    	String nameSaved = rs.getString("username"); 
-		    	String passwordSaved = rs.getString("password");
-		    	if (name.equals(nameSaved)) {
-		    		userChecked = true;
-		    		userOk = password.equals(passwordSaved);
-		    		if(userOk==false){
-		    			return LoginStatus.passInvalid;
-		    		}
-		    	}
-		    }
-	    	if(userOk==false){
-	    		return LoginStatus.userInvalid;
-	    	}
-		    stmt.close();
-		} catch (SQLException ex) {
-		    System.out.println("SQLException: " + ex.getMessage());
-		    System.out.println("SQLState: " + ex.getSQLState());
-		    System.out.println("VendorError: " + ex.getErrorCode());
+    	User user = null;
+    	try {
+			user = User.getByUsername(name);
+			if (user == null) return LoginStatus.userInvalid;
+		} catch (SecurityException | SQLException e) {
+			e.printStackTrace();
 		}
-		return LoginStatus.ok;
+    	if (!user.PASSWORD.equals(password)) return LoginStatus.passInvalid;
+    	return LoginStatus.ok;
 	}
 
     
