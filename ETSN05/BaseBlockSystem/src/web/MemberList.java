@@ -102,7 +102,11 @@ public class MemberList extends servletBase {
 			out.println("Error: Project ID is not a number!");
 			return;
 		}
-		out.println("<div>Debug: Project ID is " + projectID + "</div>");
+		try {
+			out.println("<div>Project name: " + Project.getByID(projectID).NAME +   "Project ID is " + projectID + "</div>");
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
 		if (!loggedIn(request)) {
 			response.sendRedirect("LogIn");
 		}
@@ -117,12 +121,16 @@ public class MemberList extends servletBase {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		if(members == null) {
+			members = new ArrayList<Member>();
+		}
 		out.println(memberListRequestForm(members));
 		String u;
 		for (Member m : members) {
 			u = m.USERNAME;
-			if (m.ROLE == Member.Role.manager && u.equals(myName)) {
+			if ((m.ROLE == Member.Role.manager && u.equals(myName)) || myName.equals("admin")) {
 				out.println(managerRequestForm(members));
+				break;
 			}
 		}
 	}

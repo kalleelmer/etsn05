@@ -74,8 +74,23 @@ public class ProjectList extends servletBase {
 		String createID = request.getParameter("createID");
 		String createName = request.getParameter("createName");
 		List<Project> list = null;
+		
 		if (nameObj != null) {
 			myName = (String) nameObj;
+		}
+		if (myName.equals("admin")) {
+			String htmlA = "<html><body><table border =" + formElement("1") + "><tr><td><br><form action=" + formElement("")
+					+ ">";
+			htmlA += "<input type=" + formElement("submit") + "name="
+					+ formElement("createNewProject");
+			htmlA += " value=" + formElement("Create new project") + ">";
+			htmlA += "</form>";
+			htmlA += "<form action=" + formElement("") + ">";
+			htmlA += "<input type=" + formElement("submit") + "name="
+					+ formElement("deleteProject");
+			htmlA += " value=" + formElement("Close project") + ">";
+			htmlA += "</form></tr></td></table>";
+			out.println(htmlA);
 		}
 		try {
 			list = Project.getByUser(myName);
@@ -124,20 +139,20 @@ public class ProjectList extends servletBase {
 		} else {
 
 			out.print(projectListRequestForm(list));
-			if (myName.equals("admin")) {
-				String htmlA = "<html><body><form action=" + formElement("")
-						+ ">";
-				htmlA += "<input type=" + formElement("submit") + "name="
-						+ formElement("createNewProject");
-				htmlA += " value=" + formElement("Create new project") + ">";
-				htmlA += "</form>";
-				htmlA += "<form action=" + formElement("") + ">";
-				htmlA += "<input type=" + formElement("submit") + "name="
-						+ formElement("deleteProject");
-				htmlA += " value=" + formElement("Close project") + ">";
-				htmlA += "</form>";
-				out.println(htmlA);
-			}
+//			if (myName.equals("admin")) {
+//				String htmlA = "<html><body><form action=" + formElement("")
+//						+ ">";
+//				htmlA += "<input type=" + formElement("submit") + "name="
+//						+ formElement("createNewProject");
+//				htmlA += " value=" + formElement("Create new project") + ">";
+//				htmlA += "</form>";
+//				htmlA += "<form action=" + formElement("") + ">";
+//				htmlA += "<input type=" + formElement("submit") + "name="
+//						+ formElement("deleteProject");
+//				htmlA += " value=" + formElement("Close project") + ">";
+//				htmlA += "</form>";
+//				out.println(htmlA);
+//			}
 		}
 	}
 }
