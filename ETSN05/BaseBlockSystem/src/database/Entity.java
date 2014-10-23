@@ -17,6 +17,9 @@ public class Entity {
 	protected static final String INPUTSAFETY = "[^-abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789]";
 
 	protected static String safetyInput(String input) {
+		if (input == null) {
+			return null;
+		}
 		return input.replaceAll(INPUTSAFETY, "");
 	}
 
@@ -61,8 +64,9 @@ public class Entity {
 	private static class Database {
 		private static Database INSTANCE = null;
 		private Connection CONN;
-		private static String serverURL = "jdbc:mysql://vm26.cs.lth.se/puss1402?"
-				+ "user=puss1402&password=pwi8ww1k";
+		//private static String serverURL = "jdbc:mysql://vm26.cs.lth.se/puss1402?"
+		//		+ "user=puss1402&password=pwi8ww1k";
+		private static String serverURL = "jdbc:mysql://localhost/test_base?user=root&password=etsn05";
 
 		private Database() throws SQLException {
 			DriverManager.registerDriver(new com.mysql.jdbc.Driver());

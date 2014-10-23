@@ -49,9 +49,11 @@ public class servletBase extends HttpServlet {
 	public servletBase() {
 		try {
 			DriverManager.registerDriver(new com.mysql.jdbc.Driver());
+//			conn = DriverManager
+//					.getConnection("jdbc:mysql://vm26.cs.lth.se/puss1402?"
+//							+ "user=puss1402&password=pwi8ww1k");
 			conn = DriverManager
-					.getConnection("jdbc:mysql://vm26.cs.lth.se/puss1402?"
-							+ "user=puss1402&password=pwi8ww1k");
+					.getConnection("jdbc:mysql://localhost/test_base?user=root&password=etsn05");
 
 			// Display the contents of the database in the console.
 			// This should be removed in the final version

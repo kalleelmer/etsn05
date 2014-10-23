@@ -33,7 +33,7 @@ public class Project extends Entity {
 	 */
 	public Project(String name) {
 		ID = 0;
-		NAME = name;
+		NAME = safetyInput(name);
 		CLOSED = false;
 	}
 	
@@ -45,7 +45,7 @@ public class Project extends Entity {
 	 */
 	private Project(int id, String name, boolean closed) {
 		ID = id;
-		NAME = name;
+		NAME = safetyInput(name);
 		CLOSED = closed;
 	}
 
@@ -61,10 +61,9 @@ public class Project extends Entity {
 			ResultSet projectSet = selectQuery(selectQuery);
 			List<Project> list = new ArrayList<Project>();
 			while (projectSet.next()) {
-				Project project = new Project(projectSet.getInt("id"),
+				list.add(new Project(projectSet.getInt("id"),
 						projectSet.getString("name"),
-						projectSet.getBoolean("closed"));
-				list.add(project);
+						projectSet.getBoolean("closed")));
 			}
 			return list;
 		}
@@ -77,16 +76,13 @@ public class Project extends Entity {
 					+ memberSet.getInt("project") + ";";
 			ResultSet projectSet = selectQuery(projectQuery);
 			projectSet.next();
-			Project project = new Project(projectSet.getInt("id"),
-					projectSet.getString("name"),
-					projectSet.getBoolean("closed"));
-			foundList.add(project);
+			foundList.add(new Project(projectSet.getInt("id"), projectSet
+					.getString("name"), projectSet.getBoolean("closed")));
 		}
-		if (foundList.size() == 0) {
+		if (foundList.isEmpty()) {
 			return null;
-		} else {
-			return foundList;
 		}
+		return foundList;
 	}
 	
 	/**
@@ -99,9 +95,8 @@ public class Project extends Entity {
 		ResultSet projectSet = selectQuery(selectQuery);
 		if (!projectSet.next())
 			return null;
-		Project project = new Project(projectSet.getInt("id"),
+		return new Project(projectSet.getInt("id"),
 				projectSet.getString("name"), projectSet.getBoolean("closed"));
-		return project;
 	}
 
 	/**

@@ -40,13 +40,11 @@ public class User extends Entity {
 		ResultSet userSet = selectQuery(selectQuery);
 		if (!userSet.next()) {
 			return null;
-		} else {
-			User user = new User(userSet.getString("username"),
+		}
+			return new User(userSet.getString("username"),
 					userSet.getString("password"),
 					userSet.getString("firstname"),
 					userSet.getString("lastname"));
-			return user;
-		}
 	}
 
 	/**
@@ -65,11 +63,10 @@ public class User extends Entity {
 					userSet.getString("lastname"));
 			allUsers.add(user);
 		}
-		if (allUsers.size() == 0) {
+		if (allUsers.isEmpty()) {
 			return null;
-		} else {
-			return allUsers;
 		}
+		return allUsers;
 	}
 
 	/**

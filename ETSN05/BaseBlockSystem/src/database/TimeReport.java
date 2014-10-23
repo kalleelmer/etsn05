@@ -246,11 +246,11 @@ public class TimeReport extends Entity {
 	 * Updates an existing time report in the database
 	 */
 	public void update() throws SQLException {
-		String selectQuery = "SELECT * FROM timeReports WHERE id=" + ID;
-		ResultSet rs = selectQuery(selectQuery);
-		if (rs.next()) {
+		String selectQuery = "SELECT * FROM timeReports WHERE id=" + ID + ";";
+		ResultSet timeReportSet = selectQuery(selectQuery);
+		if (timeReportSet.next()) {
 			String updateQuery = "";
-			if (rs.getString("signer").equals(null)) {
+			if (timeReportSet.getString("signer").equals(null)) {
 				updateQuery = "UPDATE timeReports SET signer='" + SIGNER + "';";
 			} else {
 				updateQuery = "UPDATE timeReports SET activityType="

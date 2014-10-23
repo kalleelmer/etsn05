@@ -33,6 +33,18 @@ public class Member extends Entity {
 	public enum Role {
 		undefined, manager, architect, developer, tester
 	}
+	
+	public static Member getMember(int id, String username) throws SQLException{
+		String selectQuery = "SELECT * FROM members WHERE project=" + id + ", username='" + username + "';";
+		ResultSet memberSet = selectQuery(selectQuery);
+		if (!memberSet.next()) {
+			return null;
+		}
+		return new Member(memberSet.getString("username"),
+				memberSet.getInt("project"), Role.valueOf(memberSet
+						.getString("role")));
+
+	}
 
 	/**
 	 * Given a specific project id, this method returns a list of all members
@@ -52,11 +64,10 @@ public class Member extends Entity {
 				foundList.add(member);
 			}
 		}
-		if (foundList.size() == 0) {
+		if (foundList.isEmpty()) {
 			return null;
-		} else {
-			return foundList;
 		}
+		return foundList;
 	}
 
 	/**
@@ -70,9 +81,7 @@ public class Member extends Entity {
 					+ "',project=" + PROJECT + ",role='" + ROLE + "';";
 			query(addQuery);
 		} else {
-			// Ska denna eventuellt berätta att rollen inte förändrats om
-			// man försöker byta till samma roll?
-			String updateQuery = "UPDATE members SET role='" + ROLE + "'";
+			String updateQuery = "UPDATE members SET role='" + ROLE + "';";
 			query(updateQuery);
 		}
 	}
