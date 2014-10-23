@@ -13,6 +13,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import database.User;
+
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -238,16 +241,15 @@ public class UserList extends servletBase {
 				}
 
 				try {
-					Statement stmt = conn.createStatement();		    
-					ResultSet rs = stmt.executeQuery("select * from users order by username asc");
 					out.println("<p>Registered users:</p>");
 					out.println("<table border=" + formElement("1") + ">");
 					out.println("<tr><td>USER NAME</td><td>PASSWORD</td><td>FIRST NAME</td><td>LAST NAME</td></tr>");
-					while (rs.next( )) {
-						String name = rs.getString("username");
-						String pw = rs.getString("password");
-						String fname = rs.getString("firstname");
-						String lname = rs.getString("lastname");
+					List<User> users = User.getAllUsers(); 
+					for (User u : users) {
+						String name = u.USERNAME;
+						String pw = u.PASSWORD;
+						String fname = u.FIRST_NAME;
+						String lname = u.LAST_NAME;
 						String deleteURL = "UserList?deletename="+name;
 						String deleteCode = "<a href=" + formElement(deleteURL) +
 								" onclick="+formElement("return confirm('Are you sure you want to delete "+name+"?')") + 
@@ -267,7 +269,6 @@ public class UserList extends servletBase {
 						out.println("</tr>");
 					}
 					out.println("</table>");
-					stmt.close();
 				} catch (SQLException ex) {
 					System.out.println("SQLException: " + ex.getMessage());
 					System.out.println("SQLState: " + ex.getSQLState());
