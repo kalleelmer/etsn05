@@ -68,7 +68,7 @@ public class MemberList extends servletBase {
 		return html;
 	}
 
-	protected String managerRequestForm(List<Member> memberList) {
+	protected String managerRequestForm(List<Member> memberList, int id) {
 		List<String> role = new ArrayList<String>();
 		role.add("undefined");
 		role.add("manager");
@@ -86,6 +86,7 @@ public class MemberList extends servletBase {
 		html += "<td><input type=" + formElement("submit") + "name="
 				+ formElement("val") + "value=" + formElement("Change")
 				+ "></td></tr>";
+		html += "<input type='hidden' name=" + formElement("project") + " value=" + formElement(id+"") + '>';
 		html += "</table>";
 		html += "</form>";
 		return html;
@@ -101,11 +102,13 @@ public class MemberList extends servletBase {
 		String filterUser = null;
 		String filterRole = null;
 		String myName = "";
-		filterUser = request.getParameter(filterUser);
-		filterRole = request.getParameter(filterRole);
+		filterUser = request.getParameter("filterUser");
+		filterRole = request.getParameter("filterRole");
+		Object val = request.getParameter("val");
 		try {
 			projectID = Integer.parseInt(request.getParameter("project"));
 		} catch (NumberFormatException e) {
+			System.out.println(request.getParameter("Project"));
 			out.println("Error: Project ID is not a number!");
 			return;
 		}
@@ -130,9 +133,12 @@ public class MemberList extends servletBase {
 		if(members == null) {
 			members = new ArrayList<Member>();
 		}
-		if(filterUser != null && filterRole != null){
+		if(val != null){
+			System.out.println(filterRole);
+			System.out.println(filterUser);
 			Role role = Member.Role.valueOf(filterRole);
 			Member newMember = new Member(filterUser, projectID, role);
+			System.out.println("innanMemberset");
 			try {
 				newMember.set();
 			} catch (SQLException e) {
@@ -143,8 +149,9 @@ public class MemberList extends servletBase {
 		String u;
 		for (Member m : members) {
 			u = m.USERNAME;
+			System.out.println("checkmanagerloop");
 			if ((m.ROLE == Member.Role.manager && u.equals(myName)) || myName.equals("admin")) {
-				out.println(managerRequestForm(members));
+				out.println(managerRequestForm(members, projectID));
 				break;
 			}
 		}
