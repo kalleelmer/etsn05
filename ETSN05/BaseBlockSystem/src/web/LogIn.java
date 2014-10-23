@@ -3,6 +3,7 @@ import java.io.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Calendar;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -106,6 +107,7 @@ public class LogIn extends servletBase {
         		state = LOGIN_TRUE;
        			session.setAttribute("state", state);  // save the state in the session
        			session.setAttribute("name", name);  // save the name in the session
+       			session.setAttribute("login_time", Calendar.getInstance());
        			response.sendRedirect("blank.html");
        		}
        		else if(checkUser(name, password) == LoginStatus.userInvalid) {

@@ -1,11 +1,11 @@
 package web;
 
 import java.sql.Connection;
-
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Calendar;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -84,6 +84,15 @@ public class servletBase extends HttpServlet {
 		int state = LOGIN_FALSE;
 		if (objectState != null)
 			state = (Integer) objectState;
+		Calendar loginTime = (Calendar) session.getAttribute("login_time");
+		Calendar now = Calendar.getInstance();
+		if (loginTime == null) return false;
+		long ltMillis = loginTime.getTimeInMillis();
+		long nMillis = now.getTimeInMillis();
+		long diff = nMillis - ltMillis;
+		long twentyminutes = 20 * 60 * 1000;
+		if (diff > twentyminutes) return false;
+		session.setAttribute("login_time", now);
 		return (state == LOGIN_TRUE);
 	}
 
