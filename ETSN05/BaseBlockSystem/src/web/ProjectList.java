@@ -53,7 +53,7 @@ public class ProjectList extends servletBase {
 
 	protected String newProjectRequestForm() {
 		String html;
-		html = "<p>Add new user: <br><table border=" + formElement("1")
+		html = "<p>Add new project: <br><table border=" + formElement("1")
 				+ "><tr><td>";
 		html += "<form name=" + formElement("input");
 		html += " method=" + formElement("get");
@@ -86,9 +86,11 @@ public class ProjectList extends servletBase {
 
 		if (deleteProject != null) {
 			out.println(closeProjectRequestForm());
+			return;
 		}
 		if (createNewProject != null) {
 			out.println(newProjectRequestForm());
+			return;
 		}
 		if (nameObj != null) {
 			myName = (String) nameObj;
