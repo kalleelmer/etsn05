@@ -15,10 +15,14 @@ import database.Member.Role;
 public class DatabaseWriter extends Entity{
 	
 	public static void write() throws IOException, SQLException {
+		try {
 		query("drop table users");
 		query("drop table projects");
 		query("drop table timeReports");
 		query("drop table members");
+		} catch(SQLException ex) {
+			System.out.print("Du hade inga tabeller att ta bort");
+		}
 		query("create table users (username varchar(128), PRIMARY KEY(username), password varchar(128), firstname varchar(128), lastname varchar(128));");
 		query("create table projects (id int, primary key(id), name varchar(128), closed boolean);");
 		query("alter table projects modify column id int auto_increment");
