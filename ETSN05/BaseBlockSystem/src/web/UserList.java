@@ -33,14 +33,6 @@ public class UserList extends servletBase {
 	private static final int PASSWORD_LENGTH = 6;
 
 	/**
-	 * @see servletBase#servletBase()
-	 */
-	public UserList() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-
-	/**
 	 * generates a form for adding new users
 	 * @return HTML code for the form
 	 */
