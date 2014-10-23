@@ -55,7 +55,7 @@ public class Project extends Entity {
 	 * @param username
 	 * @return
 	 */
-	public static List<Project> getByUser(String username) throws SQLException, Exception {
+	public static List<Project> getByUser(String username) throws SQLException {
 		if (username.equals("admin")) {
 			String selectQuery = "SELECT * FROM projects;";
 			ResultSet projectSet = selectQuery(selectQuery);
@@ -94,7 +94,7 @@ public class Project extends Entity {
 	 * @param id
 	 * @return The corresponding project, otherwise null
 	 */
-	public static Project getByID(int id) throws SQLException, Exception {
+	public static Project getByID(int id) throws SQLException {
 		String selectQuery = "SELECT * FROM projects WHERE id=" + id + ";";
 		ResultSet projectSet = selectQuery(selectQuery);
 		if (!projectSet.next())
@@ -107,7 +107,7 @@ public class Project extends Entity {
 	/**
 	 * Inserts the project to the database
 	 */
-	public void insert() throws SQLException, Exception {
+	public void insert() throws SQLException {
 		String insertQuery = "INSERT INTO projects SET name='"
 				+ NAME + "',closed=" + CLOSED + ";";
 		query(insertQuery);
@@ -116,7 +116,7 @@ public class Project extends Entity {
 	/**
 	 * Updates a current project with new information in the database
 	 */
-	public void update() throws SQLException, Exception {
+	public void update() throws SQLException {
 		String updateQuery = "UPDATE projects SET name ='" + NAME
 				+ "',closed=" + CLOSED + " WHERE id=" + ID + ";";
 		query(updateQuery);

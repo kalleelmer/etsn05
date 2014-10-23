@@ -40,7 +40,7 @@ public class Member extends Entity {
 	 * @param id
 	 * @return
 	 */
-	public static List<Member> getMembers(int id) throws SQLException, Exception {
+	public static List<Member> getMembers(int id) throws SQLException {
 		String selectQuery = "SELECT * FROM members WHERE project=" + id + ";";
 		ResultSet memberSet = selectQuery(selectQuery);
 		List<Member> foundList = new ArrayList<Member>();
@@ -62,7 +62,7 @@ public class Member extends Entity {
 	/**
 	 * Inserts a member to the database. If the member already exists, it updates with new data
 	 */
-	public void set() throws SQLException, Exception {
+	public void set() throws SQLException {
 		String selectQuery = "SELECT * FROM members WHERE username='" + USERNAME + "' AND project='" + PROJECT +"';";
 		ResultSet memberSet = selectQuery(selectQuery);
 		if (!memberSet.next()) {
@@ -80,7 +80,7 @@ public class Member extends Entity {
 	/**
 	 * Removes a member from the member list, i.e. removes a member from a project
 	 */
-	public void delete() throws SQLException, Exception {
+	public void delete() throws SQLException {
 		String deleteQuery = "DELETE FROM members WHERE username='" + USERNAME
 				+ "' AND PROJECT='" + PROJECT + "';";
 		query(deleteQuery);

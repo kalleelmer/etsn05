@@ -34,7 +34,7 @@ public class User extends Entity {
 	 * @return The user that was found, otherwise null
 	 */
 	public static User getByUsername(String userName) throws SecurityException,
-			SQLException, Exception {
+			SQLException {
 		if (userName.equals("admin")) {
 			throw new SecurityException();
 		}
@@ -57,7 +57,7 @@ public class User extends Entity {
 	 * 
 	 * @return A list of the users, or null if no users were found
 	 */
-	public static List<User> getAllUsers() throws SQLException, Exception {
+	public static List<User> getAllUsers() throws SQLException {
 		String selectQuery = "SELECT * FROM users;";
 		ResultSet userSet = selectQuery(selectQuery);
 		List<User> allUsers = new ArrayList<User>();
@@ -82,7 +82,7 @@ public class User extends Entity {
 	 * 
 	 * @return true if selected user is admin, otherwise false
 	 */
-	public boolean isAdmin() throws SQLException, Exception {
+	public boolean isAdmin() throws SQLException {
 		return USERNAME.equals("admin");
 	}
 
@@ -90,40 +90,31 @@ public class User extends Entity {
 	 * 
 	 * @throws IllegalArgumentException
 	 */
-	public void insert() throws IllegalArgumentException, SQLException,
-			Exception {
-		// if (checkUsername(USERNAME) && checkPassword(PASSWORD)) {
+	public void insert() throws SQLException {
 		String insertQuery = "INSERT INTO users SET username='" + USERNAME
 				+ "',PASSWORD='" + PASSWORD + "',firstname='" + FIRST_NAME
 				+ "',lastname='" + LAST_NAME + "';";
 		query(insertQuery);
-		// } else {
-		// throw new IllegalArgumentException();
-		// }
 	}
 
 	/**
 	 * Updates a user with new information to the database
 	 */
 	public void update() throws SecurityException, IllegalArgumentException,
-			SQLException, Exception {
-		// /if (checkUsername(USERNAME) && checkPassword(PASSWORD)) {
+			SQLException {
 		if (isAdmin()) {
 			throw new SecurityException();
 		}
 		String updateQuery = "UPDATE users SET password='" + PASSWORD
 				+ "' WHERE username ='" + USERNAME + "';";
 		query(updateQuery);
-		// } else {
-		// throw new IllegalArgumentException();
-		// }
 	}
 
 	/**
 	 * Deletes a user from the database
 	 */
 	public void delete() throws SecurityException, IllegalArgumentException,
-			SQLException, Exception {
+			SQLException {
 		if (isAdmin()) {
 			throw new SecurityException();
 		}

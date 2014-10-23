@@ -122,7 +122,7 @@ public class TimeReport extends Entity {
 		}
 	}
 	
-	public static TimeReport getByID(int id) throws SQLException, Exception {
+	public static TimeReport getByID(int id) throws SQLException {
 		String timeReportQuery = "SELECT * FROM timeReports WHERE id=" + id;
 		ResultSet timeReportSet = selectQuery(timeReportQuery);
 		if (!timeReportSet.next()) {
@@ -141,7 +141,7 @@ public class TimeReport extends Entity {
 	
 	public static List<TimeReport> get(User user, Project project,
 			Boolean signed, String start, String end, Role role,
-			Integer activityType) throws IllegalArgumentException, SQLException, Exception {
+			Integer activityType) throws IllegalArgumentException, SQLException {
 		StringBuilder condition = ConditionBuilder.appendAll( user, project, signed, role, activityType, start, end);
 		String selectQuery = "SELECT * FROM timeReports WHERE " + condition.toString() + ";";
 		ResultSet timeReportSet = selectQuery(selectQuery);
@@ -166,8 +166,7 @@ public class TimeReport extends Entity {
 
 	public static Map<String, Integer> getSummary(User user, Project project,
 			Boolean signed, String start, String end, Role role,
-			Integer activityType, SumChooser summarizeBy) throws IllegalArgumentException, SQLException,
-			Exception {
+			Integer activityType, SumChooser summarizeBy) throws IllegalArgumentException, SQLException {
 		StringBuilder condition = ConditionBuilder.appendAll(user, project,
 				signed, role, activityType, start, end);
 		if (summarizeBy.equals(SumChooser.week)) {
@@ -197,7 +196,7 @@ public class TimeReport extends Entity {
 		return foundMap;
 	}
 	
-	private static Map<String, Integer> sumByWeeks(ResultSet weekReportSet) throws SQLException, Exception {
+	private static Map<String, Integer> sumByWeeks(ResultSet weekReportSet) throws SQLException {
 		Map<String, Integer> foundWeekMap = new TreeMap<String, Integer>();
 		Calendar cldCurrent = Calendar.getInstance();
 		Calendar cldNext = Calendar.getInstance();
@@ -235,7 +234,7 @@ public class TimeReport extends Entity {
 	/**
 	 * Inserts a time report to the database
 	 */
-	public void insert() throws SQLException, Exception {
+	public void insert() throws SQLException {
 		String addQuery = "INSERT INTO timeReports SET user='" + USERNAME
 				+ "',project=" + PROJECT_ID + ",role='" + ROLE
 				+ "',activityType=" + ACTIVITY_TYPE + ",date='" + DATE
@@ -246,7 +245,7 @@ public class TimeReport extends Entity {
 	/**
 	 * Updates an existing time report in the database
 	 */
-	public void update() throws SQLException, Exception {
+	public void update() throws SQLException {
 		String selectQuery = "SELECT * FROM timeReports WHERE id=" + ID;
 		ResultSet rs = selectQuery(selectQuery);
 		if (rs.next()) {
@@ -267,7 +266,7 @@ public class TimeReport extends Entity {
 	 * This method may only be called by the user who created this time report
 	 * or the administrator of the system
 	 */
-	public void delete() throws SQLException, Exception {
+	public void delete() throws SQLException {
 		String deleteQuery = "DELETE FROM timeReports WHERE id=" + ID + ";";
 		query(deleteQuery);
 	}

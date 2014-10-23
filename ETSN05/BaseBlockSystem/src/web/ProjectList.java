@@ -38,34 +38,38 @@ public class ProjectList extends servletBase {
 
 	protected String closeProjectRequestForm() {
 		String html;
-		html = "<p>Close project: <br><table border=" + formElement("1") + "><tr><td>";
+		html = "<p>Close project: <br><table border=" + formElement("1")
+				+ "><tr><td>";
 		html += "<form name=" + formElement("input");
 		html += " method=" + formElement("get");
-		html += "<p> Project ID: <input type=" + formElement("number") + " name=" + 
-		formElement("close") + '>';    	    	    	
-		html += "<input type=" + formElement("submit") + "onclick=" + 
-		formElement("return confirm('Are you sure?')") + "value=" + formElement("Close") + '>';
+		html += "<p> Project ID: <input type=" + formElement("number")
+				+ " name=" + formElement("close") + '>';
+		html += "<input type=" + formElement("submit") + "onclick="
+				+ formElement("return confirm('Are you sure?')") + "value="
+				+ formElement("Close") + '>';
 		html += "</form></td></tr></table><br>";
 		return html;
 	}
-	
+
 	protected String newProjectRequestForm() {
 		String html;
-		html = "<p>Add new user: <br><table border=" + formElement("1") + "><tr><td>";
+		html = "<p>Add new user: <br><table border=" + formElement("1")
+				+ "><tr><td>";
 		html += "<form name=" + formElement("input");
 		html += " method=" + formElement("get");
-		html += "<p> Project ID: <input type=" + formElement("number") + " name=" +
-		formElement("createID") + '>';    	
-		html += "<p> Project name: <input type=" + formElement("text") + " name=" +
-		formElement("createName") + '>';    	    	    	
-		html += "<input type=" + formElement("submit") + "onclick=" + 
-		formElement("return confirm('Are you sure?')") + "value=" + formElement("Create") + '>';
+		html += "<p> Project ID: <input type=" + formElement("number")
+				+ " name=" + formElement("createID") + '>';
+		html += "<p> Project name: <input type=" + formElement("text")
+				+ " name=" + formElement("createName") + '>';
+		html += "<input type=" + formElement("submit") + "onclick="
+				+ formElement("return confirm('Are you sure?')") + "value="
+				+ formElement("Create") + '>';
 		html += "</form></td></tr></table><br>";
 		return html;
 	}
 
 	protected void doGet(HttpServletRequest request,
-		HttpServletResponse response) throws ServletException, IOException {
+			HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession(true);
 		PrintWriter out = response.getWriter();
 		out.println(getPageIntro());
@@ -79,23 +83,23 @@ public class ProjectList extends servletBase {
 		if (!loggedIn(request)) {
 			response.sendRedirect("LogIn");
 		}
-		
+
 		if (deleteProject != null) {
 			out.println(closeProjectRequestForm());
 		}
-		if (createNewProject != null){
+		if (createNewProject != null) {
 			out.println(newProjectRequestForm());
 		}
 		if (nameObj != null) {
 			myName = (String) nameObj;
 		}
-		
+
 		if (createID != null && createName != null) {
 			int y = Integer.parseInt(createID);
-			Project p = new Project(y,createName);
+			Project p = new Project(y, createName);
 			try {
 				p.insert();
-			} catch (Exception e) {
+			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
