@@ -225,7 +225,7 @@ public class TimeReport extends Entity {
 		ResultSet timeReportSet = selectQuery(selectQuery);
 		if (timeReportSet.next()) {
 			String updateQuery = "";
-			if (!timeReportSet.getString("signer").equals(null)) {
+			if (!timeReportSet.getString("signer").equals("null")) {
 				updateQuery = "UPDATE timeReports SET signer='" + SIGNER + "' WHERE id=" + ID +";";
 			} else {
 				updateQuery = "UPDATE timeReports SET activityType="

@@ -43,7 +43,8 @@ public class TimeReportList extends servletBase {
 		List<String> roles = getRoles();
 		try {
 			projects = Project.getByUser(userName);
-			users = getUsers(userName);
+			//users = getUsers(userName);
+			users = User.getUsersToModify(User.getByUsername(userName));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -131,7 +132,11 @@ public class TimeReportList extends servletBase {
 			} catch (SecurityException | SQLException e) {
 				
 			}
-			return summaryTable(summaryList,summary);
+			if (summaryList!=null){
+				return summaryTable(summaryList,summary);
+			}else{
+				return "nothing found";
+			}
 		}
 
 	}
@@ -146,8 +151,7 @@ public class TimeReportList extends servletBase {
 			t.add(m.getKey());
 			t.add(Integer.toString(m.getValue()));
 			html += tableRow(t)+"</tr>";
-			t.clear();
-			
+			t.clear();			
 		}
 		return html;
 	}
@@ -335,23 +339,19 @@ public class TimeReportList extends servletBase {
 		// Retrieving projects that user is member in
 		String html = "";
 		List<String> activityTypes = getTypes();
-		List<String> projects = new LinkedList<String>();
-		List<String> tableRow1 = Arrays.asList("Project", "Activity type","Date", "Duration","ID");
-		List<String> tableRow2 = Arrays.asList(dropDownMenu(projects, "updateProject",getString(Project.getByID(project_id))),
-				dropDownMenu(activityTypes, "updateType",Integer.toString(activityType)+"-TODO"),
-				 "<input type=" + formElement("text") + "name="+ formElement("updateDate") +"value="+formElement(date.toString())+ "size="+formElement("8")+ ">",
+		List<String> tableRow1 = Arrays.asList("Project","Date","Activity type", "Duration");
+		List<String> tableRow2 = Arrays.asList(getString(Project.getByID(project_id)),date.toString(),dropDownMenu(activityTypes, "updateType",Integer.toString(activityType)+"-TODO"),
 				 "<input type=" + formElement("text") + "name="+ formElement("updateDuration") + "value="
-								+ formElement(Integer.toString(duration)) + "size="+formElement("6") + ">",
-				 "<input type=" + formElement("text") + "name="+ formElement("t") + "value="
-								+ formElement(ID) + "size="+formElement("6") + ">");
+								+ formElement(Integer.toString(duration)) + "size="+formElement("6") + ">");
+		
 		html = "<p> <form name=" + formElement("input");
 		html += " method=" + formElement("get") + ">";
-		html += "<table border=" + formElement("1") + tableRow(tableRow1)
-				+ "</tr><tr>" + tableRow(tableRow2);
-		html += "<td><input type=" + formElement("submit") + "name="
-				+ formElement("val") + "value=" + formElement("save")
-				+ "></td></tr>";
+		html += "<table border=" + formElement("1") + tableRow(tableRow1)+ "</tr><tr>" + tableRow(tableRow2);
+		html += "<td><input type=" + formElement("submit") + "name=" + formElement("val") + "value=" + formElement("save")+ "></td></tr>";
 		html += "</table>";
+		html+= "<input type="+formElement("hidden")+"name="+formElement("updateProject")+"value="+formElement(Integer.toString(project_id))+">";
+		html+= "<input type=" + formElement("hidden") + "name="+ formElement("updateDate") +"value="+formElement(date.toString())+">";
+		html+= "<input type=" + formElement("hidden") + "name="+ formElement("t") + "value="+ formElement(ID) + ">";;
 		html += "</form>";
 		return html;
 
@@ -369,37 +369,7 @@ public class TimeReportList extends servletBase {
 				"43-Computer exercise", "44-Home reading", "100-Other");
 	}
 
-	private List<User> getUsers(String user) throws SecurityException,
-			SQLException {
-		List<User> users = new LinkedList<User>();
-		List<Member> members = new LinkedList<Member>();
-		if (user.equals("admin")) {
-			return User.getAllUsers();
-		} else {
-			List<Project> projects = Project.getByUser(user);
-			if (projects != null) {
-				for (Project p : projects) {
-					if (getRole(user, p.ID).equals(
-							Member.Role.valueOf("manager"))) {
-						members.addAll(Project.getByID(p.ID).getMembers());
-					}
-				}
-			}
-			if (members.isEmpty()) {
-				users.add(User.getByUsername(user));
-				return users;
-			} else {
-				for (Member m : members) {
-					User u = User.getByUsername(m.USERNAME);
-					if (!users.contains(u)) {
-						users.add(u);
-					}
-				}
-			}
-			return users;
-		}
-	}
-
+	
 	/**
 	 * Generates a table row with elements in list. Have to be enclosed with
 	 * </tr>
@@ -593,6 +563,7 @@ public class TimeReportList extends servletBase {
 			}
 			return "<p>Time report created</p>";
 		}else{
+		
 			TimeReport updatedTimeReport = new TimeReport(ID,user, projectID, getRole(
 					user, projectID), typeInt, dateObj, durationInt, null);
 
