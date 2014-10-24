@@ -74,6 +74,9 @@ public class ProjectList extends servletBase {
 		String createID = request.getParameter("createID");
 		String createName = request.getParameter("createName");
 		List<Project> list = null;
+		if (!loggedIn(request)) {
+			response.sendRedirect("LogIn");
+		}
 		
 		if (nameObj != null) {
 			myName = (String) nameObj;
@@ -99,9 +102,11 @@ public class ProjectList extends servletBase {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} 
-		if (!loggedIn(request)) {
-			response.sendRedirect("LogIn");
+		if (list.equals(null)) {
+			out.println("List is empty");
+			return;
 		}
+		
 		if (deleteProject != null) {
 			out.println(closeProjectRequestForm(list));
 			return;

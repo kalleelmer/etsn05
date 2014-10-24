@@ -80,7 +80,7 @@ public class Member extends Entity {
 					+ "',project=" + PROJECT + ",role='" + ROLE + "';";
 			query(addQuery);
 		} else {
-			String updateQuery = "UPDATE members SET role='" + ROLE + "';";
+			String updateQuery = "UPDATE members SET role='" + ROLE + "' WHERE username='" + USERNAME + "';";
 			query(updateQuery);
 		}
 	}
