@@ -118,7 +118,7 @@ public class TimeReport extends Entity {
 			} return " AND signer LIKE 'null'";
 		case "Role":
 			Role role = (Role) object;
-			return "'" + role.name() + "'";
+			return "'" + role.toString() + "'";
 		case "Integer":
 			return "'" + String.valueOf(object) + "'";
 		}
