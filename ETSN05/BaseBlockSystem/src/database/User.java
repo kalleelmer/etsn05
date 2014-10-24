@@ -3,7 +3,14 @@ package database;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.TreeMap;
+
+import database.Member.Role;
 
 /**
  * The user class is the object representation of the user in the database and
@@ -66,6 +73,30 @@ public class User extends Entity {
 			return null;
 		}
 		return allUsers;
+	}
+	
+	public static List<User> getUsersToModify(User user) throws SQLException {
+		if (user.isAdmin()) {
+			return getAllUsers();
+		}
+		String selectQuery = "SELECT * FROM members WHERE username='" + user.USERNAME + "' AND role='manager';";
+		ResultSet managerSet = selectQuery(selectQuery);
+		List<User> foundList = new ArrayList<User>();
+		Map<String, User> doubleHash = new TreeMap<String, User>();
+		while (managerSet.next()) {
+			List<Member> memberList = Project.getByID(managerSet.getInt("project")).getMembers();
+			for (Member m : memberList) {
+				doubleHash.put(m.USERNAME, User.getByUsername(m.USERNAME));
+			}
+		}
+		Iterator<Entry<String,User>> itr = doubleHash.entrySet().iterator();
+		while (itr.hasNext()) {
+			foundList.add(User.getByUsername(itr.next().getValue().USERNAME));
+		}
+		if (foundList.isEmpty()) {
+			return null;
+		}
+		return foundList;
 	}
 
 	/**
