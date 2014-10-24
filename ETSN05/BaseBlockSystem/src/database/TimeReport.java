@@ -64,12 +64,12 @@ public class TimeReport extends Entity {
 						.getString("signer"));
 	}
 	
-	public static List<TimeReport> getTimeReportToModify(String username) throws SQLException {
-		if (username.equals("admin")) {
+	public static List<TimeReport> getTimeReportToModify(User user) throws SQLException {
+		if (user.USERNAME.equals("admin")) {
 			return get(null,null,null,null,null,null,null);
 		}
 		List<TimeReport> resultList = new ArrayList<TimeReport>();
-		String selectManagerQuery = "SELECT * FROM timeReports WHERE user='" + username + "' AND role='manager' GROUP BY project";
+		String selectManagerQuery = "SELECT * FROM timeReports WHERE user='" + user.USERNAME + "' AND role='manager' GROUP BY project";
 		ResultSet managerSet = selectQuery(selectManagerQuery);
 		while (managerSet.next()) {
 			List<Member> projectMembers = Project.getByID(managerSet.getInt("project")).getMembers();
@@ -81,7 +81,7 @@ public class TimeReport extends Entity {
 				}
 			}
 		}
-		String selectNotManagerQuery = "SELECT * FROM timeReports WHERE user='" + username + "' AND role NOT LIKE 'manager';";
+		String selectNotManagerQuery = "SELECT * FROM timeReports WHERE user='" + user.USERNAME + "' AND role NOT LIKE 'manager';";
 		ResultSet notManagerSet = selectQuery(selectNotManagerQuery);
 		while (notManagerSet.next()) {
 			resultList.add(convertFromDB(notManagerSet));
@@ -244,18 +244,5 @@ public class TimeReport extends Entity {
 	public void delete() throws SQLException {
 		String deleteQuery = "DELETE FROM timeReports WHERE id=" + ID + ";";
 		query(deleteQuery);
-	}
-	
-	public static void main(String[] args) {
-		try {
-			List<TimeReport> list = TimeReport.getTimeReportToModify("Goran");
-			for (TimeReport tr : list) {
-				System.out.println(tr.ID);
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
 	}
 }
