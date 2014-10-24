@@ -47,13 +47,12 @@ public class Member extends Entity {
 	}
 
 	/**
-	 * Given a specific project id, this method returns a list of all members
-	 * currently enrolled in that project
+	 * Returns a list of all member object linked to this user
 	 * @param id
 	 * @return
 	 */
-	public static List<Member> getMembers(int id) throws SQLException {
-		String selectQuery = "SELECT * FROM members WHERE project=" + id + ";";
+	public static List<Member> getMembers(User user) throws SQLException {
+		String selectQuery = "SELECT * FROM members WHERE username='" + user.USERNAME + "';";
 		ResultSet memberSet = selectQuery(selectQuery);
 		List<Member> foundList = new ArrayList<Member>();
 		while (memberSet.next()) {

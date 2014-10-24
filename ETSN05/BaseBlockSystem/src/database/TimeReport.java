@@ -72,7 +72,7 @@ public class TimeReport extends Entity {
 		String selectManagerQuery = "SELECT * FROM timeReports WHERE user='" + username + "' AND role='manager' GROUP BY project";
 		ResultSet managerSet = selectQuery(selectManagerQuery);
 		while (managerSet.next()) {
-			List<Member> projectMembers = Member.getMembers(managerSet.getInt("project"));
+			List<Member> projectMembers = Project.getByID(managerSet.getInt("project")).getMembers();
 			for (Member m : projectMembers) {
 				String selectTimeReportQuery = "SELECT * FROM timeReports WHERE user='" + m.USERNAME + "' AND project=" + managerSet.getInt("project") + ";";
 				ResultSet membersSet = selectQuery(selectTimeReportQuery);
@@ -244,5 +244,18 @@ public class TimeReport extends Entity {
 	public void delete() throws SQLException {
 		String deleteQuery = "DELETE FROM timeReports WHERE id=" + ID + ";";
 		query(deleteQuery);
+	}
+	
+	public static void main(String[] args) {
+		try {
+			List<TimeReport> list = TimeReport.getTimeReportToModify("Goran");
+			for (TimeReport tr : list) {
+				System.out.println(tr.ID);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 }

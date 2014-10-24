@@ -48,6 +48,26 @@ public class Project extends Entity {
 		NAME = safetyInput(name);
 		CLOSED = closed;
 	}
+	
+	/**
+	 * Returns all members of this project
+	 * @return
+	 * @throws SQLException
+	 */
+	public List<Member> getMembers() throws SQLException {
+		String selectQuery = "SELECT * FROM members WHERE project=" + ID + ";";
+		ResultSet membersSet = selectQuery(selectQuery);
+		List<Member> foundList = new ArrayList<Member>();
+		while (membersSet.next()) {
+			foundList.add(new Member(membersSet.getString("username"),
+					membersSet.getInt("project"), Member.Role
+							.valueOf(membersSet.getString("role"))));
+		}
+		if (foundList.isEmpty()) {
+			return null;
+		}
+		return foundList;
+	}
 
 	/**
 	 * Given a specific username, this method returns a list of all the projects

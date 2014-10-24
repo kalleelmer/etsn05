@@ -325,7 +325,7 @@ public class TimeReportList extends servletBase {
 				for (Project p : projects) {
 					if (getRole(user, p.ID).equals(
 							Member.Role.valueOf("manager"))) {
-						members.addAll(Member.getMembers(p.ID));
+						members.addAll(Project.getByID(p.ID).getMembers());
 					}
 				}
 			}
@@ -552,7 +552,7 @@ public class TimeReportList extends servletBase {
 
 	private Role getRole(String user, int projectID) {
 		try {
-			for (Member m : Member.getMembers(projectID)) {
+			for (Member m : Project.getByID(projectID).getMembers()) {
 				if (m.USERNAME.equals(user)) {
 					return m.ROLE;
 				}

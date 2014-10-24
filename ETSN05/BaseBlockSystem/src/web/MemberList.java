@@ -126,7 +126,7 @@ public class MemberList extends servletBase {
 		List<Member> members = null;
 
 		try {
-			members = Member.getMembers(projectID);
+			members = Project.getByID(projectID).getMembers();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
