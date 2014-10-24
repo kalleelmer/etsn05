@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -108,24 +109,47 @@ public class TimeReportList extends servletBase {
 		if (summary.equals("none")) {
 			List<TimeReport> timeReports = null;
 			try {
-				timeReports = getTimeReports(userName, user, project, type,
-						startDate, endDate, role);
+				timeReports = getTimeReports(userName, user, project, type,startDate, endDate, role);
+				
 			} catch (Exception e) {
 			}
-			List<String> tableRow1 = Arrays.asList("User", "Project",
-					"Acticvity type", "Role", "Date", "Duration","Update","Remove","Sign/Unsign");
-			html += "<table border=" + formElement("1") + tableRow(tableRow1)
-					+ "</tr>";
 			if (timeReports != null) {
+				List<String> tableRow1 = Arrays.asList("User", "Project",
+						"Acticvity type", "Role", "Date", "Duration","Update","Remove","Sign/Unsign");
+				html += "<table border=" + formElement("1") + tableRow(tableRow1)
+						+ "</tr>";
 				for (TimeReport t : timeReports) {
 					html += listTableRow(t, userName);
 				}
 			}
 			html += "</tr></table>";
+			return html;
 		} else {
+			Map<String,Integer> summaryList = null;
+			try {
+				summaryList = getSummaryMap(userName, user, project, type,startDate, endDate, role,summary);
+			} catch (SecurityException | SQLException e) {
+				
+			}
+			return summaryTable(summaryList,summary);
+		}
+
+	}
+	
+
+	private String summaryTable(Map<String, Integer> summaryList,String summary) {
+		List<String> tableRow1 = Arrays.asList(summary, "Duration");
+		List<String> t = new LinkedList<String>();
+		String html = "<table border=" + formElement("1") + tableRow(tableRow1)+ "</tr>";
+		Set<Map.Entry<String,Integer>> s = summaryList.entrySet();
+		for (Map.Entry<String,Integer> m:s){
+			t.add(m.getKey());
+			t.add(Integer.toString(m.getValue()));
+			html += tableRow(t)+"</tr>";
+			t.clear();
+			
 		}
 		return html;
-
 	}
 
 	private String listTableRow(TimeReport t, String userName) {
@@ -190,7 +214,39 @@ public class TimeReportList extends servletBase {
 		html += "</tr>";
 		return html;
 	}
+	protected Map<String,Integer> getSummaryMap(String userName, String user,
+			String project, String type, String startDate, String endDate,
+			String role,String summary) throws SecurityException, SQLException {
+		User userObj = null;
+		Project projectObj = null;
+		Role roleObj = null;
+		Integer typeObj = null;
+		String startDateObj = null;
+		String endDateObj = null;
 
+		if (!startDate.equals("")) {
+			startDateObj = startDate;
+		}
+		if (!endDate.equals("")) {
+			endDateObj = endDate;
+		}
+		if (!user.equals("all")) {
+			userObj = User.getByUsername(user);
+		}
+		if (!project.equals("all")) {
+			projectObj = Project.getByID(getID(project));
+		}
+		if (!type.equals("all")) {
+			typeObj = getID(type);
+		}
+		if (!role.equals("all")) {
+			roleObj = Member.Role.valueOf(role);
+		}
+		Map<String,Integer> summaryList = TimeReport.getSummary(userObj, projectObj,
+				null, startDateObj, endDateObj, roleObj, typeObj,TimeReport.SumChooser.valueOf(summary));
+		return summaryList;
+	}
+	
 	protected List<TimeReport> getTimeReports(String userName, String user,
 			String project, String type, String startDate, String endDate,
 			String role) throws SecurityException, SQLException {
