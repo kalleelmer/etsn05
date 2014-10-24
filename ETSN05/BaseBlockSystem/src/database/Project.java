@@ -85,19 +85,15 @@ public class Project extends Entity {
 						projectSet.getString("name"),
 						projectSet.getBoolean("closed")));
 			}
+			if (list.isEmpty()) {
+				return null;
+			}
 			return list;
 		}
-		String selectQuery = "SELECT project FROM members WHERE username='"
-				+ username + "';";
-		ResultSet memberSet = selectQuery(selectQuery);
+		List<Member> memberList = Member.getMembers(User.getByUsername(username));
 		List<Project> foundList = new ArrayList<Project>();
-		while (memberSet.next()) {
-			String projectQuery = "SELECT * FROM projects WHERE id="
-					+ memberSet.getInt("project") + ";";
-			ResultSet projectSet = selectQuery(projectQuery);
-			projectSet.next();
-			foundList.add(new Project(projectSet.getInt("id"), projectSet
-					.getString("name"), projectSet.getBoolean("closed")));
+		for (Member m : memberList) {
+			foundList.add(Project.getByID(m.PROJECT));
 		}
 		if (foundList.isEmpty()) {
 			return null;
