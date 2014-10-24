@@ -53,14 +53,43 @@ public class TimeReport extends Entity {
 		SIGNER = safetyInput(signer);
 	}
 	
+	private static TimeReport convertFromDB(ResultSet rs) throws SQLException {
+		return new TimeReport(rs.getInt("id"),
+				rs.getString("user"), rs
+						.getInt("project"), Role.valueOf(rs
+						.getString("role")), rs
+						.getInt("activityType"), Date
+						.valueOf(rs.getString("date")),
+				rs.getInt("duration"), rs
+						.getString("signer"));
+	}
+	
 	public static List<TimeReport> getTimeReportToModify(String username) throws SQLException {
 		if (username.equals("admin")) {
 			return get(null,null,null,null,null,null,null);
 		}
-		List<TimeReport> managerList = get(User.getByUsername(username),null,null,null,null,Role.manager,null);
-		String selectQuery = "SELECT * FROM timeReports WHERE user='" + username + "', role NOT LIKE 'manager'";
-		ResultSet timeReportSet = selectQuery(selectQuery);
-		return null;
+		List<TimeReport> resultList = new ArrayList<TimeReport>();
+		String selectManagerQuery = "SELECT * FROM timeReports WHERE user='" + username + "' AND role='manager' GROUP BY project";
+		ResultSet managerSet = selectQuery(selectManagerQuery);
+		while (managerSet.next()) {
+			List<Member> projectMembers = Member.getMembers(managerSet.getInt("project"));
+			for (Member m : projectMembers) {
+				String selectTimeReportQuery = "SELECT * FROM timeReports WHERE user='" + m.USERNAME + "' AND project=" + managerSet.getInt("project") + ";";
+				ResultSet membersSet = selectQuery(selectTimeReportQuery);
+				while (membersSet.next()) {
+					resultList.add(convertFromDB(membersSet));
+				}
+			}
+		}
+		String selectNotManagerQuery = "SELECT * FROM timeReports WHERE user='" + username + "' AND role NOT LIKE 'manager';";
+		ResultSet notManagerSet = selectQuery(selectNotManagerQuery);
+		while (notManagerSet.next()) {
+			resultList.add(convertFromDB(notManagerSet));
+		}
+		if (resultList.isEmpty()) {
+			return null;
+		}
+		return resultList;
 	}
 	
 	public static TimeReport getByID(int id) throws SQLException {
@@ -69,14 +98,7 @@ public class TimeReport extends Entity {
 		if (!timeReportSet.next()) {
 			return null;
 		}
-		return new TimeReport(timeReportSet.getInt("id"),
-				timeReportSet.getString("user"),
-				timeReportSet.getInt("project"), Role.valueOf(timeReportSet
-						.getString("role")),
-				timeReportSet.getInt("activityType"),
-				timeReportSet.getDate("date"),
-				timeReportSet.getInt("duration"),
-				timeReportSet.getString("signer"));
+		return convertFromDB(timeReportSet);
 	}
 	
 	private static String Cond(Object object) {
@@ -121,13 +143,7 @@ public class TimeReport extends Entity {
 		ResultSet timeReportSet = selectQuery(selectQuery);
 		List<TimeReport> foundList = new ArrayList<TimeReport>();
 		while (timeReportSet.next()) {
-			foundList.add(new TimeReport(timeReportSet.getInt("id"),
-					timeReportSet.getString("user"),
-					timeReportSet.getInt("project"), Role.valueOf(timeReportSet
-							.getString("role")),
-					timeReportSet.getInt("activityType"), Date.valueOf(timeReportSet.getString("date")),
-					timeReportSet.getInt("duration"),
-					timeReportSet.getString("signer")));			
+			foundList.add(convertFromDB(timeReportSet));			
 		}
 		if (foundList.isEmpty()) {
 			return null;
@@ -210,19 +226,11 @@ public class TimeReport extends Entity {
 		if (timeReportSet.next()) {
 			String updateQuery = "";
 			if (!timeReportSet.getString("signer").equals(null)) {
-<<<<<<< HEAD
 				updateQuery = "UPDATE timeReports SET signer='" + SIGNER + "' WHERE id=" + ID +";";
 			} else {
 				updateQuery = "UPDATE timeReports SET activityType="
 						+ ACTIVITY_TYPE + ",duration=" + DURATION + ",signer='"
 						+ SIGNER + "' WHERE id=" + ID +";";
-=======
-				updateQuery = "UPDATE timeReports SET signer='" + SIGNER + "' WHERE id=" + ID + ";";
-			} else {
-				updateQuery = "UPDATE timeReports SET activityType="
-						+ ACTIVITY_TYPE + ",duration=" + DURATION + ",signer='"
-						+ SIGNER + "' WHERE id=" + ID + ";";
->>>>>>> 6db9c13a4fad6c0015131584e458ee6b1326bb7d
 			}
 			query(updateQuery);
 		}
