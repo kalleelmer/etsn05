@@ -90,6 +90,9 @@ public class Project extends Entity {
 			}
 			return list;
 		}
+		if (User.getByUsername(username) == null) {
+			return null;
+		}
 		List<Member> memberList = Member.getMembers(User.getByUsername(username));
 		List<Project> foundList = new ArrayList<Project>();
 		for (Member m : memberList) {

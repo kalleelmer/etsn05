@@ -80,7 +80,7 @@ public class Member extends Entity {
 					+ "',project=" + PROJECT + ",role='" + ROLE + "';";
 			query(addQuery);
 		} else {
-			String updateQuery = "UPDATE members SET role='" + ROLE + "' WHERE username='" + USERNAME + "';";
+			String updateQuery = "UPDATE members SET role='" + ROLE + "' WHERE username='" + USERNAME + "' AND project=" + PROJECT + ";";
 			query(updateQuery);
 		}
 	}
@@ -90,7 +90,7 @@ public class Member extends Entity {
 	 */
 	public void delete() throws SQLException {
 		String deleteQuery = "DELETE FROM members WHERE username='" + USERNAME
-				+ "' AND PROJECT='" + PROJECT + "';";
+				+ "' AND PROJECT=" + PROJECT + ";";
 		query(deleteQuery);
 	}
 }

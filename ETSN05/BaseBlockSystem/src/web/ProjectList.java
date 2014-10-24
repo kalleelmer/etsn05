@@ -77,7 +77,6 @@ public class ProjectList extends servletBase {
 		if (!loggedIn(request)) {
 			response.sendRedirect("LogIn");
 		}
-		
 		if (nameObj != null) {
 			myName = (String) nameObj;
 		}
@@ -95,6 +94,7 @@ public class ProjectList extends servletBase {
 			htmlA += "</form></tr></td></table>";
 			out.println(htmlA);
 		}
+
 		try {
 			list = Project.getByUser(myName);
 		} catch (SecurityException e) {
@@ -102,7 +102,7 @@ public class ProjectList extends servletBase {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} 
-		if (list.equals(null)) {
+		if (list == (null)) {
 			out.println("List is empty");
 			return;
 		}
@@ -116,7 +116,6 @@ public class ProjectList extends servletBase {
 			return;
 		}
 
-
 		if (createName != null) {
 			Project p = new Project(createName);
 			try {
@@ -125,6 +124,7 @@ public class ProjectList extends servletBase {
 				e.printStackTrace();
 			}
 		}
+
 		if (close != null) {
 			Project p = null;
 			int x = Integer.parseInt(close);
