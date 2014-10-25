@@ -35,7 +35,7 @@ public class Member extends Entity {
 	}
 	
 	public static Member getMember(int id, String username) throws SQLException{
-		String selectQuery = "SELECT * FROM members WHERE project=" + id + ", username='" + username + "';";
+		String selectQuery = "SELECT * FROM members WHERE project=" + id + " AND username='" + username + "';";
 		ResultSet memberSet = selectQuery(selectQuery);
 		if (!memberSet.next()) {
 			return null;
