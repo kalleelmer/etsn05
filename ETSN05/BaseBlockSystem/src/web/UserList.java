@@ -202,6 +202,7 @@ public class UserList extends servletBase {
 					}
 				}
 				out.println("<h1>Administration page " + "</h1>");
+				out.println("<p>User names may consist only of 5-10 alphanumeric characters.</p>");
 
 				out.println(addUserForm());
 
@@ -229,6 +230,7 @@ public class UserList extends servletBase {
 
 				try {
 					out.println("<p>Registered users:</p>");
+					out.println("<p>Passwords may only consist of 6 lowercase letters.</p>");
 					out.println("<table border=" + formElement("1") + ">");
 					out.println("<tr><td>USER NAME</td><td>PASSWORD</td><td>FIRST NAME</td><td>LAST NAME</td></tr>");
 					List<User> users = User.getAllUsers();
