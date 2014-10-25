@@ -191,7 +191,9 @@ public class TimeReport extends Entity {
 								.get(Calendar.YEAR))) {
 					sum += next.getValue();
 				} else {
-					weekMap.put(currentDate.get(Calendar.YEAR) + ": " + currentDate.get(Calendar.WEEK_OF_YEAR), sum);
+					int currentWeek = currentDate.get(Calendar.WEEK_OF_YEAR);
+					String currentWeek_s = (String) (currentWeek < 10 ? "0" + currentWeek : "" + currentWeek);
+					weekMap.put(currentDate.get(Calendar.YEAR) + ": " + currentWeek_s, sum);
 					currentDate.setTime(Date.valueOf(next.getKey()));
 					sum = next.getValue();
 				}
