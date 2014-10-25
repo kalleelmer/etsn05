@@ -198,6 +198,7 @@ public class UserList extends servletBase {
 							e.printStackTrace();
 						}		 
 					}else{
+						if (cpwPass.length() == 0) out.println("<b>Please enter a new password in the input box to the left of the 'Change password' button!</b><br>");
 						out.println("Password change failed: password must be 6 lower-case letters.");
 					}
 				}
