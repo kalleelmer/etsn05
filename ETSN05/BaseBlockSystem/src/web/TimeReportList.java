@@ -9,7 +9,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -152,11 +151,10 @@ public class TimeReportList extends servletBase {
 	 * @throws SQLException 
 	 * @throws NumberFormatException 
 	 */
-	private String summaryTableForm(Map<String, Integer> unsortedList,String summary) throws NumberFormatException, SQLException {
+	private String summaryTableForm(Map<String, Integer> summaryList,String summary) throws NumberFormatException, SQLException {
 		List<String> tableRow1=Arrays.asList(summary, "Duration");
 		List<String> t=new LinkedList<String>();
 		String html = "<table border=" + formElement("1") + tableRow(tableRow1)+ "</tr>";
-		Map<String, Integer> summaryList = new TreeMap<String, Integer>(unsortedList);
 		Set<Map.Entry<String,Integer>> s = summaryList.entrySet();
 		for (Map.Entry<String,Integer> m:s){
 			if(summary.equals("activityType")){
