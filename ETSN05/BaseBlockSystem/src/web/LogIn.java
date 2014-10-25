@@ -29,7 +29,7 @@ import database.User;
 @WebServlet("/LogIn")
 public class LogIn extends servletBase {
 	private static final long serialVersionUID = 1L;
-	private enum LoginStatus {ok, passInvalid, userInvalid};
+	public enum LoginStatus {ok, passInvalid, userInvalid};
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -60,7 +60,7 @@ public class LogIn extends servletBase {
      * @param password The password of the user
      * @return true if the user should be accepted
      */
-    private LoginStatus checkUser(String name, String password) {
+    public static LoginStatus checkUser(String name, String password) {
     	User user = null;
     	//if (name.equals("admin") && password.equals("3hpdF")) return LoginStatus.ok;
     	try {
@@ -121,6 +121,7 @@ public class LogIn extends servletBase {
         		state = LOGIN_TRUE;
        			session.setAttribute("state", state);  // save the state in the session
        			session.setAttribute("name", name);  // save the name in the session
+       			session.setAttribute("password", password);  // save the name in the session
        			session.setAttribute("login_time", Calendar.getInstance());
        			response.sendRedirect("blank.html");
        		}
