@@ -3,6 +3,8 @@ package web;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -55,7 +57,7 @@ public class UserList extends servletBase {
 		html += " method=" + formElement("get");
 		html += "<p><input type=" + formElement("text") + " name=" + formElement("password") + '>';    	
 		html += "<input type='hidden' name=" + formElement("name") + " value=" + formElement(name) + '>';
-		html += "<input type=" + formElement("submit") + " value='Change PW'>";
+		html += "<input type=" + formElement("submit") + " value='Change password'>";
 		html += "</form>";
 		return html;
 	}
@@ -179,16 +181,29 @@ public class UserList extends servletBase {
 					if (checkNewPassword(cpwPass)){
 						try {
 							User cpw = User.getByUsername(cpwUser);
-							User newUser = new User(cpw.USERNAME, cpwPass, cpw.FIRST_NAME, cpw.LAST_NAME);
+							
+							//hash password
+							MessageDigest md = null;
+							try {
+								md = MessageDigest.getInstance("SHA-256");
+							} catch (NoSuchAlgorithmException e) {
+								e.printStackTrace();
+							}
+							md.update((cpwPass + cpwUser).getBytes("UTF-8")); // Change this to "UTF-16" if needed
+							byte[] digest = md.digest();
+							
+							User newUser = new User(cpw.USERNAME, new String(digest, "ASCII").replaceAll("[^A-Za-z0-9]", ""), cpw.FIRST_NAME, cpw.LAST_NAME);
 							newUser.update();
 						} catch (SQLException e) {
 							e.printStackTrace();
 						}		 
 					}else{
+						if (cpwPass.length() == 0) out.println("<b>Please enter a new password in the input box to the left of the 'Change password' button!</b><br>");
 						out.println("Password change failed: password must be 6 lower-case letters.");
 					}
 				}
 				out.println("<h1>Administration page " + "</h1>");
+				out.println("<p>User names may consist only of 5-10 alphanumeric characters.</p>");
 
 				out.println(addUserForm());
 
@@ -216,6 +231,7 @@ public class UserList extends servletBase {
 
 				try {
 					out.println("<p>Registered users:</p>");
+					out.println("<p>Passwords may only consist of 6 lowercase letters.</p>");
 					out.println("<table border=" + formElement("1") + ">");
 					out.println("<tr><td>USER NAME</td><td>PASSWORD</td><td>FIRST NAME</td><td>LAST NAME</td></tr>");
 					List<User> users = User.getAllUsers();

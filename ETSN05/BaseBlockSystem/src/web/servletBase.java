@@ -95,6 +95,7 @@ public class servletBase extends HttpServlet {
 		long twentyminutes = 20 * 60 * 1000;
 		if (diff > twentyminutes) return false;
 		session.setAttribute("login_time", now);
+		if (LogIn.checkUser((String)session.getAttribute("name"), (String)session.getAttribute("password")) != LogIn.LoginStatus.ok) return false;
 		return (state == LOGIN_TRUE);
 	}
 

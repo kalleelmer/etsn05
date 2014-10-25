@@ -5,6 +5,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.List;
@@ -29,14 +31,25 @@ public class DatabaseWriter extends Entity{
 		query("create table members (username varchar(128), project int, primary key(username, project), role enum('undefined','manager','developer','architect','tester'))");
 		query("create table timeReports (id int, user varchar(128), primary key(id), project int, role enum('undefined','manager','developer','architect','tester'),activityType int, date Date, duration int, signer varchar(128))");
 		query("alter table timeReports modify column id int auto_increment");
-		query("insert into users set username='admin', password='adminp'");
+		query("insert into users set username='admin', password='3hpdF'");
 		Path path = Paths.get("/home/etsn05/workspace/etsn05/ETSN05/BaseBlockSystem/src/database/DatabaseContent");
 	    List<String> list =  Files.readAllLines(path, StandardCharsets.UTF_8);
 	    int i = 0;
 	    while (!list.get(i).contains("#")) {
 	    	String userInfo = list.get(i);
 	    	String[] data = userInfo.split(";");
-	    	User user = new User(data[0],data[1],data[2],data[3]);
+	    	//hash password
+    		MessageDigest md = null;
+    		try {
+    			md = MessageDigest.getInstance("SHA-256");
+    		} catch (NoSuchAlgorithmException e) {
+    			e.printStackTrace();
+    		}
+    		md.update((data[1]+data[0].replaceAll("\\s+","")).getBytes("UTF-8")); // Change this to "UTF-16" if needed
+    		System.out.println(data[1]+data[0].replaceAll("\\s+",""));
+    		byte[] digest = md.digest();
+    		String password = new String(digest, "ASCII").replaceAll("[^A-Za-z0-9]", "");
+	    	User user = new User(data[0],password,data[2],data[3]);
 	    	user.insert();
 	    	i++;
 	    }
