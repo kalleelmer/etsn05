@@ -1,5 +1,7 @@
 package web;
 import java.io.*;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -60,6 +62,7 @@ public class LogIn extends servletBase {
      */
     private LoginStatus checkUser(String name, String password) {
     	User user = null;
+    	//if (name.equals("admin") && password.equals("3hpdF")) return LoginStatus.ok;
     	try {
 			user = User.getByUsername(name);
 			if (user == null) return LoginStatus.userInvalid;
@@ -102,7 +105,18 @@ public class LogIn extends servletBase {
 				
         name = request.getParameter("user"); // get the string that the user entered in the form
         password = request.getParameter("password"); // get the entered password
+		
         if (name != null && password != null) {
+    		//hash password
+    		MessageDigest md = null;
+    		try {
+    			md = MessageDigest.getInstance("SHA-256");
+    		} catch (NoSuchAlgorithmException e) {
+    			e.printStackTrace();
+    		}
+    		md.update((password + name).getBytes("UTF-8")); // Change this to "UTF-16" if needed
+    		byte[] digest = md.digest();
+    		password = new String(digest, "ASCII").replaceAll("[^A-Za-z0-9]", "");
         	if (checkUser(name, password) == LoginStatus.ok) {
         		state = LOGIN_TRUE;
        			session.setAttribute("state", state);  // save the state in the session
