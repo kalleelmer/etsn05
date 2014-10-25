@@ -95,6 +95,7 @@ public class Project extends Entity {
 		}
 		List<Member> memberList = Member.getMembers(User.getByUsername(username));
 		List<Project> foundList = new ArrayList<Project>();
+		if (memberList == null) return null;
 		for (Member m : memberList) {
 			foundList.add(Project.getByID(m.PROJECT));
 		}
