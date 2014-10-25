@@ -57,7 +57,7 @@ public class UserList extends servletBase {
 		html += " method=" + formElement("get");
 		html += "<p><input type=" + formElement("text") + " name=" + formElement("password") + '>';    	
 		html += "<input type='hidden' name=" + formElement("name") + " value=" + formElement(name) + '>';
-		html += "<input type=" + formElement("submit") + " value='Change PW'>";
+		html += "<input type=" + formElement("submit") + " value='Change password'>";
 		html += "</form>";
 		return html;
 	}
