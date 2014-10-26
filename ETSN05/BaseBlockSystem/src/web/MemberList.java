@@ -197,6 +197,11 @@ public class MemberList extends servletBase {
 			}
 		}
 		if (myName.equals("admin")) manager_b = true;
+		try {
+			if (Project.getByID(projectID) != null && Project.getByID(projectID).CLOSED) manager_b = false;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		if (manager_b) out.println(managerRequestForm(members, projectID));
 	}
 }
