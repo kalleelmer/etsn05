@@ -1,10 +1,6 @@
 package web;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Calendar;
 
 import javax.servlet.http.HttpServlet;
@@ -43,34 +39,9 @@ public class servletBase extends HttpServlet {
 	protected Connection conn = null;
 
 	/**
-	 * Constructs a servlet and makes a connection to the database. It also
-	 * writes all user names on the console for test purpose.
+	 * Constructs a servlet and makes a connection to the database
 	 */
 	public servletBase() {
-		try {
-			DriverManager.registerDriver(new com.mysql.jdbc.Driver());
-//			conn = DriverManager
-//					.getConnection("jdbc:mysql://vm26.cs.lth.se/puss1402?"
-//							+ "user=puss1402&password=pwi8ww1k");
-			conn = DriverManager
-					.getConnection("jdbc:mysql://localhost/test_base?user=root&password=etsn05");
-
-			// Display the contents of the database in the console.
-			// This should be removed in the final version
-			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery("select * from users");
-			while (rs.next()) {
-				String name = rs.getString("username");
-				System.out.println("base " + name);
-			}
-
-			stmt.close();
-
-		} catch (SQLException ex) {
-			System.out.println("SQLException: " + ex.getMessage());
-			System.out.println("SQLState: " + ex.getSQLState());
-			System.out.println("VendorError: " + ex.getErrorCode());
-		}
 	}
 
 	/**

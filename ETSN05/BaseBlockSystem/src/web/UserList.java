@@ -235,7 +235,6 @@ public class UserList extends servletBase {
 					out.println("<table border=" + formElement("1") + ">");
 					out.println("<tr><td>USER NAME</td><td>PASSWORD</td><td>FIRST NAME</td><td>LAST NAME</td></tr>");
 					List<User> users = User.getAllUsers();
-					System.out.println(users);
 					for (User u : users) {
 						String name = u.USERNAME;
 						String pw = u.PASSWORD;
