@@ -46,12 +46,15 @@ public class User extends Entity {
 				+ "';";
 		ResultSet userSet = selectQuery(selectQuery);
 		if (!userSet.next()) {
+			userSet.close();
 			return null;
 		}
-			return new User(userSet.getString("username"),
+			User user =  new User(userSet.getString("username"),
 					userSet.getString("password"),
 					userSet.getString("firstname"),
 					userSet.getString("lastname"));
+			userSet.close();
+			return user;
 	}
 
 	/**
@@ -70,8 +73,10 @@ public class User extends Entity {
 					userSet.getString("lastname")));
 		}
 		if (allUsers.isEmpty()) {
+			userSet.close();
 			return null;
 		}
+		userSet.close();
 		return allUsers;
 	}
 	
@@ -79,22 +84,36 @@ public class User extends Entity {
 		if (user.isAdmin()) {
 			return getAllUsers();
 		}
-		String selectQuery = "SELECT * FROM members WHERE username='" + user.USERNAME + "' AND role='manager';";
-		ResultSet managerSet = selectQuery(selectQuery);
-		List<User> foundList = new ArrayList<User>();
-		Map<String, User> doubleHash = new TreeMap<String, User>();
-		while (managerSet.next()) {
-			List<Member> memberList = Project.getByID(managerSet.getInt("project")).getMembers();
-			for (Member m : memberList) {
-				doubleHash.put(m.USERNAME, User.getByUsername(m.USERNAME));
+		String selectManagerQuery = "SELECT project FROM members WHERE username='" + user.USERNAME + "' AND role='manager';";
+		ResultSet managerSet = selectQuery(selectManagerQuery);
+		Map<String,User> doubleHash = new TreeMap<String,User>();
+		if (managerSet.next()) {
+			do {
+				List<Member> memberList = Project.getByID(managerSet.getInt("project")).getMembers();
+				for (Member m : memberList) {
+					doubleHash.put(m.USERNAME, User.getByUsername(m.USERNAME));
+				}
+			} while (managerSet.next());
+		} else {
+			String selectOtherQuery = "SELECT username FROM members WHERE username='"
+					+ user.USERNAME + "' AND role NOT LIKE 'manager';";
+			ResultSet notManagerSet = selectQuery(selectOtherQuery);
+			while (notManagerSet.next()) {
+				doubleHash
+						.put(notManagerSet.getString("username"), User
+								.getByUsername(notManagerSet
+										.getString("username")));
 			}
+			notManagerSet.close();
+			managerSet.close();
 		}
+		if (doubleHash.isEmpty()) {
+			return null;
+		}
+		List<User> foundList = new ArrayList<User>();
 		Iterator<Entry<String,User>> itr = doubleHash.entrySet().iterator();
 		while (itr.hasNext()) {
-			foundList.add(User.getByUsername(itr.next().getValue().USERNAME));
-		}
-		if (foundList.isEmpty()) {
-			return null;
+			foundList.add(itr.next().getValue());
 		}
 		return foundList;
 	}
@@ -146,6 +165,7 @@ public class User extends Entity {
 		if (!userSet.next()) {
 			throw new IllegalArgumentException();
 		}
+		userSet.close();
 		String deleteUsersQuery = "DELETE FROM users WHERE username='"
 				+ USERNAME + "' AND password='" + PASSWORD + "';";
 		query(deleteUsersQuery);

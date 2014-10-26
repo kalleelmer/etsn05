@@ -204,7 +204,12 @@ public class TimeReportList extends servletBase {
 		}
 		Role role = Member.Role.valueOf("tester");
 		if (!userName.equals("admin")) {
-			role = getRole(userName, t.PROJECT_ID);
+			try {
+				role = Member.getMember(t.PROJECT_ID, userName).ROLE;
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		
 		}
 		if (userName.equals("admin")

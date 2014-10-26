@@ -40,10 +40,11 @@ public class Member extends Entity {
 		if (!memberSet.next()) {
 			return null;
 		}
-		return new Member(memberSet.getString("username"),
+		Member member = new Member(memberSet.getString("username"),
 				memberSet.getInt("project"), Role.valueOf(memberSet
 						.getString("role")));
-
+		memberSet.close();
+		return member;
 	}
 
 	/**
@@ -63,6 +64,7 @@ public class Member extends Entity {
 				foundList.add(member);
 			}
 		}
+		memberSet.close();
 		if (foundList.isEmpty()) {
 			return null;
 		}
@@ -83,6 +85,7 @@ public class Member extends Entity {
 			String updateQuery = "UPDATE members SET role='" + ROLE + "' WHERE username='" + USERNAME + "' AND project=" + PROJECT + ";";
 			query(updateQuery);
 		}
+		memberSet.close();
 	}
 	
 	/**

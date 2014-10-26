@@ -64,8 +64,10 @@ public class Project extends Entity {
 							.valueOf(membersSet.getString("role"))));
 		}
 		if (foundList.isEmpty()) {
+			membersSet.close();
 			return null;
 		}
+		membersSet.close();
 		return foundList;
 	}
 
@@ -85,6 +87,7 @@ public class Project extends Entity {
 						projectSet.getString("name"),
 						projectSet.getBoolean("closed")));
 			}
+			projectSet.close();
 			if (list.isEmpty()) {
 				return null;
 			}
@@ -115,8 +118,10 @@ public class Project extends Entity {
 		ResultSet projectSet = selectQuery(selectQuery);
 		if (!projectSet.next())
 			return null;
-		return new Project(projectSet.getInt("id"),
+		Project project = new Project(projectSet.getInt("id"),
 				projectSet.getString("name"), projectSet.getBoolean("closed"));
+		projectSet.close();
+		return project;
 	}
 
 	/**

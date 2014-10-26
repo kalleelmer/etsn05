@@ -86,6 +86,8 @@ public class TimeReport extends Entity {
 		while (notManagerSet.next()) {
 			resultList.add(convertFromDB(notManagerSet));
 		}
+		managerSet.close();
+		notManagerSet.close();
 		if (resultList.isEmpty()) {
 			return null;
 		}
@@ -96,8 +98,10 @@ public class TimeReport extends Entity {
 		String timeReportQuery = "SELECT * FROM timeReports WHERE id=" + id;
 		ResultSet timeReportSet = selectQuery(timeReportQuery);
 		if (!timeReportSet.next()) {
+			timeReportSet.close();
 			return null;
 		}
+		timeReportSet.close();
 		return convertFromDB(timeReportSet);
 	}
 	
@@ -145,6 +149,7 @@ public class TimeReport extends Entity {
 		while (timeReportSet.next()) {
 			foundList.add(convertFromDB(timeReportSet));			
 		}
+		timeReportSet.close();
 		if (foundList.isEmpty()) {
 			return null;
 		} return foundList;
@@ -173,6 +178,7 @@ public class TimeReport extends Entity {
 			foundMap.put(timeReportSet.getString((summarizeBy.equals(SumChooser.week) ? "date" : summarizeBy.toString())), timeReportSet.getInt("SUM(duration)"));
 		}
 		if (foundMap.isEmpty()) {
+			timeReportSet.close();
 			return null;
 		} else if (summarizeBy.equals(SumChooser.week)) {
 			Map<String, Integer> weekMap = new TreeMap<String, Integer>();
@@ -199,8 +205,10 @@ public class TimeReport extends Entity {
 				}
 			}
 			weekMap.put(currentDate.get(Calendar.YEAR) + ": " + currentDate.get(Calendar.WEEK_OF_YEAR), sum);
+			timeReportSet.close();
 			return weekMap;	
 		}
+		timeReportSet.close();
 		return foundMap;
 	}
 	
@@ -236,6 +244,7 @@ public class TimeReport extends Entity {
 			}
 			query(updateQuery);
 		}
+		timeReportSet.close();
 	}
 
 	/**

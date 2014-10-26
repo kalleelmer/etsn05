@@ -32,7 +32,7 @@ public class DatabaseWriter extends Entity{
 		query("create table timeReports (id int, user varchar(128), primary key(id), project int, role enum('undefined','manager','developer','architect','tester'),activityType int, date Date, duration int, signer varchar(128))");
 		query("alter table timeReports modify column id int auto_increment");
 		query("insert into users set username='admin', password='3hpdF'");
-		Path path = Paths.get("/home/etsn05/workspace/etsn05/ETSN05/BaseBlockSystem/src/database/DatabaseContent");
+		Path path = Paths.get("/home/etsn05/PUSS/etsn05/ETSN05/BaseBlockSystem/src/database/DatabaseContent");
 	    List<String> list =  Files.readAllLines(path, StandardCharsets.UTF_8);
 	    int i = 0;
 	    while (!list.get(i).contains("#")) {
