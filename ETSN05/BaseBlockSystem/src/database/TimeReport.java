@@ -101,8 +101,9 @@ public class TimeReport extends Entity {
 			timeReportSet.close();
 			return null;
 		}
+		TimeReport tr = convertFromDB(timeReportSet);
 		timeReportSet.close();
-		return convertFromDB(timeReportSet);
+		return tr;
 	}
 	
 	private static String Cond(Object object) {
