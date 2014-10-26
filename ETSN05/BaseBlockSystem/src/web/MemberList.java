@@ -91,7 +91,7 @@ public class MemberList extends servletBase {
 		html += "<input type='hidden' name=" + formElement("project") + " value=" + formElement(id+"") + '>';
 		html += "</table>";
 		html += "</form>";
-		html = "<p><form name=" + formElement("input");
+		html += "<p><form name=" + formElement("input");
 		html += " method=" + formElement("get");
 		html += "<p><input type=" + formElement("text") + " name=" + formElement("add") + '>';    	
 		html += "<input type='hidden' name=" + formElement("project") + " value=" + formElement(id + "") + '>';
