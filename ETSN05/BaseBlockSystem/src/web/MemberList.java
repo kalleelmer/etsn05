@@ -95,6 +95,12 @@ public class MemberList extends servletBase {
 		html += "<input type='hidden' name=" + formElement("project") + " value=" + formElement(id + "") + '>';
 		html += "<input type=" + formElement("submit") + " value='Add new member'>";
 		html += "</form>";
+		html += "<p><form name=" + formElement("input");
+		html += " method=" + formElement("get");
+		html += "<p><input type=" + formElement("text") + " name=" + formElement("delete") + '>';    	
+		html += "<input type='hidden' name=" + formElement("project") + " value=" + formElement(id + "") + '>';
+		html += "<input type=" + formElement("submit") + " value='Delete member from project'>";
+		html += "</form>";
 		return html;
 	}
 
@@ -111,6 +117,7 @@ public class MemberList extends servletBase {
 		filterUser = request.getParameter("filterUser");
 		filterRole = request.getParameter("filterRole");
 		String addmember = request.getParameter("add");
+		String delmember = request.getParameter("delete");
 		Object val = request.getParameter("val");
 		try {
 			projectID = Integer.parseInt(request.getParameter("project"));
@@ -145,6 +152,15 @@ public class MemberList extends servletBase {
 			Member newMember = new Member(addmember, projectID, Member.Role.undefined);
 			try {
 				newMember.set();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		if (delmember != null) {
+			try {
+				Member delmember_m = Member.getMember(projectID, delmember);
+				delmember_m.delete();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
