@@ -17,6 +17,7 @@ import database.Project;
 public class ProjectList extends servletBase {
 
 	protected String projectListRequestForm(List<Project> list) {
+		if (list == null) return "";
 		String html = "<html><body><p>Project List:</p>";
 		html += "<table border = " + formElement("1") + "><tr><td>ID</td><td>Name</td><td>Active</td>";
 		for (Project p : list) {
