@@ -6,10 +6,8 @@ import database.Project;
 import database.User;
 
 import java.sql.SQLException;
-
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -135,6 +133,15 @@ public class MemberList extends servletBase {
 		List<Member> members = null;
 		
 		if (addmember != null) {
+			try {
+				if (User.getByUsername(addmember) == null) {
+					out.println("Invalid username!");
+					return;
+				}
+			} catch (SecurityException | SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			Member newMember = new Member(addmember, projectID, Member.Role.undefined);
 			try {
 				newMember.set();
@@ -168,7 +175,6 @@ public class MemberList extends servletBase {
 		boolean manager_b = false;
 		for (Member m : members) {
 			u = m.USERNAME;
-			System.out.println("checkmanagerloop");
 			if ((m.ROLE == Member.Role.manager && u.equals(myName)) || myName.equals("admin")) {
 				manager_b = true;
 				break;
