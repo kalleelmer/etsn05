@@ -97,6 +97,7 @@ public class ProjectList extends servletBase {
 
 		try {
 			list = Project.getByUser(myName);
+			
 		} catch (SecurityException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
@@ -104,7 +105,6 @@ public class ProjectList extends servletBase {
 		} 
 		if (list == (null)) {
 			out.println("List is empty");
-			return;
 		}
 		
 		if (deleteProject != null) {

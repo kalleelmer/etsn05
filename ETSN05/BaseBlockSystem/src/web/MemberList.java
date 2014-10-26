@@ -5,6 +5,8 @@ import database.Member.Role;
 import database.Project;
 import database.User;
 
+import java.sql.SQLException;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -89,6 +91,12 @@ public class MemberList extends servletBase {
 		html += "<input type='hidden' name=" + formElement("project") + " value=" + formElement(id+"") + '>';
 		html += "</table>";
 		html += "</form>";
+		html = "<p><form name=" + formElement("input");
+		html += " method=" + formElement("get");
+		html += "<p><input type=" + formElement("text") + " name=" + formElement("add") + '>';    	
+		html += "<input type='hidden' name=" + formElement("project") + " value=" + formElement(id + "") + '>';
+		html += "<input type=" + formElement("submit") + " value='Add new member'>";
+		html += "</form>";
 		return html;
 	}
 
@@ -104,6 +112,7 @@ public class MemberList extends servletBase {
 		String myName = "";
 		filterUser = request.getParameter("filterUser");
 		filterRole = request.getParameter("filterRole");
+		String addmember = request.getParameter("add");
 		Object val = request.getParameter("val");
 		try {
 			projectID = Integer.parseInt(request.getParameter("project"));
@@ -113,7 +122,7 @@ public class MemberList extends servletBase {
 			return;
 		}
 		try {
-			out.println("<div>Project name: " + Project.getByID(projectID).NAME +   "Project ID is " + projectID + "</div>");
+			out.println("<div>Project name: " + Project.getByID(projectID).NAME +   " Project ID is " + projectID + "</div>");
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}
@@ -124,6 +133,15 @@ public class MemberList extends servletBase {
 			myName = (String) nameObj;
 		}
 		List<Member> members = null;
+		
+		if (addmember != null) {
+			Member newMember = new Member(addmember, projectID, Member.Role.undefined);
+			try {
+				newMember.set();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 
 		try {
 			members = Project.getByID(projectID).getMembers();
@@ -147,13 +165,16 @@ public class MemberList extends servletBase {
 		}
 		out.println(memberListRequestForm(members));
 		String u;
+		boolean manager_b = false;
 		for (Member m : members) {
 			u = m.USERNAME;
 			System.out.println("checkmanagerloop");
 			if ((m.ROLE == Member.Role.manager && u.equals(myName)) || myName.equals("admin")) {
-				out.println(managerRequestForm(members, projectID));
+				manager_b = true;
 				break;
 			}
 		}
+		if (myName.equals("admin")) manager_b = true;
+		if (manager_b) out.println(managerRequestForm(members, projectID));
 	}
 }
