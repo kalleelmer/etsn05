@@ -177,6 +177,10 @@ public class MemberList extends servletBase {
 		if(val != null){
 			System.out.println(filterRole);
 			System.out.println(filterUser);
+			if (filterUser.equals(myName)) {
+				out.println("Cannot change your own role.");
+				return;
+			}
 			Role role = Member.Role.valueOf(filterRole);
 			Member newMember = new Member(filterUser, projectID, role);
 			System.out.println("innanMemberset");
