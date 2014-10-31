@@ -224,6 +224,7 @@ public class TimeReportList extends servletBase {
 		}else{
 			html+="<td></td>";
 		}
+		html+="<td>" + (t.SIGNER == null || t.SIGNER.equals("null") ? "Not signed" : "Signed by '" + t.SIGNER + "'") + "</td>";
 
 		html+="</tr>";
 		return html;
