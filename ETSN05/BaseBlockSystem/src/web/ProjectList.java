@@ -3,6 +3,7 @@ package web;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -116,7 +117,12 @@ public class ProjectList extends servletBase {
 		}
 
 		if (deleteProject != null) {
-			out.println(closeProjectRequestForm(list));
+			List<Project> closeList = new ArrayList<Project>();
+			for(Project p : list) {
+				if(!p.CLOSED)
+					closeList.add(p);
+			}
+			out.println(closeProjectRequestForm(closeList)); //////////////////////
 			return;
 		}
 		if (createNewProject != null) {
