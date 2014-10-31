@@ -133,7 +133,7 @@ public class ProjectList extends servletBase {
 		if (close != null) {
 			Project p = null;
 			int x = Integer.parseInt(close);
-			System.out.println(close);
+			//System.out.println(close);
 			try {
 				if(Project.getByID(x) == null) {
 					out.println("No project with that ID");
