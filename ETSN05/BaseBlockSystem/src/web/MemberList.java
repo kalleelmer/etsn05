@@ -127,6 +127,10 @@ public class MemberList extends servletBase {
 			return;
 		}
 		try {
+			if(Project.getByID(projectID).CLOSED == true){
+				out.println("<div>Project is closed</div>");
+				return;
+			}
 			out.println("<div>Project name: " + Project.getByID(projectID).NAME +   " Project ID is " + projectID + "</div>");
 		} catch (SQLException e1) {
 			e1.printStackTrace();
