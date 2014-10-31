@@ -25,11 +25,11 @@ public class DatabaseWriter extends Entity{
 		} catch(SQLException ex) {
 			System.out.print("Du hade inga tabeller att ta bort");
 		}
-		query("create table users (username varchar(128), PRIMARY KEY(username), password varchar(128), firstname varchar(128), lastname varchar(128));");
-		query("create table projects (id int, primary key(id), name varchar(128), closed boolean);");
+		query("create table users (username varchar(128), PRIMARY KEY(username), password varchar(128), firstname varchar(128), lastname varchar(128)) collate latin1_general_cs;");
+		query("create table projects (id int, primary key(id), name varchar(128), closed boolean) collate latin1_general_cs;");
 		query("alter table projects modify column id int auto_increment");
-		query("create table members (username varchar(128), project int, primary key(username, project), role enum('undefined','manager','developer','architect','tester'))");
-		query("create table timeReports (id int, user varchar(128), primary key(id), project int, role enum('undefined','manager','developer','architect','tester'),activityType int, date Date, duration int, signer varchar(128))");
+		query("create table members (username varchar(128), project int, primary key(username, project), role enum('undefined','manager','developer','architect','tester')) collate latin1_general_cs;");
+		query("create table timeReports (id int, user varchar(128), primary key(id), project int, role enum('undefined','manager','developer','architect','tester'),activityType int, date Date, duration int, signer varchar(128)) collate latin1_general_cs;");
 		query("alter table timeReports modify column id int auto_increment");
 		query("insert into users set username='admin', password='3hpdF'");
 		Path path = Paths.get("/home/etsn05/PUSS/etsn05/ETSN05/BaseBlockSystem/src/database/DatabaseContent");
