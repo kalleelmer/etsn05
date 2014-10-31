@@ -81,6 +81,14 @@ public class ProjectList extends servletBase {
 		if (nameObj != null) {
 			myName = (String) nameObj;
 		}
+		if (createName != null) {
+			Project p = new Project(createName);
+			try {
+				p.insert();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 		if (myName.equals("admin")) {
 			String htmlA = "<html><h1>Project List</h1><body><table border =" + formElement("1") + "><tr><td><br><form action=" + formElement("")
 					+ ">";
@@ -115,15 +123,6 @@ public class ProjectList extends servletBase {
 		if (createNewProject != null) {
 			out.println(newProjectRequestForm());
 			return;
-		}
-
-		if (createName != null) {
-			Project p = new Project(createName);
-			try {
-				p.insert();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
 		}
 
 		if (close != null) {
