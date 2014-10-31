@@ -266,7 +266,9 @@ public class TimeReportList extends servletBase {
 		Role role = Member.Role.valueOf("tester");
 		if (!userName.equals("admin")) {
 			try {
-				role = Member.getMember(t.PROJECT_ID, userName).ROLE;
+				if(Member.getMember(t.PROJECT_ID, userName) != null){	
+					role = Member.getMember(t.PROJECT_ID, userName).ROLE;
+				}
 			} catch (SQLException e) {
 				return "<p> Error! Please use menus to navigate the system </p>";
 			}
