@@ -194,7 +194,6 @@ public class MemberList extends servletBase {
 				e.printStackTrace();
 			}
 		}
-		out.println(memberListRequestForm(members));
 		String u;
 		boolean manager_b = false;
 		for (Member m : members) {
@@ -210,6 +209,15 @@ public class MemberList extends servletBase {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		try {
+			members = Project.getByID(projectID).getMembers();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		if(members == null) {
+			members = new ArrayList<Member>();
+		}
+		out.println(memberListRequestForm(members));
 		if (manager_b) out.println(managerRequestForm(members, projectID));
 	}
 }
