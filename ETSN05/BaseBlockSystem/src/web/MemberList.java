@@ -99,7 +99,7 @@ public class MemberList extends servletBase {
 		html += " method=" + formElement("get");
 		html += "<p><input type=" + formElement("text") + " name=" + formElement("delete") + '>';    	
 		html += "<input type='hidden' name=" + formElement("project") + " value=" + formElement(id + "") + '>';
-		html += "<input type=" + formElement("submit") + " value='Delete member from project'>";
+		html += "<input type=" + formElement("submit") + "onclick=" + formElement("return confirm('Are you sure?')") + " value='Delete member from project'>";
 		html += "</form>";
 		return html;
 	}
