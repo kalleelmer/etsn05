@@ -142,22 +142,7 @@ public class ProjectList extends servletBase {
 				e.printStackTrace();
 			}
 		} else {
-
 			out.print(projectListRequestForm(list));
-//			if (myName.equals("admin")) {
-//				String htmlA = "<html><body><form action=" + formElement("")
-//						+ ">";
-//				htmlA += "<input type=" + formElement("submit") + "name="
-//						+ formElement("createNewProject");
-//				htmlA += " value=" + formElement("Create new project") + ">";
-//				htmlA += "</form>";
-//				htmlA += "<form action=" + formElement("") + ">";
-//				htmlA += "<input type=" + formElement("submit") + "name="
-//						+ formElement("deleteProject");
-//				htmlA += " value=" + formElement("Close project") + ">";
-//				htmlA += "</form>";
-//				out.println(htmlA);
-//			}
 		}
 	}
 }
