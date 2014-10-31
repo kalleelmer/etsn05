@@ -72,7 +72,6 @@ public class ProjectList extends servletBase {
 		Object createNewProject = request.getParameter("createNewProject");
 		Object deleteProject = request.getParameter("deleteProject");
 		String close = request.getParameter("close");
-		String createID = request.getParameter("createID");
 		String createName = request.getParameter("createName");
 		List<Project> list = null;
 		if (!loggedIn(request)) {
@@ -106,7 +105,7 @@ public class ProjectList extends servletBase {
 
 		try {
 			list = Project.getByUser(myName);
-			
+
 		} catch (SecurityException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
@@ -115,7 +114,7 @@ public class ProjectList extends servletBase {
 		if (list == (null)) {
 			out.println("List is empty");
 		}
-		
+
 		if (deleteProject != null) {
 			out.println(closeProjectRequestForm(list));
 			return;
@@ -136,6 +135,15 @@ public class ProjectList extends servletBase {
 					p = Project.getByID(x);
 					p.CLOSED = true;
 					p.update();
+					try {
+						list = Project.getByUser(myName);
+
+					} catch (SecurityException e) {
+						e.printStackTrace();
+					} catch (SQLException e) {
+						e.printStackTrace();
+					} 
+					out.print(projectListRequestForm(list));
 				}
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
