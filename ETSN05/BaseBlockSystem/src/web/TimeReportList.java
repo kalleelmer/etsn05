@@ -189,7 +189,7 @@ public class TimeReportList extends servletBase {
 				+ p.NAME+ "</td><td>" + activityType + "</td><td>"
 				+ t.ROLE + "</td><td>" + t.DATE + "</td><td>"+ t.DURATION+"</td>";
 		if (t.SIGNER.equals("null")
-				&& (userName.equals("admin") || t.USERNAME.equals(userName))) {
+				&& (t.USERNAME.equals(userName))) {
 			html += "<td><a href ="+formElement("TimeReportList?val=update&t=" + t.ID)
 					+">update</td>";
 		} else {
