@@ -49,7 +49,7 @@ public class ProjectList extends servletBase {
 
 	protected String newProjectRequestForm() {
 		String html;
-		html = "<p>Add new project: <br><table border=" + formElement("1")
+		html = "<p>Add new project: <br> Project names should only include letters a to z, numbers and -. All other inputs will be filtered <table border=" + formElement("1")
 				+ "><tr><td>";
 		html += "<form name=" + formElement("input");
 		html += " method=" + formElement("get");
