@@ -163,8 +163,10 @@ public class MemberList extends servletBase {
 		
 		if (delmember != null) {
 			try {
+				if(delmember!=""){
 				Member delmember_m = Member.getMember(projectID, delmember);
 				delmember_m.delete();
+				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
