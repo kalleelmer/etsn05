@@ -81,7 +81,7 @@ public class ProjectList extends servletBase {
 		if (nameObj != null) {
 			myName = (String) nameObj;
 		}
-		if (createName != null) {
+		if (createName != null && createName != "") {
 			Project p = new Project(createName);
 			try {
 				p.insert();
