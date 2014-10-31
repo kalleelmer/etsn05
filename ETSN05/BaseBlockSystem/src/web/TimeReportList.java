@@ -197,8 +197,17 @@ public class TimeReportList extends servletBase {
 		}
 		if (t.SIGNER.equals("null")
 				&& (userName.equals("admin") || t.USERNAME.equals(userName))) {
-			html += "<td><a href ="+formElement("TimeReportList?val=remove&t="+t.ID)
-					+">remove</td>";
+			try {
+				if(userName.equals("admin") && Project.getByID(t.PROJECT_ID).CLOSED==true){
+					html += "<td> - </td>";
+				}else{
+				html += "<td><a href ="+formElement("TimeReportList?val=remove&t="+t.ID)
+						+">remove</td>";
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		} else {
 			html += "<td>-</td>";
 		}
