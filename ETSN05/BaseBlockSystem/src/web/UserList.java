@@ -142,7 +142,7 @@ public class UserList extends servletBase {
 		try {
 			user = User.getByUsername(name);
 			user.delete();
-		} catch (SecurityException | SQLException e) {
+		} catch (SecurityException | SQLException | NullPointerException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -224,7 +224,18 @@ public class UserList extends servletBase {
 				String deleteName = request.getParameter("deletename");
 				if (deleteName != null) {
 					if (checkNewName(deleteName)) {
-						deleteUser(deleteName);
+						try {
+							if(User.getByUsername(deleteName) != null) {
+								deleteUser(deleteName);
+							}
+							else {
+								out.println("<p> The user has already been deleted </p>");
+							}	
+						} catch (SecurityException | SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
 					}	else
 						out.println("<p>Error: URL wrong</p>");
 				}
