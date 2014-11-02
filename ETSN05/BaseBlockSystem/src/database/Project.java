@@ -16,16 +16,16 @@ public class Project extends Entity {
 	public final String NAME;
 	public boolean CLOSED;
 	
-	/**
-	 * Constructs a new project, and automatically marks it as an open project
-	 * @param id
-	 * @param name
-	 */
-	public Project(int id, String name) {
-		ID = id;
-		NAME = safetyInput(name);
-		CLOSED = false;
-	}
+//	/**
+//	 * Constructs a new project, and automatically marks it as an open project
+//	 * @param id
+//	 * @param name
+//	 */
+//	public Project(int id, String name) {
+//		ID = id;
+//		NAME = safetyInput(name);
+//		CLOSED = false;
+//	}
 	
 	/**
 	 * Constructs a new project, and automatically marks it as an open project
