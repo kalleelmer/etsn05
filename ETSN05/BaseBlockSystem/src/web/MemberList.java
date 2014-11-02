@@ -52,7 +52,7 @@ public class MemberList extends servletBase {
 			return ((Project) s).ID + "- " + ((Project) s).NAME;
 		} else if (s instanceof Member) {
 			return ((Member) s).USERNAME;
-			} else {
+		} else {
 			return "";
 		}
 	}
@@ -68,7 +68,7 @@ public class MemberList extends servletBase {
 		return html;
 	}
 
-	protected String managerRequestForm(List<Member> memberList, int id) {
+	protected String managerRequestForm(List<Member> memberList, int id, String myName) {
 		List<String> role = new ArrayList<String>();
 		role.add("undefined");
 		role.add("manager");
@@ -86,21 +86,32 @@ public class MemberList extends servletBase {
 		html += "<td><input type=" + formElement("submit") + "name="
 				+ formElement("val") + "value=" + formElement("Change")
 				+ "></td></tr>";
-		html += "<input type='hidden' name=" + formElement("project") + " value=" + formElement(id+"") + '>';
+		html += "<input type='hidden' name=" + formElement("project")
+				+ " value=" + formElement(id + "") + '>';
 		html += "</table>";
 		html += "</form>";
-		html += "<p><form name=" + formElement("input");
-		html += " method=" + formElement("get");
-		html += "<p><input type=" + formElement("text") + " name=" + formElement("add") + '>';    	
-		html += "<input type='hidden' name=" + formElement("project") + " value=" + formElement(id + "") + '>';
-		html += "<input type=" + formElement("submit") + " value='Add new member'>";
-		html += "</form>";
-		html += "<p><form name=" + formElement("input");
-		html += " method=" + formElement("get");
-		html += "<p><input type=" + formElement("text") + " name=" + formElement("delete") + '>';    	
-		html += "<input type='hidden' name=" + formElement("project") + " value=" + formElement(id + "") + '>';
-		html += "<input type=" + formElement("submit") + "onclick=" + formElement("return confirm('Are you sure?')") + " value='Delete member from project'>";
-		html += "</form>";
+
+		if (myName.equals("admin")) {
+			html += "<p><form name=" + formElement("input");
+			html += " method=" + formElement("get");
+			html += "<p><input type=" + formElement("text") + " name="
+					+ formElement("add") + '>';
+			html += "<input type='hidden' name=" + formElement("project")
+					+ " value=" + formElement(id + "") + '>';
+			html += "<input type=" + formElement("submit")
+					+ " value='Add new member'>";
+			html += "</form>";
+			html += "<p><form name=" + formElement("input");
+			html += " method=" + formElement("get");
+			html += "<p><input type=" + formElement("text") + " name="
+					+ formElement("delete") + '>';
+			html += "<input type='hidden' name=" + formElement("project")
+					+ " value=" + formElement(id + "") + '>';
+			html += "<input type=" + formElement("submit") + "onclick="
+					+ formElement("return confirm('Are you sure?')")
+					+ " value='Delete member from project'>";
+			html += "</form>";
+		}
 		return html;
 	}
 
@@ -127,11 +138,12 @@ public class MemberList extends servletBase {
 			return;
 		}
 		try {
-			if(Project.getByID(projectID).CLOSED == true){
+			if (Project.getByID(projectID).CLOSED == true) {
 				out.println("<div>Project is closed</div>");
 				return;
 			}
-			out.println("<div>Project name: " + Project.getByID(projectID).NAME +   " Project ID is " + projectID + "</div>");
+			out.println("<div>Project name: " + Project.getByID(projectID).NAME
+					+ " Project ID is " + projectID + "</div>");
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}
@@ -142,7 +154,7 @@ public class MemberList extends servletBase {
 			myName = (String) nameObj;
 		}
 		List<Member> members = null;
-		
+
 		if (addmember != null) {
 			try {
 				if (User.getByUsername(addmember) == null) {
@@ -152,20 +164,22 @@ public class MemberList extends servletBase {
 			} catch (SecurityException | SQLException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
+				return;
 			}
-			Member newMember = new Member(addmember, projectID, Member.Role.undefined);
+			Member newMember = new Member(addmember, projectID,
+					Member.Role.undefined);
 			try {
 				newMember.set();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		}
-		
+
 		if (delmember != null) {
 			try {
-				if(delmember!=""){
-				Member delmember_m = Member.getMember(projectID, delmember);
-				delmember_m.delete();
+				if (delmember != "") {
+					Member delmember_m = Member.getMember(projectID, delmember);
+					delmember_m.delete();
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -177,10 +191,10 @@ public class MemberList extends servletBase {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		if(members == null) {
+		if (members == null) {
 			members = new ArrayList<Member>();
 		}
-		if(val != null){
+		if (val != null) {
 			System.out.println(filterRole);
 			System.out.println(filterUser);
 			if (filterUser != null && filterUser.equals(myName)) {
@@ -188,13 +202,13 @@ public class MemberList extends servletBase {
 				return;
 			}
 			Role role = Member.Role.valueOf(filterRole);
-			if(filterUser != null){
-				
+			if (filterUser != null) {
+
 			}
 			Member newMember = new Member(filterUser, projectID, role);
 			System.out.println("innanMemberset");
 			try {
-				if(filterUser!=null){
+				if (filterUser != null) {
 					newMember.set();
 				}
 			} catch (SQLException e) {
@@ -205,14 +219,18 @@ public class MemberList extends servletBase {
 		boolean manager_b = false;
 		for (Member m : members) {
 			u = m.USERNAME;
-			if ((m.ROLE == Member.Role.manager && u.equals(myName)) || myName.equals("admin")) {
+			if ((m.ROLE == Member.Role.manager && u.equals(myName))
+					|| myName.equals("admin")) {
 				manager_b = true;
 				break;
 			}
 		}
-		if (myName.equals("admin")) manager_b = true;
+		if (myName.equals("admin"))
+			manager_b = true;
 		try {
-			if (Project.getByID(projectID) != null && Project.getByID(projectID).CLOSED) manager_b = false;
+			if (Project.getByID(projectID) != null
+					&& Project.getByID(projectID).CLOSED)
+				manager_b = false;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -221,10 +239,11 @@ public class MemberList extends servletBase {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		if(members == null) {
+		if (members == null) {
 			members = new ArrayList<Member>();
 		}
 		out.println(memberListRequestForm(members));
-		if (manager_b) out.println(managerRequestForm(members, projectID));
+		if (manager_b)
+			out.println(managerRequestForm(members, projectID, myName));
 	}
 }

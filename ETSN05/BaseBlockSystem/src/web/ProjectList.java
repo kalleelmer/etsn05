@@ -109,6 +109,7 @@ public class ProjectList extends servletBase {
 
 		} catch (SecurityException e) {
 			e.printStackTrace();
+			return;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} 
@@ -146,6 +147,7 @@ public class ProjectList extends servletBase {
 
 					} catch (SecurityException e) {
 						e.printStackTrace();
+						return;
 					} catch (SQLException e) {
 						e.printStackTrace();
 					} 
