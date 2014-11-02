@@ -130,6 +130,9 @@ public class MemberList extends servletBase {
 		String addmember = request.getParameter("add");
 		String delmember = request.getParameter("delete");
 		Object val = request.getParameter("val");
+		if (nameObj != null) {
+			myName = (String) nameObj;
+		}
 		try {
 			projectID = Integer.parseInt(request.getParameter("project"));
 		} catch (NumberFormatException e) {
@@ -140,6 +143,11 @@ public class MemberList extends servletBase {
 		try {
 			if (Project.getByID(projectID).CLOSED == true) {
 				out.println("<div>Project is closed</div>");
+				if(myName.equals("admin")){
+					List<Member> closedMemberList = new ArrayList<Member>();
+					closedMemberList = Project.getByID(projectID).getMembers();
+					out.println(memberListRequestForm(closedMemberList));
+				}
 				return;
 			}
 			out.println("<div>Project name: " + Project.getByID(projectID).NAME
@@ -150,9 +158,7 @@ public class MemberList extends servletBase {
 		if (!loggedIn(request)) {
 			response.sendRedirect("LogIn");
 		}
-		if (nameObj != null) {
-			myName = (String) nameObj;
-		}
+		
 		List<Member> members = null;
 
 		if (addmember != null) {
@@ -164,6 +170,7 @@ public class MemberList extends servletBase {
 			} catch (SecurityException | SQLException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
+				out.println("Invalid username!");
 				return;
 			}
 			Member newMember = new Member(addmember, projectID,
