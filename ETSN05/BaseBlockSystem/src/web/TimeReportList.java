@@ -50,11 +50,11 @@ public class TimeReportList extends servletBase {
 			return "<p> Error! Please use menus to navigate the system </p>";
 		}
 		if (!project.equals("all")){
-			String name;
+			//String name;
 			try {
 				int id = getID(project);
-				name = Project.getByID(id).NAME;
-				project = project+" "+ name;
+				//name = Project.getByID(id).NAME;
+				project = getString(Project.getByID(id));
 			} catch (NumberFormatException | SQLException e) {
 				return "<p> Error! Please use menus to navigate the system </p>";
 			}
@@ -793,6 +793,13 @@ public class TimeReportList extends servletBase {
 			return "<p>Select a activity type</p>";
 		} else {
 			typeInt = getID(type);
+		}
+		try {
+			if (Project.getByID(projectID).CLOSED){
+				return "<p>The project is closed</p>";
+			}
+		} catch (SQLException e1) {
+			return "<p> Error! Please use menues to navigate the system </p>";
 		}
 		if (getRole(user,projectID)!=null){
 			if (create){
