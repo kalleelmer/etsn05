@@ -323,7 +323,8 @@ public class TimeReportList extends servletBase {
 			}
 
 		}
-		if (role.equals(Member.Role.valueOf("manager"))) {
+		if (userName.equals("admin")
+				|| role.equals(Member.Role.valueOf("manager"))) {
 			if (t.SIGNER == null || t.SIGNER.equals("null")) {
 				html += "<td><a href ="
 						+ formElement("TimeReportList?val=sign&t=" + t.ID
