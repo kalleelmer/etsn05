@@ -284,7 +284,7 @@ public class TimeReportList extends servletBase {
 		} else {
 			html += "<td>" + t.SIGNER + "</td>";
 		}
-		if (t.SIGNER == null || t.SIGNER.equals("null")
+		if ((t.SIGNER == null || t.SIGNER.equals("null"))
 				&& !Project.getByID(t.PROJECT_ID).CLOSED
 				&& t.USERNAME.equals(userName)) {
 			html += "<td><a href ="
@@ -297,7 +297,7 @@ public class TimeReportList extends servletBase {
 		} else {
 			html += "<td>-</td>";
 		}
-		if (t.SIGNER == null || t.SIGNER.equals("null")
+		if ((t.SIGNER == null || t.SIGNER.equals("null"))
 				&& !Project.getByID(t.PROJECT_ID).CLOSED
 				&& (userName.equals("admin") || t.USERNAME.equals(userName))) {
 			html += "<td><a href ="
@@ -806,7 +806,7 @@ public class TimeReportList extends servletBase {
 								t.PROJECT_ID, t.DATE, t.ACTIVITY_TYPE,
 								t.DURATION, timeReportID));
 					} catch (Exception e) {
-						// Unnecessary throw
+						e.printStackTrace();
 						out.println("<p>Something went wrong</p>");
 					}
 				} else if (val.equals("save")) {
